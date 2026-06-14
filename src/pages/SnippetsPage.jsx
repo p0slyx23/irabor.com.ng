@@ -2,7 +2,7 @@ import { startTransition, useDeferredValue, useId, useState } from 'react'
 import { AppLink } from '../components/atoms/AppLink.jsx'
 import { Chip } from '../components/atoms/Chip.jsx'
 import { SearchField } from '../components/molecules/SearchField.jsx'
-import { snippetCategories, snippets } from '../content/siteContent.js'
+import { getProjectPath, snippetCategories, snippets } from '../content/siteContent.js'
 import { formatContentDate } from '../core/dateFormatting.js'
 
 export function SnippetsPage() {
@@ -24,7 +24,13 @@ export function SnippetsPage() {
       return true
     }
 
-    return [snippet.title, snippet.description, snippet.category]
+    return [
+      snippet.title,
+      snippet.description,
+      snippet.category,
+      snippet.projectTitle,
+      ...(snippet.stack ?? []),
+    ]
       .join(' ')
       .toLowerCase()
       .includes(normalizedQuery)
@@ -33,7 +39,7 @@ export function SnippetsPage() {
   return (
     <div className="page-shell snippets-page">
       <header className="page-heading">
-        <p className="eyebrow">Snippets</p>
+        <p className="eyebrow">Patterns</p>
         <h1 className="page-heading__title">Snippets</h1>
         <p className="page-heading__lede">
           Small reusable patterns pulled from the same interface, accessibility, and
@@ -94,7 +100,22 @@ export function SnippetsPage() {
                     {snippet.title}
                   </AppLink>
                 </th>
-                <td data-label="Description">{snippet.description}</td>
+                <td data-label="Description">
+                  <div className="data-table__description">
+                    <p>{snippet.description}</p>
+                    {snippet.projectSlug && snippet.projectTitle ? (
+                      <AppLink
+                        className="data-table__project-link"
+                        href={getProjectPath(snippet.projectSlug)}
+                      >
+                        From {snippet.projectTitle}
+                      </AppLink>
+                    ) : null}
+                    {snippet.stack?.length ? (
+                      <p className="data-table__subcopy">{snippet.stack.join(' / ')}</p>
+                    ) : null}
+                  </div>
+                </td>
                 <td data-label="Category">{snippet.category}</td>
                 <td data-label="Last updated">
                   <time dateTime={snippet.updatedAt}>{formatContentDate(snippet.updatedAt)}</time>

@@ -226,23 +226,30 @@
     }
   ],
   "projectsPage": {
-    "eyebrow": "Projects",
+    "eyebrow": "Case Studies",
     "title": "Projects",
     "lede": "High-level introduction for the projects archive page."
   },
   "snippetCategories": [
     "All",
-    "React Hook",
-    "JavaScript",
+    "Flutter",
+    "React",
+    "PHP",
     "Accessibility",
-    "Data Formatting"
+    "Utilities"
   ],
   "snippets": [
     {
       "id": "snippet-id",
       "title": "Snippet title",
       "description": "Snippet description.",
-      "category": "JavaScript",
+      "category": "Flutter",
+      "projectSlug": "project-slug",
+      "projectTitle": "Project title",
+      "stack": [
+        "Flutter",
+        "Firebase"
+      ],
       "updatedAt": "2026-06-12",
       "highlighted": false
     }

@@ -22,7 +22,7 @@ export function ThemeToggle({
       title={`Current theme: ${preferenceLabel}`}
       type="button"
     >
-      <Icon className="icon-button__icon" />
+      <Icon className="icon-button__icon theme-toggle__icon" />
       <span className="sr-only">
         Current theme is {currentThemeLabel}. Activate to switch to {nextTheme}.
       </span>

@@ -8,10 +8,14 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-body:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Inter',
+    'Helvetica Neue', Arial, sans-serif;
+  --font-ui:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Inter',
+    'Helvetica Neue', Arial, sans-serif;
   --font-display: 'Space Mono', 'IBM Plex Mono', 'JetBrains Mono', monospace;
-  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+  --font-mono: 'SF Mono', 'IBM Plex Mono', 'JetBrains Mono', monospace;
   --line-height-global: 1.24;
 
   --color-background: #ffffff;
@@ -54,6 +58,26 @@
   --radius-20: 20px;
   --radius-full: 999px;
 
+  --control-height-compact: 32px;
+  --control-height-regular: 40px;
+  --control-height-touch: 44px;
+  --logo-height-nav: 28px;
+  --logo-height-footer: 18px;
+  --icon-glyph-sm: 14px;
+  --icon-glyph-md: 18px;
+  --icon-glyph-lg: 20px;
+  --icon-size-menu: 20px;
+  --icon-size-close: 20px;
+  --icon-size-search: 20px;
+  --icon-size-theme: 18px;
+  --icon-size-arrow: 16px;
+  --icon-size-chevron: 14px;
+  --icon-size-stack: 20px;
+  --icon-size-feature: 24px;
+  --icon-size-section: 20px;
+  --icon-size-resource: 20px;
+  --icon-size-social: 18px;
+
   --shadow-sm: 0 10px 30px rgba(33, 16, 51, 0.06);
   --shadow-md: 0 28px 70px rgba(33, 16, 51, 0.12);
   --shadow-lg: 0 48px 120px rgba(33, 16, 51, 0.18);
@@ -64,7 +88,7 @@
   --transition-slow: 320ms ease;
 
   --container-max: 1400px;
-  --shell-max-width: 1180px;
+  --shell-max-width: 900px;
   --content-width: 900px;
   --article-width: 760px;
   --grid-gap: var(--space-24);
@@ -80,21 +104,21 @@
   --type-h2-line-height: var(--line-height-global);
   --type-h3-size: clamp(1.5rem, 3vw, 2rem);
   --type-h3-line-height: var(--line-height-global);
-  --type-h4-size: 1.25rem;
+  --type-h4-size: 1.3125rem;
   --type-h4-line-height: var(--line-height-global);
-  --type-h5-size: 1rem;
+  --type-h5-size: 1.0625rem;
   --type-h5-line-height: var(--line-height-global);
-  --type-body-lg-size: 1.125rem;
+  --type-body-lg-size: 1.1875rem;
   --type-body-lg-line-height: var(--line-height-global);
-  --type-body-size: 1rem;
+  --type-body-size: 1.0625rem;
   --type-body-line-height: var(--line-height-global);
   --type-body-sm-size: 0.9375rem;
   --type-body-sm-line-height: var(--line-height-global);
-  --type-caption-size: 0.75rem;
+  --type-caption-size: 0.8125rem;
   --type-caption-line-height: var(--line-height-global);
-  --type-label-size: 0.75rem;
+  --type-label-size: 0.8125rem;
   --type-label-line-height: var(--line-height-global);
-  --type-code-size: 0.875rem;
+  --type-code-size: 0.8125rem;
   --type-code-line-height: var(--line-height-global);
 }
 

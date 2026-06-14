@@ -6,10 +6,9 @@ export function NewsletterPage() {
   return (
     <div className="page-shell newsletter-page">
       <section className="newsletter-hero">
-        <StarCluster className="newsletter-hero__stars" />
+        {/* <StarCluster className="newsletter-hero__stars" /> */}
         <NewsletterForm
           buttonLabel="Subscribe me"
-          eyebrow={newsletterPage.eyebrow}
           note={newsletterPage.lede}
           title={newsletterPage.title}
         />

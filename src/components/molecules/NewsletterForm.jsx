@@ -14,7 +14,7 @@ export function NewsletterForm({
   return (
     <section className={cx('newsletter-block', className)}>
       <div className="newsletter-block__copy">
-        <p className="eyebrow eyebrow--compact">{eyebrow}</p>
+        {/* <p className="eyebrow eyebrow--compact">{eyebrow}</p> */}
         <h2 className="newsletter-block__title">{title}</h2>
         <p className="newsletter-block__note">{note}</p>
       </div>

@@ -39,7 +39,7 @@ export function ResourcesPage() {
   return (
     <div className="page-shell resources-page">
       <header className="page-heading">
-        <p className="eyebrow">Resources</p>
+        <p className="eyebrow">Library</p>
         <h1 className="page-heading__title">Resources</h1>
         <p className="page-heading__lede">
           A working shelf of the frameworks, services, and systems behind the products
@@ -125,10 +125,10 @@ export function ResourcesPage() {
       ) : null}
 
       <section className="newsletter-feature">
-        <StarCluster />
+        {/* <StarCluster /> */}
         <NewsletterForm
           buttonLabel="Subscribe me"
-          note="Testowanie kodu jest bardzo pozadana umiejetnoscia u kazdego programisty... Ale zacznijmy od poczatku. Dlaczego tak wlasciwie potrzebujemy testow?"
+          note="Occasional notes on product design, frontend systems, and the decisions behind the work in this portfolio."
           title="Newsletter"
         />
       </section>
