@@ -1,0 +1,265 @@
+{
+  "siteBrand": {
+    "cycle": "Product Design + Mobile",
+    "name": "your-name",
+    "footerLabel": "your-name 2026",
+    "tagline": "Product Designer and Frontend Engineer",
+    "location": "City, Country",
+    "email": "hello@example.com",
+    "resumeUrl": "/files/your-name-resume.pdf",
+    "profileImage": {
+      "src": "/images/profile/your-name-portrait.jpg",
+      "alt": "Portrait of Your Name"
+    }
+  },
+  "socialLinks": [
+    {
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/your-handle",
+      "icon": "linkedin"
+    },
+    {
+      "label": "GitHub",
+      "href": "https://github.com/your-handle",
+      "icon": "github"
+    },
+    {
+      "label": "Email",
+      "href": "mailto:hello@example.com",
+      "icon": "mail"
+    }
+  ],
+  "aboutPage": {
+    "eyebrow": "About",
+    "title": "About me",
+    "lede": "Short introduction to who you are and the kind of work you do.",
+    "paragraphs": [
+      "Paragraph one about your background and the kind of problems you work on.",
+      "Paragraph two about your approach to product, design, or engineering.",
+      "Paragraph three about what makes your contribution valuable."
+    ],
+    "capabilities": [
+      "Capability one",
+      "Capability two"
+    ],
+    "principles": [
+      "Principle one",
+      "Principle two"
+    ],
+    "availability": "Short note on the kind of work, roles, or collaborations you are open to."
+  },
+  "projectCategories": [
+    "All",
+    "Case Studies"
+  ],
+  "projectPosts": [
+    {
+      "slug": "project-slug",
+      "title": "Project title",
+      "category": "Case Studies",
+      "date": "Jun 12, 2026",
+      "readTime": "8 min",
+      "excerpt": "Short portfolio-ready summary for the project card and listing.",
+      "tags": [
+        "tag-one",
+        "tag-two"
+      ],
+      "featured": true,
+      "image": {
+        "src": "/images/projects/project-slug/project-cover.jpg",
+        "alt": "Project cover image"
+      }
+    }
+  ],
+  "projectEntries": {
+    "project-slug": {
+      "slug": "project-slug",
+      "eyebrow": "case study",
+      "title": "Project title",
+      "lede": "A concise high-level summary of the project.",
+      "meta": [
+        "UI/UX Design",
+        "Flutter Mobile Development",
+        "Completed",
+        "Completed Feb 2026"
+      ],
+      "tags": [
+        "tag-one",
+        "tag-two"
+      ],
+      "coverImage": {
+        "src": "/images/projects/project-slug/project-cover.jpg",
+        "alt": "Project cover image"
+      },
+      "stack": [
+        {
+          "id": "flutter",
+          "badge": "flutter",
+          "badgeTone": "sky",
+          "title": "flutter",
+          "description": "What this tool or technology was used for in the project."
+        },
+        {
+          "id": "figma",
+          "badge": "fg",
+          "badgeTone": "purple",
+          "title": "figma",
+          "description": "What this tool or technology was used for in the project."
+        }
+      ],
+      "toc": [
+        {
+          "id": "overview",
+          "label": "Overview"
+        },
+        {
+          "id": "role",
+          "label": "My Role"
+        }
+      ],
+      "sections": [
+        {
+          "id": "overview",
+          "heading": "Project Overview",
+          "paragraphs": [
+            "Paragraph one.",
+            "Paragraph two."
+          ]
+        },
+        {
+          "id": "role",
+          "heading": "My Role",
+          "paragraphs": [
+            "Paragraph one."
+          ],
+          "list": [
+            "List item one",
+            "List item two"
+          ]
+        }
+      ],
+      "related": []
+    }
+  },
+  "blogCategories": [
+    "All",
+    "Engineering",
+    "Product",
+    "Notes"
+  ],
+  "blogPosts": [
+    {
+      "slug": "blog-post-slug",
+      "title": "Blog post title",
+      "category": "Engineering",
+      "date": "Jun 14, 2026",
+      "readTime": "4 min",
+      "excerpt": "Short editorial summary for the post listing.",
+      "tags": [
+        "tag-one",
+        "tag-two"
+      ],
+      "featured": false,
+      "image": {
+        "src": "/images/blog/blog-post-cover.jpg",
+        "alt": "Blog post cover image"
+      }
+    }
+  ],
+  "blogEntries": {
+    "blog-post-slug": {
+      "slug": "blog-post-slug",
+      "eyebrow": "post",
+      "title": "Blog post title",
+      "lede": "A concise editorial summary or lead paragraph.",
+      "meta": [
+        "engineering",
+        "Created Jun 14, 2026"
+      ],
+      "tags": [
+        "tag-one",
+        "tag-two"
+      ],
+      "coverImage": {
+        "src": "/images/blog/blog-post-cover.jpg",
+        "alt": "Blog post cover image"
+      },
+      "toc": [
+        {
+          "id": "section-one",
+          "label": "Section one"
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-one",
+          "heading": "Section heading",
+          "paragraphs": [
+            "Paragraph one.",
+            "Paragraph two."
+          ]
+        }
+      ],
+      "related": []
+    }
+  },
+  "resourceCategories": [
+    "All",
+    "Mobile",
+    "Frontend",
+    "Backend",
+    "Design",
+    "Tooling"
+  ],
+  "resources": [
+    {
+      "id": "resource-id",
+      "title": "Resource title",
+      "category": "Tooling",
+      "logoText": "npm",
+      "logoTone": "neutral",
+      "description": "Resource description.",
+      "image": {
+        "src": "/images/resources/resource-logo.svg",
+        "alt": "Resource logo"
+      }
+    }
+  ],
+  "projectsPage": {
+    "eyebrow": "Projects",
+    "title": "Projects",
+    "lede": "High-level introduction for the projects archive page."
+  },
+  "snippetCategories": [
+    "All",
+    "React Hook",
+    "JavaScript",
+    "Accessibility",
+    "Data Formatting"
+  ],
+  "snippets": [
+    {
+      "id": "snippet-id",
+      "title": "Snippet title",
+      "description": "Snippet description.",
+      "category": "JavaScript",
+      "updatedAt": "2026-06-12",
+      "highlighted": false
+    }
+  ],
+  "newsletterPage": {
+    "eyebrow": "Newsletter",
+    "title": "Newsletter",
+    "lede": "Newsletter description.",
+    "benefits": [
+      "Benefit one",
+      "Benefit two"
+    ],
+    "issues": [
+      {
+        "title": "Issue title",
+        "excerpt": "Issue summary."
+      }
+    ]
+  }
+}

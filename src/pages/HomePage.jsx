@@ -1,0 +1,62 @@
+import { AppLink } from '../components/atoms/AppLink.jsx'
+import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
+import { ProjectStackCarousel } from '../components/organisms/ProjectStackCarousel.jsx'
+import { formatContentDate } from '../core/dateFormatting.js'
+import {
+  getProjectPath,
+  getProjectStack,
+  homeRecentProjects,
+} from '../content/siteContent.js'
+
+export function HomePage() {
+  return (
+    <div className="page-shell home-page">
+      <header className="page-heading">
+        <p className="eyebrow">Case studies</p>
+        <h1 className="page-heading__title">Recent case studies</h1>
+        <p className="page-heading__lede">
+          Selected product work across mobile apps, full-stack platforms, and backend
+          systems.
+        </p>
+      </header>
+
+      <section className="post-list" aria-label="Recent case studies">
+        {homeRecentProjects.map((post) => (
+          <article className="post-list__item" key={post.slug}>
+            <div className="post-list__body">
+              {post.image ? (
+                <figure className="post-list__media">
+                  <img alt={post.image.alt} src={post.image.src} />
+                </figure>
+              ) : null}
+
+              <p className="post-list__meta">
+                <span>{post.category}</span>
+                <span>{formatContentDate(post.date)}</span>
+                <span>{post.readTime}</span>
+              </p>
+              <h2 className="post-list__title">{post.title}</h2>
+              <p className="post-list__excerpt">{post.excerpt}</p>
+              <AppLink className="inline-link" href={getProjectPath(post.slug)}>
+                <span>Read more</span>
+                <ArrowRightIcon className="inline-link__icon" />
+              </AppLink>
+              <ProjectStackCarousel
+                ariaLabel={`${post.title} project stack`}
+                items={getProjectStack(post.slug)}
+              />
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <div className="page-actions">
+        <AppLink className="page-action-link" href="/projects">
+          View all projects
+        </AppLink>
+      </div>
+
+      {/* Reserved for future testimonial content. */}
+    </div>
+  )
+}

@@ -1,0 +1,128 @@
+:root {
+  color-scheme: light;
+  font-family: var(--font-body);
+  line-height: 1.24;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Mono', 'IBM Plex Mono', 'JetBrains Mono', monospace;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+  --line-height-global: 1.24;
+
+  --color-background: #ffffff;
+  --color-surface: #f2f2f2;
+  --color-surface-raised: #ffffff;
+  --color-border: rgba(63, 63, 63, 0.22);
+  --color-border-strong: #3f3f3f;
+  --color-text-primary: #000000;
+  --color-text-secondary: #3d3d3d;
+  --color-muted: #656565;
+  --color-primary: #7901b1;
+  --color-primary-hover: #9a46c1;
+  --color-primary-active: #2e0044;
+  --color-success: #1e8f5a;
+  --color-warning: #ff5c00;
+  --color-error: #d62929;
+  --color-on-primary: #ffffff;
+  --color-row-highlight: rgba(154, 70, 193, 0.18);
+  --color-row-hover: rgba(154, 70, 193, 0.09);
+  --color-canvas-start: #7300cd;
+  --color-canvas-end: #8d00da;
+  --canvas-background: linear-gradient(180deg, var(--color-canvas-start), var(--color-canvas-end));
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-120: 120px;
+
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-full: 999px;
+
+  --shadow-sm: 0 10px 30px rgba(33, 16, 51, 0.06);
+  --shadow-md: 0 28px 70px rgba(33, 16, 51, 0.12);
+  --shadow-lg: 0 48px 120px rgba(33, 16, 51, 0.18);
+  --screen-shadow: var(--shadow-lg);
+
+  --transition-fast: 140ms ease;
+  --transition-normal: 220ms ease;
+  --transition-slow: 320ms ease;
+
+  --container-max: 1400px;
+  --shell-max-width: 1180px;
+  --content-width: 900px;
+  --article-width: 760px;
+  --grid-gap: var(--space-24);
+  --grid-gap-lg: var(--space-32);
+  --site-gutter: clamp(24px, 5vw, 72px);
+  --rail-offset: clamp(18px, 3vw, 36px);
+
+  --type-display-size: clamp(3.5rem, 7vw, 5.5rem);
+  --type-display-line-height: var(--line-height-global);
+  --type-h1-size: clamp(2.6rem, 6vw, 4rem);
+  --type-h1-line-height: var(--line-height-global);
+  --type-h2-size: clamp(2rem, 4vw, 3rem);
+  --type-h2-line-height: var(--line-height-global);
+  --type-h3-size: clamp(1.5rem, 3vw, 2rem);
+  --type-h3-line-height: var(--line-height-global);
+  --type-h4-size: 1.25rem;
+  --type-h4-line-height: var(--line-height-global);
+  --type-h5-size: 1rem;
+  --type-h5-line-height: var(--line-height-global);
+  --type-body-lg-size: 1.125rem;
+  --type-body-lg-line-height: var(--line-height-global);
+  --type-body-size: 1rem;
+  --type-body-line-height: var(--line-height-global);
+  --type-body-sm-size: 0.9375rem;
+  --type-body-sm-line-height: var(--line-height-global);
+  --type-caption-size: 0.75rem;
+  --type-caption-line-height: var(--line-height-global);
+  --type-label-size: 0.75rem;
+  --type-label-line-height: var(--line-height-global);
+  --type-code-size: 0.875rem;
+  --type-code-line-height: var(--line-height-global);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-background: #080714;
+  --color-surface: #110d1d;
+  --color-surface-raised: #0c0916;
+  --color-border: rgba(255, 255, 255, 0.16);
+  --color-border-strong: rgba(255, 255, 255, 0.66);
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #dad0ea;
+  --color-muted: #ff8ece;
+  --color-primary: #ff50b3;
+  --color-primary-hover: #ff8ece;
+  --color-primary-active: #e90084;
+  --color-success: #31bf7a;
+  --color-warning: #ff8d23;
+  --color-error: #ff3a3a;
+  --color-on-primary: #080714;
+  --color-row-highlight: rgba(255, 80, 179, 0.2);
+  --color-row-hover: rgba(255, 80, 179, 0.12);
+  --color-canvas-start: #f542b4;
+  --color-canvas-end: #ef2ca6;
+  --canvas-background: linear-gradient(180deg, var(--color-canvas-start), var(--color-canvas-end));
+  --shadow-sm: 0 10px 26px rgba(0, 0, 0, 0.18);
+  --shadow-md: 0 28px 70px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 44px 120px rgba(0, 0, 0, 0.34);
+  --screen-shadow: var(--shadow-lg);
+}
