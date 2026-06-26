@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AppLink } from '../components/atoms/AppLink.jsx'
+import { ContentImage } from '../components/atoms/ContentImage.jsx'
 import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
 import { formatContentDate } from '../core/dateFormatting.js'
 import { getProjectPath, projectPosts, projectsPage } from '../content/siteContent.js'
@@ -68,14 +69,16 @@ export function ProjectsPage() {
             <div className="post-list__body">
               {project.image ? (
                 <figure className="post-list__media">
-                  <img alt={project.image.alt} src={project.image.src} />
+                  <ContentImage alt={project.image.alt} src={project.image.src} />
                 </figure>
               ) : null}
 
               <p className="post-list__meta">
-                <span>{project.category}</span>
-                <span>{formatContentDate(project.date)}</span>
-                <span>{project.readTime}</span>
+                {[project.category, formatContentDate(project.date)]
+                  .filter(Boolean)
+                  .map((item, index) => (
+                    <span key={`${project.slug}-meta-${index}`}>{item}</span>
+                  ))}
               </p>
               <h2 className="post-list__title">{project.title}</h2>
               <p className="post-list__excerpt">{project.excerpt}</p>

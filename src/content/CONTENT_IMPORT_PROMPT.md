@@ -24,8 +24,11 @@ Rules:
 12. Keep project case studies under "projectPosts" and "projectEntries".
 13. Keep editorial writing under "blogPosts" and "blogEntries".
 14. For projectEntries.stack, use objects with exactly these keys: "id", "badge", "badgeTone", "title", "description".
-15. For snippets, keep them tied to real projects when possible by filling "projectSlug", "projectTitle", and "stack". Make "projectSlug" match an existing project slug exactly.
-16. Use empty arrays or empty objects for sections you are not filling yet, instead of placeholder prose.
+15. For projectEntries.links, use objects with exactly these keys: "label" and "href". Use an empty array if there are no project links yet.
+16. For resources, use objects with exactly these keys: "id", "title", "category", "logoText", "logoTone", "description", and "image".
+17. For snippets, use objects with exactly these keys: "id", "title", "description", "category", "projectSlug", "projectTitle", "stack", "updatedAt", and "highlighted".
+18. For snippets, keep them tied to real projects when possible by filling "projectSlug", "projectTitle", and "stack". Make "projectSlug" match an existing project slug exactly.
+19. Use empty arrays or empty objects for sections you are not filling yet, instead of placeholder prose.
 ```
 
 Image rule for this project:

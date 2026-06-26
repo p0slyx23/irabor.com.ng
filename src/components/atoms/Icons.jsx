@@ -1,17 +1,7 @@
+import brandmarkAsset from '../../assets/brand/brandmark.svg'
+
 export function BrandMarkIcon({ className, ...rest }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      {...rest}
-    >
-      <circle cx="12" cy="12" r="8.75" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M6 18L18 6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-      <circle cx="16.5" cy="7.5" fill="currentColor" r="1.5" />
-    </svg>
-  )
+  return <img alt="" aria-hidden="true" className={className} draggable="false" src={brandmarkAsset} {...rest} />
 }
 
 export function MoonIcon({ className, ...rest }) {

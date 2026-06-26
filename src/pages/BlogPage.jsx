@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AppLink } from '../components/atoms/AppLink.jsx'
+import { ContentImage } from '../components/atoms/ContentImage.jsx'
 import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
 import { blogPosts, getBlogPath } from '../content/siteContent.js'
 import { formatContentDate } from '../core/dateFormatting.js'
@@ -73,14 +74,16 @@ export function BlogPage() {
                 <div className="post-list__body">
                   {post.image ? (
                     <figure className="post-list__media">
-                      <img alt={post.image.alt} src={post.image.src} />
+                      <ContentImage alt={post.image.alt} src={post.image.src} />
                     </figure>
                   ) : null}
 
                   <p className="post-list__meta">
-                    <span>{post.category}</span>
-                    <span>{formatContentDate(post.date)}</span>
-                    <span>{post.readTime}</span>
+                    {[post.category, formatContentDate(post.date)]
+                      .filter(Boolean)
+                      .map((item, index) => (
+                        <span key={`${post.slug}-meta-${index}`}>{item}</span>
+                      ))}
                   </p>
                   <h2 className="post-list__title">{post.title}</h2>
                   <p className="post-list__excerpt">{post.excerpt}</p>

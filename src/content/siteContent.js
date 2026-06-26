@@ -1,4 +1,11 @@
 import { getContentDateSortValue } from "../core/dateFormatting.js";
+import excacoCoverImage from "../assets/images/projects/excaco-cover.png";
+import lgscElectionCoverImage from "../assets/images/projects/lgscelection-cover.png";
+import lugspaceCoverImage from "../assets/images/projects/lugspace-cover.png";
+import payshipCoverImage from "../assets/images/projects/payship-cover.png";
+import placeholderCoverImage from "../assets/images/projects/placeholder-cover.png";
+import primewaveCoverImage from "../assets/images/projects/primewave-cover.png";
+import travelBookingCoverImage from "../assets/images/projects/travebooking-cover.png";
 
 export const siteBrand = {
   cycle: "Product Design + Mobile",
@@ -23,11 +30,11 @@ export const siteNavigation = [
 ];
 
 export const socialLinks = [
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/joseph-irabor",
-    icon: "linkedin",
-  },
+  // {
+  //   label: "LinkedIn",
+  //   href: "https://www.linkedin.com/joseph-irabor",
+  //   icon: "linkedin",
+  // },
   {
     label: "GitHub",
     href: "https://github.com/p0slyx23",
@@ -150,54 +157,46 @@ const payshipProjectStack = [
   },
 ];
 
-const tourOduduwaProjectStack = [
+const travelBookingPlatformProjectStack = [
   {
     id: "php",
     badge: "php",
-    badgeTone: "purple",
+    badgeTone: "sky",
     title: "php",
     description:
-      "Server-side application logic powering platform workflows and tourism content delivery.",
+      "Used to build the custom application layer for routing, controllers, services, and domain workflows.",
   },
   {
-    id: "api-development",
-    badge: "api",
-    badgeTone: "sky",
-    title: "api development",
-    description:
-      "Endpoints supporting destinations, attractions, experiences, and platform operations.",
-  },
-  {
-    id: "database-design",
-    badge: "db",
+    id: "mysql",
+    badge: "sql",
     badgeTone: "neutral",
-    title: "database design",
+    title: "mysql",
     description:
-      "Data modelling, relationships, and schema planning for scalable platform development.",
+      "Used for persistence across users, destinations, bookings, payments, passport plans, and notifications.",
   },
   {
-    id: "content-workflows",
-    badge: "cms",
-    badgeTone: "ice",
-    title: "content workflows",
+    id: "paystack",
+    badge: "pay",
+    badgeTone: "lime",
+    title: "paystack",
     description:
-      "Backend support for organizing and maintaining tourism content efficiently.",
+      "Used for payment initialization and server-side transaction verification.",
   },
   {
-    id: "auth-security",
-    badge: "auth",
-    badgeTone: "slate",
-    title: "auth & security",
+    id: "cloudinary",
+    badge: "cdn",
+    badgeTone: "purple",
+    title: "cloudinary",
     description:
-      "Authentication and access control for reliable platform management and integrations.",
+      "Used for signed image uploads and mirrored asset storage for homepage and destination media.",
   },
   {
-    id: "performance",
-    badge: "perf",
+    id: "zeptomail",
+    badge: "mail",
     badgeTone: "pink",
-    title: "performance",
+    title: "zeptomail",
     description:
-      "Performance-focused backend decisions for stability under growing platform demand.",
+      "Used for transactional email delivery tied to account, booking, and passport events.",
   },
 ];
 
@@ -463,7 +462,7 @@ const projectStacks = {
   "lugspace-student-community-platform": lugspaceProjectStack,
   "payship-fintech-platform": payshipProjectStack,
   "primewave-digital-services-platform": primewaveProjectStack,
-  "tour-oduduwa-tourism-platform": tourOduduwaProjectStack,
+  "travel-booking-platform-backend": travelBookingPlatformProjectStack,
 };
 
 export function getProjectStack(slug) {
@@ -484,7 +483,7 @@ export const projectPosts = [
     tags: ["react", "php", "business-platform", "hr-tech", "consulting"],
     featured: false,
     image: {
-      src: "/images/projects/primewave/primewave-cover.jpg",
+      src: primewaveCoverImage,
       alt: "PrimeWave digital services platform",
     },
   },
@@ -492,14 +491,15 @@ export const projectPosts = [
     slug: "atlanticstay-booking-platform",
     title: "Atlantic Stay",
     category: "Case Studies",
-    date: "Aug 2025",
+    date: "",
+    sortDate: "Aug 2025",
     readTime: "8 min",
     excerpt:
       "A vacation rental and property discovery platform designed to simplify accommodation search, property management, and booking experiences across multiple listings.",
     tags: ["react", "php", "travel-tech", "booking-platform", "marketplace"],
     featured: false,
     image: {
-      src: "/images/projects/atlanticstay/atlanticstay-cover.jpg",
+      src: placeholderCoverImage,
       alt: "Atlantic Stay booking platform",
     },
   },
@@ -514,7 +514,7 @@ export const projectPosts = [
     tags: ["react", "php", "community-platform", "education", "student-portal"],
     featured: false,
     image: {
-      src: "/images/projects/lugspace/lugspace-cover.jpg",
+      src: lugspaceCoverImage,
       alt: "LugSpace student platform",
     },
   },
@@ -522,7 +522,7 @@ export const projectPosts = [
     slug: "excaco-real-estate-platform",
     title: "ExcaCo",
     category: "Case Studies",
-    date: "Jan 2025",
+    date: "Jan 2026",
     readTime: "8 min",
     excerpt:
       "A modern real estate and property showcase platform built to present residential developments, property listings, and investment opportunities through a premium digital experience.",
@@ -535,7 +535,7 @@ export const projectPosts = [
     ],
     featured: false,
     image: {
-      src: "/images/projects/excaco/excaco-cover.jpg",
+      src: excacoCoverImage,
       alt: "ExcaCo real estate platform",
     },
   },
@@ -543,14 +543,14 @@ export const projectPosts = [
     slug: "lgsc-election-results-platform",
     title: "LGSC Election Results Platform",
     category: "Case Studies",
-    date: "May 2025",
+    date: "May 2026",
     readTime: "8 min",
     excerpt:
       "A real-time election results platform designed to provide transparent access to candidate standings, vote percentages, and election updates through a responsive digital dashboard.",
     tags: ["react", "php", "civic-tech", "elections", "real-time-data"],
     featured: false,
     image: {
-      src: "/images/projects/lgsc/lgsc-cover.jpg",
+      src: lgscElectionCoverImage,
       alt: "LGSC election results platform",
     },
   },
@@ -565,28 +565,29 @@ export const projectPosts = [
     tags: ["fintech", "mobile", "flutter", "dart", "notifications"],
     featured: true,
     image: {
-      src: "/images/projects/payship/payship-cover.jpg",
+      src: payshipCoverImage,
       alt: "PayShip native mobile fintech experience",
     },
   },
   {
-    slug: "tour-oduduwa-tourism-platform",
-    title: "Tour Oduduwa",
+    slug: "travel-booking-platform-backend",
+    title: "Travel Booking Platform Backend",
     category: "Case Studies",
     date: "Feb 2026",
-    readTime: "15 min",
+    readTime: "",
     excerpt:
-      "Backend architecture and PHP API development for a tourism discovery platform connecting travelers with destinations, cultural experiences, tours, and attractions across Western Nigeria.",
-    tags: ["backend", "php", "api", "tourism", "travel", "platform"],
+      "Backend architecture and API workflows for a travel booking platform covering auth, bookings, payments, media handling, and admin operations.",
+    tags: ["backend", "php", "payments", "cloudinary"],
     featured: true,
     image: {
-      src: "/images/projects/tour-oduduwa/tour-oduduwa-cover.jpg",
-      alt: "Tour Oduduwa tourism platform",
+      src: travelBookingCoverImage,
+      alt: "Travel booking platform backend",
     },
   },
 ].sort(
   (left, right) =>
-    getContentDateSortValue(right.date) - getContentDateSortValue(left.date),
+    getContentDateSortValue(right.sortDate ?? right.date) -
+    getContentDateSortValue(left.sortDate ?? left.date),
 );
 
 export const homeRecentProjects = projectPosts.slice(0, 3);
@@ -606,9 +607,19 @@ export const projectEntries = {
     ],
     tags: ["fintech", "mobile", "flutter", "dart", "notifications"],
     coverImage: {
-      src: "/images/projects/payship/payship-cover.jpg",
+      src: payshipCoverImage,
       alt: "PayShip native mobile product screens",
     },
+    links: [
+      {
+        label: "View on App Store",
+        href: "https://apps.apple.com/app/payship-by-zoan/id6746713737",
+      },
+      {
+        label: "View on Google Play",
+        href: "https://play.google.com/store/apps/details?id=com.payship.app",
+      },
+    ],
     stack: payshipProjectStack,
     toc: [
       {
@@ -672,49 +683,53 @@ export const projectEntries = {
         ],
       },
     ],
-    related: ["tour-oduduwa-tourism-platform"],
+    related: ["travel-booking-platform-backend"],
   },
-  "tour-oduduwa-tourism-platform": {
-    slug: "tour-oduduwa-tourism-platform",
+  "travel-booking-platform-backend": {
+    slug: "travel-booking-platform-backend",
     eyebrow: "case study",
-    title: "Tour Oduduwa",
-    lede: "A tourism discovery platform designed to connect travelers with destinations, cultural experiences, attractions, and tour opportunities across Western Nigeria.",
+    title: "Travel Booking Platform Backend",
+    lede: "A custom PHP backend that powers public booking flows and a separate admin API for content, user, and operational management.",
     meta: [
-      "PHP Backend Development",
-      "API & Platform Systems",
+      "Backend API Design",
+      "Authentication & Authorization",
+      "Payment Verification",
+      "Media Upload Workflow",
       "Completed",
       "Completed Feb 2026",
     ],
-    tags: ["backend", "php", "api", "tourism", "travel", "platform"],
+    tags: ["php", "mysql", "paystack", "cloudinary", "zeptomail"],
     coverImage: {
-      src: "/images/projects/tour-oduduwa/tour-oduduwa-cover.jpg",
-      alt: "Tour Oduduwa platform",
+      src: travelBookingCoverImage,
+      alt: "Travel booking platform backend",
     },
-    stack: tourOduduwaProjectStack,
+    links: [
+      {
+        label: "Visit live platform",
+        href: "https://touroduduwaonline.com/",
+      },
+    ],
+    stack: travelBookingPlatformProjectStack,
     toc: [
       {
         id: "overview",
         label: "Overview",
       },
       {
-        id: "role",
-        label: "My Role",
-      },
-      {
         id: "architecture",
-        label: "Backend Systems",
+        label: "Architecture",
       },
       {
-        id: "content",
-        label: "Content Workflows",
+        id: "auth",
+        label: "Auth & Access",
       },
       {
-        id: "delivery",
-        label: "Delivery Approach",
+        id: "payments",
+        label: "Payments",
       },
       {
-        id: "outcome",
-        label: "Outcome",
+        id: "admin-media",
+        label: "Admin & Media",
       },
     ],
     sections: [
@@ -722,75 +737,67 @@ export const projectEntries = {
         id: "overview",
         heading: "Project Overview",
         paragraphs: [
-          "Tour Oduduwa is a tourism platform that showcases destinations, attractions, cultural experiences, and travel opportunities across Western Nigeria.",
-          "The platform enables users to explore locations, discover experiences, and access tourism-related information through a centralized digital experience.",
-          "From a backend perspective, the product needed to support a broad mix of structured destination data, editorial content, and platform-driven interactions without letting the content model become difficult to manage over time.",
-        ],
-      },
-      {
-        id: "role",
-        heading: "My Role",
-        paragraphs: [
-          "I served as the Backend Developer on the project, working primarily with PHP.",
-          "My focus was building and maintaining the server-side foundation that supports content management, platform functionality, data processing, and application integrations.",
-          "That work included shaping API behavior, organizing data relationships, supporting administrative workflows, and creating a backend structure that could handle a growing tourism catalog in a maintainable way.",
+          "I worked on the backend layer of a travel booking platform, focusing on the server-side flows that support user accounts, destination discovery, bookings, payments, and admin operations.",
+          "The backend exposes separate JSON APIs for public and admin use, which keeps customer-facing flows distinct from internal management actions.",
         ],
       },
       {
         id: "architecture",
-        heading: "Backend Systems",
+        heading: "Architecture",
         paragraphs: [
-          "The backend was designed to support tourism content, destination listings, platform operations, and scalable data management.",
-          "Emphasis was placed on maintainability, performance, reliability, and building a PHP-based foundation that supports future platform growth.",
-          "Because the platform spans destinations, attractions, experiences, and discovery flows, the architecture had to balance clear data modeling with practical API responses that could support multiple surfaces cleanly.",
+          "The server is a custom PHP application with its own bootstrap process, router, middleware layer, controllers, services, and PDO-based database access.",
+          "The codebase uses UUIDs for API-facing identifiers and keeps response contracts consistent across public and admin endpoints.",
         ],
         list: [
-          "PHP backend architecture",
-          "API development",
-          "Database design",
-          "Content management workflows",
-          "Platform integrations",
-          "Authentication and security",
-          "Performance optimization",
-          "Scalable data management",
+          "Public API for customer flows",
+          "Admin API for content and operational management",
+          "Service layer for pricing, payments, notifications, passport activation, and media handling",
         ],
       },
       {
-        id: "content",
-        heading: "Content Workflows",
+        id: "auth",
+        heading: "Auth & Access Control",
         paragraphs: [
-          "A key part of the system was supporting tourism content in a way that remained structured, searchable, and reusable across the platform.",
-          "That meant treating destinations, experiences, and supporting travel information as connected data rather than isolated entries, which helped create a more coherent discovery experience for users.",
-          "The backend also needed to support content updates and operational workflows without introducing unnecessary friction for future platform maintenance.",
+          "Authentication is token-based, with hashed bearer tokens stored server-side and role-aware middleware protecting customer and admin routes.",
+          "The backend also supports managed account creation, password resets, and super-admin-only controls for higher-risk account actions.",
         ],
         list: [
-          "Destination and attraction data relationships",
-          "Tourism content structuring",
-          "Searchable content organization",
-          "Administrative content workflows",
-          "Reusable API response design",
+          "Bearer-token authentication",
+          "Role checks for admin and super admin access",
+          "Protected flows for profile, booking, notification, and admin management endpoints",
         ],
       },
       {
-        id: "delivery",
-        heading: "Delivery Approach",
+        id: "payments",
+        heading: "Payments And Business Rules",
         paragraphs: [
-          "My approach centered on building a backend that was practical to extend, easy to reason about, and stable enough to support a content-heavy product as it evolved.",
-          "Rather than optimizing for short-term speed alone, the work emphasized clear separation of responsibilities, reliable API behavior, and data structures that could support additional destinations, experiences, and integrations over time.",
-          "The result was a backend layer that could serve current platform needs while remaining flexible for future product expansion.",
+          "I implemented payment preparation and verification flows that connect bookings and passport purchases to provider references and local payment records.",
+          "Pricing logic is handled on the server, including passport-aware discounts and access restrictions for passport-only inventory.",
+          "Successful payment verification updates the related booking or passport purchase and triggers follow-up notification flows.",
+        ],
+        list: [
+          "Pending payment creation tied to a payable record",
+          "Server-side verification against the payment provider",
+          "Passport activation with calculated start and expiry dates",
         ],
       },
       {
-        id: "outcome",
-        heading: "Outcome",
+        id: "admin-media",
+        heading: "Admin Operations And Media Workflow",
         paragraphs: [
-          "The project delivered a stable backend foundation capable of supporting destination discovery and tourism experiences.",
-          "The work demonstrates my ability to architect and develop PHP backend systems that power content-driven digital platforms.",
-          "It also reflects my ability to think beyond isolated endpoints and build backend systems around product structure, operational clarity, and long-term maintainability.",
+          "The admin API supports destination management, homepage content updates, user management, booking oversight, passport plan management, and dashboard summaries.",
+          "For media, the backend generates signed Cloudinary upload payloads and can mirror approved image URLs into structured Cloudinary folders for homepage and destination assets.",
+          "The notification system writes in-app notifications and sends transactional emails for events like welcome flows, booking updates, managed account creation, password resets, and passport activation.",
+        ],
+        list: [
+          "Destination create, update, delete workflows",
+          "Homepage hero and featured destination management",
+          "Signed image upload support with Cloudinary",
+          "Transactional notification fan-out across email and in-app records",
         ],
       },
     ],
-    related: ["payship-fintech-platform"],
+    related: [],
   },
   "primewave-digital-services-platform": {
     slug: "primewave-digital-services-platform",
@@ -805,9 +812,15 @@ export const projectEntries = {
     ],
     tags: ["react", "php", "business-platform", "hr-tech", "consulting"],
     coverImage: {
-      src: "/images/projects/primewave/primewave-cover.jpg",
+      src: primewaveCoverImage,
       alt: "PrimeWave digital services platform",
     },
+    links: [
+      {
+        label: "Visit live platform",
+        href: "https://primewaveinc.ca/",
+      },
+    ],
     stack: primewaveProjectStack,
     toc: [
       {
@@ -899,9 +912,10 @@ export const projectEntries = {
     meta: ["React Frontend", "PHP API Backend", "In Development"],
     tags: ["react", "php", "travel-tech", "booking-platform", "marketplace"],
     coverImage: {
-      src: "/images/projects/atlanticstay/atlanticstay-cover.jpg",
+      src: placeholderCoverImage,
       alt: "Atlantic Stay booking platform",
     },
+    links: [],
     stack: atlanticStayProjectStack,
     toc: [
       {
@@ -1001,9 +1015,15 @@ export const projectEntries = {
     ],
     tags: ["react", "php", "community-platform", "education", "student-portal"],
     coverImage: {
-      src: "/images/projects/lugspace/lugspace-cover.jpg",
+      src: lugspaceCoverImage,
       alt: "LugSpace student platform",
     },
+    links: [
+      {
+        label: "Visit live platform",
+        href: "https://lugspace.org/",
+      },
+    ],
     stack: lugspaceProjectStack,
     toc: [
       {
@@ -1099,7 +1119,7 @@ export const projectEntries = {
       "React Frontend",
       "PHP API Backend",
       "Completed",
-      "Completed Jan 2025",
+      "Completed Jan 2026",
     ],
     tags: [
       "react",
@@ -1109,9 +1129,15 @@ export const projectEntries = {
       "investment-platform",
     ],
     coverImage: {
-      src: "/images/projects/excaco/excaco-cover.jpg",
+      src: excacoCoverImage,
       alt: "ExcaCo real estate platform",
     },
+    links: [
+      {
+        label: "Visit live platform",
+        href: "https://excaco.com/",
+      },
+    ],
     stack: excacoProjectStack,
     toc: [
       {
@@ -1207,13 +1233,19 @@ export const projectEntries = {
       "React Frontend",
       "PHP API Backend",
       "Completed",
-      "Completed May 2025",
+      "Completed May 2026",
     ],
     tags: ["react", "php", "civic-tech", "elections", "real-time-data"],
     coverImage: {
-      src: "/images/projects/lgsc/lgsc-cover.jpg",
+      src: lgscElectionCoverImage,
       alt: "LGSC election results platform",
     },
+    links: [
+      {
+        label: "Visit live platform",
+        href: "https://lgscelectionresults.com/",
+      },
+    ],
     stack: lgscProjectStack,
     toc: [
       {
@@ -1360,6 +1392,42 @@ export const resources = [
       "API and platform logic used for content delivery, integrations, and operational workflows.",
   },
   {
+    id: "mysql",
+    title: "mysql",
+    category: "Backend",
+    logoText: "sql",
+    logoTone: "neutral",
+    description:
+      "Relational data storage used for users, bookings, payments, destination content, passport plans, and notification records.",
+  },
+  {
+    id: "paystack",
+    title: "paystack",
+    category: "Tooling",
+    logoText: "pay",
+    logoTone: "lime",
+    description:
+      "Payment provider integration used for checkout initialization, server-side verification, and transaction reconciliation.",
+  },
+  {
+    id: "cloudinary",
+    title: "cloudinary",
+    category: "Tooling",
+    logoText: "cdn",
+    logoTone: "purple",
+    description:
+      "Media delivery workflow used for signed uploads, structured asset folders, and normalized image management.",
+  },
+  {
+    id: "zeptomail",
+    title: "zeptomail",
+    category: "Tooling",
+    logoText: "mail",
+    logoTone: "pink",
+    description:
+      "Transactional email service used for welcome flows, booking updates, password resets, and account lifecycle messaging.",
+  },
+  {
     id: "figma",
     title: "figma",
     category: "Design",
@@ -1432,6 +1500,54 @@ export const snippetCategories = [
 
 export const snippets = [
   {
+    id: "hashed-bearer-token-auth",
+    title: "Hashed bearer token authentication",
+    description:
+      "A lightweight token auth flow with server-side hashing, expiry checks, and role-aware middleware.",
+    category: "PHP",
+    projectSlug: "travel-booking-platform-backend",
+    projectTitle: "Travel Booking Platform Backend",
+    stack: ["PHP", "MySQL"],
+    highlighted: true,
+    updatedAt: "2026-06-15",
+  },
+  {
+    id: "paystack-payment-verification",
+    title: "Payment verification pipeline",
+    description:
+      "Server-side payment verification that reconciles provider status with local booking and passport purchase records.",
+    category: "PHP",
+    projectSlug: "travel-booking-platform-backend",
+    projectTitle: "Travel Booking Platform Backend",
+    stack: ["PHP", "Paystack"],
+    highlighted: true,
+    updatedAt: "2026-06-15",
+  },
+  {
+    id: "cloudinary-signed-image-uploads",
+    title: "Signed image upload payloads",
+    description:
+      "A scoped Cloudinary signing flow for homepage and destination media uploads with normalized folder and public ID rules.",
+    category: "PHP",
+    projectSlug: "travel-booking-platform-backend",
+    projectTitle: "Travel Booking Platform Backend",
+    stack: ["PHP", "Cloudinary"],
+    highlighted: false,
+    updatedAt: "2026-06-15",
+  },
+  {
+    id: "notification-fanout-dispatch",
+    title: "Notification fan-out dispatcher",
+    description:
+      "Coordinates in-app notifications and transactional email delivery from the same backend account and booking events.",
+    category: "PHP",
+    projectSlug: "travel-booking-platform-backend",
+    projectTitle: "Travel Booking Platform Backend",
+    stack: ["PHP", "ZeptoMail"],
+    highlighted: false,
+    updatedAt: "2026-06-15",
+  },
+  {
     id: "payship-transaction-status-map",
     title: "transactionStatusMap",
     description:
@@ -1476,29 +1592,6 @@ export const snippets = [
     updatedAt: "2026-06-10",
   },
   {
-    id: "tour-oduduwa-destination-query",
-    title: "buildDestinationQuery",
-    description:
-      "Builds clean destination query payloads for state, category, and keyword-based tourism discovery.",
-    category: "PHP",
-    projectSlug: "tour-oduduwa-tourism-platform",
-    projectTitle: "Tour Oduduwa",
-    stack: ["PHP", "API"],
-    highlighted: true,
-    updatedAt: "2026-06-13",
-  },
-  {
-    id: "tour-oduduwa-api-resource",
-    title: "formatApiResource",
-    description:
-      "Shapes destination and experience responses into a stable API format for frontend consumption.",
-    category: "PHP",
-    projectSlug: "tour-oduduwa-tourism-platform",
-    projectTitle: "Tour Oduduwa",
-    stack: ["PHP", "REST API"],
-    updatedAt: "2026-06-09",
-  },
-  {
     id: "lugspace-menu-focus-trap",
     title: "trapMenuFocus",
     description:
@@ -1531,7 +1624,10 @@ export const snippets = [
     stack: ["React", "Property UI"],
     updatedAt: "2026-06-08",
   },
-];
+].sort(
+  (left, right) =>
+    getContentDateSortValue(right.updatedAt) - getContentDateSortValue(left.updatedAt),
+);
 
 export const newsletterPage = {
   eyebrow: "Newsletter",
@@ -1544,9 +1640,9 @@ export const newsletterPage = {
   ],
   issues: [
     {
-      title: "Tour Oduduwa",
+      title: "Travel Booking Platform Backend",
       excerpt:
-        "Backend architecture and PHP API work for a tourism discovery platform.",
+        "Custom PHP backend workflows for auth, bookings, payments, media, and admin operations.",
     },
     {
       title: "PayShip",

@@ -3,6 +3,10 @@ import { MOTION_DURATION_MS } from './motion.js'
 export const THEME_STORAGE_KEY = 'portfolio-theme'
 export const THEME_MEDIA_QUERY = '(prefers-color-scheme: dark)'
 export const THEME_TRANSITION_DURATION_MS = MOTION_DURATION_MS.normal
+const THEME_CHROME_COLORS = {
+  light: '#ffffff',
+  dark: '#080714',
+}
 
 function isThemePreference(value) {
   return value === 'system' || value === 'light' || value === 'dark'
@@ -58,10 +62,15 @@ export function applyTheme(theme, themePreference) {
   }
 
   const root = document.documentElement
+  const themeColorMeta = document.querySelector('meta[name="theme-color"]')
 
   root.dataset.theme = theme
   root.dataset.themePreference = themePreference
   root.style.colorScheme = theme
+
+  if (themeColorMeta) {
+    themeColorMeta.setAttribute('content', THEME_CHROME_COLORS[theme] ?? THEME_CHROME_COLORS.light)
+  }
 }
 
 export function subscribeToSystemTheme(onChange) {

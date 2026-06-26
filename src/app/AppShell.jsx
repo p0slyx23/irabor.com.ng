@@ -12,6 +12,7 @@ import {
 import { SiteHeader } from '../components/organisms/SiteHeader.jsx'
 import { SiteFooter } from '../components/organisms/SiteFooter.jsx'
 import { SocialRail } from '../components/organisms/SocialRail.jsx'
+import StatusBar from '../components/atoms/StatusBar.jsx'
 import { notFoundRoute, routes } from './routes.js'
 
 function getCurrentRoute(pathname) {
@@ -49,8 +50,22 @@ export default function AppShell() {
     document.title = `${pageTitle} | ${siteBrand.name}`
   }, [pageTitle])
 
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    })
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [currentPath])
+
   return (
     <div className="site-shell" data-route={currentRoute.id}>
+      <StatusBar />
+
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>

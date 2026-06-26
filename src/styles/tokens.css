@@ -17,6 +17,9 @@
   --font-display: 'Space Mono', 'IBM Plex Mono', 'JetBrains Mono', monospace;
   --font-mono: 'SF Mono', 'IBM Plex Mono', 'JetBrains Mono', monospace;
   --line-height-global: 1.24;
+  --safe-area-top: 0px;
+  --safe-area-top: constant(safe-area-inset-top);
+  --safe-area-top: env(safe-area-inset-top);
 
   --color-background: #ffffff;
   --color-surface: #f2f2f2;
@@ -61,8 +64,8 @@
   --control-height-compact: 32px;
   --control-height-regular: 40px;
   --control-height-touch: 44px;
-  --logo-height-nav: 28px;
-  --logo-height-footer: 18px;
+  --logo-height-nav: 38px;
+  --logo-height-footer: 30px;
   --icon-glyph-sm: 14px;
   --icon-glyph-md: 18px;
   --icon-glyph-lg: 20px;

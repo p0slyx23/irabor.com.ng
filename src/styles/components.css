@@ -442,10 +442,12 @@
 .monogram-badge--sky {
   background: #cee4fb;
   color: #4577bb;
+  border: 0!important
 }
 
 .monogram-badge--darksky {
   background: #000;
+  border: 0!important
 }
 
 .monogram-badge--ice {

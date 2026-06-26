@@ -11,8 +11,8 @@ import {
   projectPosts,
 } from '../content/siteContent.js'
 import { useCurrentPath } from '../core/router.js'
-import { Button } from '../components/atoms/Button.jsx'
 import { AppLink } from '../components/atoms/AppLink.jsx'
+import { ContentImage } from '../components/atoms/ContentImage.jsx'
 import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
 import { Chip } from '../components/atoms/Chip.jsx'
 import { PageHero } from '../components/molecules/PageHero.jsx'
@@ -32,13 +32,15 @@ export function ArticlePage() {
     return <NotFoundPage />
   }
 
-  const relatedEntries = article.related
+  const relatedEntries = (article.related ?? [])
     .map((slug) =>
       isProjectRoute
         ? projectEntries[slug] ?? projectPosts.find((post) => post.slug === slug)
         : blogEntries[slug] ?? blogPosts.find((post) => post.slug === slug),
     )
     .filter(Boolean)
+  const articleLinks = (article.links ?? []).filter((link) => link?.label && link?.href)
+  const hasArticleFooter = Boolean(article.tags?.length || articleLinks.length || relatedEntries.length)
 
   return (
     <div className="page-shell page-shell--article">
@@ -55,7 +57,7 @@ export function ArticlePage() {
         <div className="article-layout__body">
           {article.coverImage ? (
             <figure className="article-cover">
-              <img alt={article.coverImage.alt} src={article.coverImage.src} />
+              <ContentImage alt={article.coverImage.alt} src={article.coverImage.src} />
             </figure>
           ) : null}
 
@@ -91,53 +93,69 @@ export function ArticlePage() {
               </section>
             ))}
           </div>
-
-          <div className="article-actions">
-            <Button size="sm" variant="secondary">
-              13733
-            </Button>
-            <Button size="sm" variant="ghost">
-              edit on github
-            </Button>
-          </div>
         </div>
       </article>
 
-      <footer className="article-footer">
-        <div className="article-footer__tags">
-          <p className="eyebrow eyebrow--compact">Tags</p>
-          <div className="chip-set">
-            {article.tags.map((tag) => (
-              <Chip key={tag} variant="outlined">
-                {tag}
-              </Chip>
-            ))}
-          </div>
-        </div>
+      {hasArticleFooter ? (
+        <footer className="article-footer">
+          {article.tags?.length || articleLinks.length ? (
+            <div className="article-footer__tags">
+              {articleLinks.length ? (
+                <div className="article-footer__actions">
+                  {articleLinks.map((link) => (
+                    <AppLink
+                      className="page-action-link"
+                      href={link.href}
+                      key={`${link.label}-${link.href}`}
+                      target={link.href.startsWith('/') ? undefined : '_blank'}
+                    >
+                      {link.label}
+                    </AppLink>
+                  ))}
+                </div>
+              ) : null}
 
-        <div className="article-related">
-          <h2 className="article-related__title">You may want to check out</h2>
-          <div className="article-related__list">
-            {relatedEntries.map((item) => (
-              <article className="article-related__item" key={item.slug ?? item.title}>
-                <h3>{item.title}</h3>
-                <p>{item.excerpt ?? item.lede}</p>
-                <AppLink
-                  className="inline-link"
-                  href={
-                    isProjectRoute
-                      ? getProjectPath(item.slug ?? getProjectSlugFromPath(currentPath))
-                      : getBlogPath(item.slug ?? getBlogSlugFromPath(currentPath))
-                  }
-                >
-                  <span>Read more</span>
-                  <ArrowRightIcon className="inline-link__icon" />
-                </AppLink>
-              </article>
-            ))}
-          </div>
-        </div>
-      </footer>
+              {article.tags?.length ? (
+                <>
+                  <p className="eyebrow eyebrow--compact">Tags</p>
+                  <div className="chip-set">
+                    {article.tags.map((tag) => (
+                      <Chip key={tag} variant="outlined">
+                        {tag}
+                      </Chip>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </div>
+          ) : null}
+
+          {relatedEntries.length ? (
+            <div className="article-related">
+              <h2 className="article-related__title">You may want to check out</h2>
+              <div className="article-related__list">
+                {relatedEntries.map((item) => (
+                  <article className="article-related__item" key={item.slug ?? item.title}>
+                    <h3>{item.title}</h3>
+                    <p>{item.excerpt ?? item.lede}</p>
+                    <AppLink
+                      className="inline-link"
+                      href={
+                        isProjectRoute
+                          ? getProjectPath(item.slug ?? getProjectSlugFromPath(currentPath))
+                          : getBlogPath(item.slug ?? getBlogSlugFromPath(currentPath))
+                      }
+                    >
+                      <span>Read more</span>
+                      <ArrowRightIcon className="inline-link__icon" />
+                    </AppLink>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </footer>
+      ) : null}
     </div>
   )
 }

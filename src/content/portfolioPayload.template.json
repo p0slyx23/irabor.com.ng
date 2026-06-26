@@ -91,6 +91,12 @@
         "src": "/images/projects/project-slug/project-cover.jpg",
         "alt": "Project cover image"
       },
+      "links": [
+        {
+          "label": "View live project",
+          "href": "https://example.com/project"
+        }
+      ],
       "stack": [
         {
           "id": "flutter",
