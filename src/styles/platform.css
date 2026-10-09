@@ -249,7 +249,7 @@
 
 .page-shell {
   display: grid;
-  gap: var(--space-64);
+  gap: var(--space-48);
 }
 
 .page-heading {
@@ -614,12 +614,13 @@
 
 .about-layout {
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-  align-items: start;
+  align-items: stretch;
 }
 
 .about-main {
   display: grid;
   gap: var(--space-24);
+  grid-template-rows: auto 1fr;
 }
 
 .about-panel {
