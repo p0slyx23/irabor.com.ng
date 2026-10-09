@@ -37,20 +37,35 @@ export function AboutPage() {
       </header>
 
       <section className="about-layout">
-        <article className="about-panel about-panel--intro">
-          {hasProfileImage ? (
-            <figure className="about-profile">
-              <img alt={siteBrand.profileImage.alt} src={siteBrand.profileImage.src} />
-            </figure>
-          ) : null}
+        <div className="about-main">
+          <article className="about-panel about-panel--intro">
+            {hasProfileImage ? (
+              <figure className="about-profile">
+                <img alt={siteBrand.profileImage.alt} src={siteBrand.profileImage.src} />
+              </figure>
+            ) : null}
 
-          <div className="about-copy">
-            <p className="about-kicker">{siteBrand.tagline}</p>
-            {aboutPage.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-        </article>
+            <div className="about-copy">
+              <p className="about-kicker">{siteBrand.tagline}</p>
+              {aboutPage.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </article>
+
+          <section className="about-grid">
+            <article className="about-panel">
+              <h2 className="section-heading">How I work</h2>
+              <ul className="about-list">
+                {aboutPage.principles.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <p className="about-availability">{aboutPage.availability}</p>
+            </article>
+
+          </section>
+        </div>
 
         <aside className="about-sidebar">
           <section className="about-panel">
@@ -72,17 +87,31 @@ export function AboutPage() {
                   <AppLink href={`mailto:${siteBrand.email}`}>{siteBrand.email}</AppLink>
                 </dd>
               </div>
+
+              <div className="about-fact">
+                <dt>Phone</dt>
+                <dd>
+                  <AppLink href={`tel:${siteBrand.phone}`}>
+                    +234 916 386 6675
+                  </AppLink>
+                </dd>
+              </div>
             </dl>
 
             <div className="about-actions">
               <AppLink className="page-action-link" href={`mailto:${siteBrand.email}`}>
                 Get in touch
               </AppLink>
-              {siteBrand.resumeUrl ? (
-                <AppLink className="page-action-link" href={siteBrand.resumeUrl} target="_blank">
-                  View resume
+              {siteBrand.resumes?.map((resume) => (
+                <AppLink
+                  className="page-action-link"
+                  href={resume.url}
+                  key={resume.url}
+                  target="_blank"
+                >
+                  {resume.label}
                 </AppLink>
-              ) : null}
+              ))}
             </div>
           </section>
 
@@ -116,16 +145,6 @@ export function AboutPage() {
               <li key={item}>{item}</li>
             ))}
           </ul>
-        </article>
-
-        <article className="about-panel">
-          <h2 className="section-heading">How I work</h2>
-          <ul className="about-list">
-            {aboutPage.principles.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <p className="about-availability">{aboutPage.availability}</p>
         </article>
       </section>
     </div>

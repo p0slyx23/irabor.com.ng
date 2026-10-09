@@ -28,7 +28,11 @@ Rules:
 16. For resources, use objects with exactly these keys: "id", "title", "category", "logoText", "logoTone", "description", and "image".
 17. For snippets, use objects with exactly these keys: "id", "title", "description", "category", "projectSlug", "projectTitle", "stack", "updatedAt", and "highlighted".
 18. For snippets, keep them tied to real projects when possible by filling "projectSlug", "projectTitle", and "stack". Make "projectSlug" match an existing project slug exactly.
-19. Use empty arrays or empty objects for sections you are not filling yet, instead of placeholder prose.
+19. For ongoing projects where you want no visible month/year in listings, set "date" to "" and use "sortDate" like "Aug 2025" to preserve ordering.
+20. For projectPosts.readTime and blogPosts.readTime, use an empty string unless you explicitly want to keep that metadata for later use.
+21. Include only the social links you want visible. The app supports "github", "mail", and "linkedin", but you do not need to include all three.
+22. If a project cover image is not ready yet, use an empty string for image.src or coverImage.src. The app will fall back to the placeholder cover.
+23. Use empty arrays or empty objects for sections you are not filling yet, instead of placeholder prose.
 ```
 
 Image rule for this project:
@@ -42,6 +46,8 @@ Image rule for this project:
 - Reference them in data as:
   - `"/images/profile/irabor-portrait.jpg"`
   - `"/images/logos/typescript.svg"`
+  - `"/images/projects/project-slug/project-cover.jpg"`
+  - `"/images/blog/post-cover.jpg"`
 
 Recommended workflow:
 

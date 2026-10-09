@@ -104,8 +104,7 @@ export function BlogPage() {
         <section className="empty-state empty-state--centered">
           <h2 className="empty-state__title">No blog posts at the moment.</h2>
           <p className="empty-state__copy">
-            Case studies are already published under Projects. Deeper notes and
-            supporting write-ups will appear here as the archive grows.
+            Case studies live under Projects. More notes will follow.
           </p>
         </section>
       )}

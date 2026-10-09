@@ -3,21 +3,16 @@
     "cycle": "Product Design + Mobile",
     "name": "your-name",
     "footerLabel": "your-name 2026",
-    "tagline": "Product Designer and Frontend Engineer",
+    "tagline": "Product Designer & Full-Stack Engineer",
     "location": "City, Country",
     "email": "hello@example.com",
-    "resumeUrl": "/files/your-name-resume.pdf",
+    "resumeUrl": "/assets/files/your-name-resume.pdf",
     "profileImage": {
       "src": "/images/profile/your-name-portrait.jpg",
       "alt": "Portrait of Your Name"
     }
   },
   "socialLinks": [
-    {
-      "label": "LinkedIn",
-      "href": "https://www.linkedin.com/in/your-handle",
-      "icon": "linkedin"
-    },
     {
       "label": "GitHub",
       "href": "https://github.com/your-handle",
@@ -58,7 +53,8 @@
       "title": "Project title",
       "category": "Case Studies",
       "date": "Jun 12, 2026",
-      "readTime": "8 min",
+      "sortDate": "",
+      "readTime": "",
       "excerpt": "Short portfolio-ready summary for the project card and listing.",
       "tags": [
         "tag-one",
@@ -159,7 +155,7 @@
       "title": "Blog post title",
       "category": "Engineering",
       "date": "Jun 14, 2026",
-      "readTime": "4 min",
+      "readTime": "",
       "excerpt": "Short editorial summary for the post listing.",
       "tags": [
         "tag-one",

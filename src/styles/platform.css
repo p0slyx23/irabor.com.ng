@@ -555,6 +555,10 @@
   gap: var(--space-24);
 }
 
+.about-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .article-related__list {
   margin-top: 1rem;
 }
@@ -613,6 +617,11 @@
   align-items: start;
 }
 
+.about-main {
+  display: grid;
+  gap: var(--space-24);
+}
+
 .about-panel {
   display: grid;
   gap: var(--space-20);
@@ -654,6 +663,10 @@
   gap: var(--space-24);
 }
 
+.about-panel--intro .about-copy {
+  grid-column: 1 / -1;
+}
+
 .about-copy p,
 .about-fact dd,
 .about-availability {
@@ -690,12 +703,17 @@
 }
 
 .about-actions {
-  grid-template-columns: repeat(2, minmax(0, max-content));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-12);
 }
 
 .about-stats {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.about-stat:last-child {
+  grid-column: 1 / -1;
 }
 
 .about-stat {
@@ -715,6 +733,7 @@
   font-size: var(--type-caption-size);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .about-list {
@@ -962,6 +981,7 @@
   .resource-card,
   .page-hero,
   .about-layout,
+  .about-grid,
   .about-panel--intro,
   .newsletter-feature,
   .newsletter-hero,

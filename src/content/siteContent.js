@@ -6,15 +6,21 @@ import payshipCoverImage from "../assets/images/projects/payship-cover.png";
 import placeholderCoverImage from "../assets/images/projects/placeholder-cover.png";
 import primewaveCoverImage from "../assets/images/projects/primewave-cover.png";
 import travelBookingCoverImage from "../assets/images/projects/travebooking-cover.png";
+import frontendResumeUrl from "../assets/files/irabor_joseph_ehis_frontend.pdf";
+import fullStackResumeUrl from "../assets/files/irabor_joseph_ehis_fullstack.pdf";
 
 export const siteBrand = {
   cycle: "Product Design + Mobile",
   name: "irabor",
   footerLabel: "irabor 2026",
-  tagline: "Product Designer & Full-Stack Engineer",
+  tagline: "Frontend & Full-Stack Developer",
   location: "Lagos, Nigeria",
   email: "irabor.art@gmail.com",
-  resumeUrl: "/assets/files/Irabor-Joseph-Ehis.pdf",
+  phone: "+2349163866675",
+  resumes: [
+    { label: "View frontend CV", url: frontendResumeUrl },
+    { label: "View full-stack CV", url: fullStackResumeUrl },
+  ],
   profileImage: {
     src: "",
     alt: "",
