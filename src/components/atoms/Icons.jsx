@@ -1,7 +1,13 @@
-import brandmarkAsset from '../../assets/brand/brandmark.svg'
+import brandmarkBlackAsset from '../../assets/brand/brandmark-black.svg'
+import brandmarkWhiteAsset from '../../assets/brand/brandmark-white.svg'
 
 export function BrandMarkIcon({ className, ...rest }) {
-  return <img alt="" aria-hidden="true" className={className} draggable="false" src={brandmarkAsset} {...rest} />
+  return (
+    <span aria-hidden="true" className={className} {...rest}>
+      <img alt="" className="brand-mark__image brand-mark__image--light" draggable="false" src={brandmarkBlackAsset} />
+      <img alt="" className="brand-mark__image brand-mark__image--dark" draggable="false" src={brandmarkWhiteAsset} />
+    </span>
+  )
 }
 
 export function MoonIcon({ className, ...rest }) {

@@ -3,9 +3,15 @@ import { MOTION_DURATION_MS } from './motion.js'
 export const THEME_STORAGE_KEY = 'portfolio-theme'
 export const THEME_MEDIA_QUERY = '(prefers-color-scheme: dark)'
 export const THEME_TRANSITION_DURATION_MS = MOTION_DURATION_MS.normal
-const THEME_CHROME_COLORS = {
-  light: '#ffffff',
-  dark: '#080714',
+const THEME_CHROME = {
+  light: {
+    color: '#ffffff',
+    appleStatusBarStyle: 'default',
+  },
+  dark: {
+    color: '#080714',
+    appleStatusBarStyle: 'black-translucent',
+  },
 }
 
 function isThemePreference(value) {
@@ -63,13 +69,21 @@ export function applyTheme(theme, themePreference) {
 
   const root = document.documentElement
   const themeColorMeta = document.querySelector('meta[name="theme-color"]')
+  const appleStatusBarMeta = document.querySelector(
+    'meta[name="apple-mobile-web-app-status-bar-style"]',
+  )
+  const themeChrome = THEME_CHROME[theme] ?? THEME_CHROME.light
 
   root.dataset.theme = theme
   root.dataset.themePreference = themePreference
   root.style.colorScheme = theme
 
   if (themeColorMeta) {
-    themeColorMeta.setAttribute('content', THEME_CHROME_COLORS[theme] ?? THEME_CHROME_COLORS.light)
+    themeColorMeta.setAttribute('content', themeChrome.color)
+  }
+
+  if (appleStatusBarMeta) {
+    appleStatusBarMeta.setAttribute('content', themeChrome.appleStatusBarStyle)
   }
 }
 
@@ -120,15 +134,6 @@ export function runThemeTransition(updateTheme, { shouldReduceMotion = false } =
     }
 
     delete root.dataset.themeTransition
-  }
-
-  if (typeof document.startViewTransition === 'function') {
-    const transition = document.startViewTransition(() => {
-      updateTheme()
-    })
-
-    transition.finished.finally(cleanup)
-    return cleanup
   }
 
   updateTheme()

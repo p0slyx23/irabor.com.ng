@@ -71,7 +71,8 @@
 .site-mobile-nav__link:focus-visible,
 .form-control:focus-visible,
 .table-shell a:focus-visible,
-.inline-link:focus-visible {
+.inline-link:focus-visible,
+.post-list__primary-link:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
@@ -230,6 +231,7 @@
 .inline-link__icon {
   width: var(--icon-size-arrow);
   height: var(--icon-size-arrow);
+  transition: transform var(--transition-fast);
 }
 
 .ui-icon--search {
@@ -270,6 +272,11 @@
 
 .inline-link:hover {
   color: var(--color-primary-hover);
+}
+
+.inline-link:hover .inline-link__icon,
+.inline-link:focus-visible .inline-link__icon {
+  transform: translateX(4px);
 }
 
 .form-label {
@@ -606,7 +613,8 @@
   .site-header__menu-button,
   .site-nav__link,
   .site-mobile-nav__link,
-  .inline-link {
+  .inline-link,
+  .inline-link__icon {
     transition: none;
   }
 

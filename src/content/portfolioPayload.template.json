@@ -3,10 +3,20 @@
     "cycle": "Product Design + Mobile",
     "name": "your-name",
     "footerLabel": "your-name 2026",
-    "tagline": "Product Designer & Full-Stack Engineer",
+    "tagline": "Frontend & Full-Stack Developer",
     "location": "City, Country",
     "email": "hello@example.com",
-    "resumeUrl": "/assets/files/your-name-resume.pdf",
+    "phone": "+234 916 386 6675",
+    "resumes": [
+      {
+        "label": "View frontend CV",
+        "url": "/assets/files/your-name-frontend-cv.pdf"
+      },
+      {
+        "label": "View full-stack CV",
+        "url": "/assets/files/your-name-full-stack-cv.pdf"
+      }
+    ],
     "profileImage": {
       "src": "/images/profile/your-name-portrait.jpg",
       "alt": "Portrait of Your Name"
@@ -93,6 +103,8 @@
           "href": "https://example.com/project"
         }
       ],
+      "screenshots": [],
+      "evidence": [],
       "stack": [
         {
           "id": "flutter",
@@ -117,6 +129,10 @@
         {
           "id": "role",
           "label": "My Role"
+        },
+        {
+          "id": "outcome",
+          "label": "Outcome"
         }
       ],
       "sections": [
@@ -137,6 +153,14 @@
           "list": [
             "List item one",
             "List item two"
+          ]
+        },
+        {
+          "id": "outcome",
+          "heading": "Outcome",
+          "paragraphs": [
+            "State the delivered result using only verified facts.",
+            "Add project evidence below when it is available; do not manufacture metrics."
           ]
         }
       ],

@@ -61,8 +61,8 @@ export function BlogPage() {
         <p className="eyebrow">Posts</p>
         <h1 className="page-heading__title">Blog</h1>
         <p className="page-heading__lede">
-          Longer-form writing, implementation notes, and post-launch reflections will
-          live here.
+          Notes from real product work, frontend implementation, and the systems behind
+          the case studies.
         </p>
       </header>
 

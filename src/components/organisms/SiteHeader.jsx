@@ -16,6 +16,7 @@ export function SiteHeader({
   themePreference,
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuMounted, setIsMenuMounted] = useState(false)
   const menuId = useId()
   const menuLabelId = useId()
   const menuPanelRef = useRef(null)
@@ -23,6 +24,11 @@ export function SiteHeader({
 
   const closeMenu = () => {
     setIsMenuOpen(false)
+  }
+
+  const openMenu = () => {
+    setIsMenuMounted(true)
+    setIsMenuOpen(true)
   }
 
   const handleMenuKeydown = useEffectEvent((event) => {
@@ -111,6 +117,20 @@ export function SiteHeader({
     }
   }, [isMenuOpen])
 
+  useEffect(() => {
+    if (isMenuOpen || !isMenuMounted) {
+      return undefined
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setIsMenuMounted(false)
+    }, 180)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [isMenuOpen, isMenuMounted])
+
   const isActivePath = (path) => {
     if (path === '/') {
       return currentPath === '/'
@@ -152,7 +172,7 @@ export function SiteHeader({
               aria-controls={menuId}
               aria-expanded={isMenuOpen}
               className="site-header__menu-button"
-              onClick={() => setIsMenuOpen((currentState) => !currentState)}
+              onClick={isMenuOpen ? closeMenu : openMenu}
               ref={menuButtonRef}
               type="button"
             >
@@ -167,8 +187,8 @@ export function SiteHeader({
         </div>
       </header>
 
-      {isMenuOpen ? (
-        <div className="site-mobile-nav" role="presentation">
+      {isMenuMounted ? (
+        <div className={cx('site-mobile-nav', isMenuOpen && 'is-open')} role="presentation">
           <button
             aria-label="Close navigation menu"
             className="site-mobile-nav__backdrop"
@@ -179,6 +199,7 @@ export function SiteHeader({
           <aside
             aria-labelledby={menuLabelId}
             aria-modal="true"
+            aria-hidden={!isMenuOpen}
             className="site-mobile-nav__panel"
             id={menuId}
             ref={menuPanelRef}
@@ -199,7 +220,7 @@ export function SiteHeader({
             </div>
 
             <nav aria-label="Mobile navigation" className="site-mobile-nav__links">
-              {navigation.map((item) => (
+              {navigation.map((item, index) => (
                 <AppLink
                   className={cx(
                     'site-mobile-nav__link',
@@ -208,6 +229,7 @@ export function SiteHeader({
                   href={item.path}
                   key={item.path}
                   onClick={closeMenu}
+                  style={{ '--menu-item-index': index }}
                 >
                   {item.label}
                 </AppLink>

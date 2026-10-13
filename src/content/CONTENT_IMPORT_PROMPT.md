@@ -7,7 +7,7 @@ Rules:
 1. Keep the exact JSON structure and keys.
 2. Do not rename keys.
 3. Do not add comments.
-4. If information is missing, use an empty string, empty array, or false instead of inventing data.
+4. If information is missing, use an empty string, empty array, or false instead of inventing data. Never invent metrics, users, revenue, performance claims, launch dates, or client outcomes.
 5. Keep copy concise and portfolio-ready.
 6. For image paths, use this format exactly: /images/folder/file-name.ext
 7. For aboutPage.paragraphs and for projectEntries.sections/blogEntries.sections, keep each paragraph as a separate string inside "paragraphs".
@@ -24,15 +24,19 @@ Rules:
 12. Keep project case studies under "projectPosts" and "projectEntries".
 13. Keep editorial writing under "blogPosts" and "blogEntries".
 14. For projectEntries.stack, use objects with exactly these keys: "id", "badge", "badgeTone", "title", "description".
-15. For projectEntries.links, use objects with exactly these keys: "label" and "href". Use an empty array if there are no project links yet.
-16. For resources, use objects with exactly these keys: "id", "title", "category", "logoText", "logoTone", "description", and "image".
-17. For snippets, use objects with exactly these keys: "id", "title", "description", "category", "projectSlug", "projectTitle", "stack", "updatedAt", and "highlighted".
-18. For snippets, keep them tied to real projects when possible by filling "projectSlug", "projectTitle", and "stack". Make "projectSlug" match an existing project slug exactly.
-19. For ongoing projects where you want no visible month/year in listings, set "date" to "" and use "sortDate" like "Aug 2025" to preserve ordering.
-20. For projectPosts.readTime and blogPosts.readTime, use an empty string unless you explicitly want to keep that metadata for later use.
-21. Include only the social links you want visible. The app supports "github", "mail", and "linkedin", but you do not need to include all three.
-22. If a project cover image is not ready yet, use an empty string for image.src or coverImage.src. The app will fall back to the placeholder cover.
-23. Use empty arrays or empty objects for sections you are not filling yet, instead of placeholder prose.
+15. For siteBrand, use "phone" as an international phone string and "resumes" as an array of objects with exactly "label" and "url". Use an empty array when no CV files are ready.
+16. For projectEntries.links, use objects with exactly these keys: "label" and "href". Include only links that work publicly, such as a live site, app-store listing, repository, or prototype. Use an empty array if there are no project links yet.
+17. For projectEntries.screenshots, use an array of objects with exactly these keys: "src", "alt", and "caption". Screenshots are optional: one strong cover image is enough until you have more. Use an empty array rather than duplicating the cover image.
+18. For projectEntries.evidence, use an array of objects with exactly these keys: "label", "value", and "detail". Include only verifiable proof such as a delivery milestone, supported platform, launch status, validated metric, or named system capability. Use an empty array when no evidence is available; never use invented numbers or placeholder evidence.
+19. Each project case study needs "overview", "challenge", "role", "solution", and "outcome" entries in both "toc" and "sections". Keep the outcome concise and factual. The outcome section should explain what was delivered and what it demonstrates, not repeat the solution list.
+20. For resources, use objects with exactly these keys: "id", "title", "category", "logoText", "logoTone", "description", and "image".
+21. For snippets, use objects with exactly these keys: "id", "title", "description", "category", "projectSlug", "projectTitle", "stack", "updatedAt", and "highlighted".
+22. For snippets, keep them tied to real projects when possible by filling "projectSlug", "projectTitle", and "stack". Make "projectSlug" match an existing project slug exactly.
+23. For ongoing projects where you want no visible month/year in listings, set "date" to "" and use "sortDate" like "Aug 2025" to preserve ordering.
+24. For projectPosts.readTime and blogPosts.readTime, use an empty string unless you explicitly want to keep that metadata for later use.
+25. Include only the social links you want visible. The app supports "github", "mail", and "linkedin", but you do not need to include all three.
+26. If a project cover image is not ready yet, use an empty string for image.src or coverImage.src. The app will fall back to the placeholder cover.
+27. Use empty arrays or empty objects for sections you are not filling yet, instead of placeholder prose.
 ```
 
 Image rule for this project:

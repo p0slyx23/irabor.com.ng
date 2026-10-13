@@ -22,27 +22,34 @@ export function HomePage() {
       </header>
 
       <section className="post-list" aria-label="Recent case studies">
-        {homeRecentProjects.map((post) => (
+        {homeRecentProjects.map((post, index) => (
           <article className="post-list__item" key={post.slug}>
             <div className="post-list__body">
-              {post.image ? (
-                <figure className="post-list__media">
-                  <ContentImage alt={post.image.alt} src={post.image.src} />
-                </figure>
-              ) : null}
+              <AppLink className="post-list__primary-link" href={getProjectPath(post.slug)}>
+                {post.image ? (
+                  <figure className="post-list__media">
+                    <ContentImage
+                      alt={post.image.alt}
+                      fetchPriority={index === 0 ? 'high' : undefined}
+                      loading={index === 0 ? 'eager' : undefined}
+                      src={post.image.src}
+                    />
+                  </figure>
+                ) : null}
 
-              <p className="post-list__meta">
-                {[post.category, formatContentDate(post.date)]
-                  .filter(Boolean)
-                  .map((item, index) => (
-                    <span key={`${post.slug}-meta-${index}`}>{item}</span>
-                  ))}
-              </p>
-              <h2 className="post-list__title">{post.title}</h2>
-              <p className="post-list__excerpt">{post.excerpt}</p>
-              <AppLink className="inline-link" href={getProjectPath(post.slug)}>
-                <span>Read more</span>
-                <ArrowRightIcon className="inline-link__icon" />
+                <p className="post-list__meta">
+                  {[post.category, formatContentDate(post.date)]
+                    .filter(Boolean)
+                    .map((item, index) => (
+                      <span key={`${post.slug}-meta-${index}`}>{item}</span>
+                    ))}
+                </p>
+                <h2 className="post-list__title">{post.title}</h2>
+                <p className="post-list__excerpt">{post.excerpt}</p>
+                <span className="inline-link">
+                  <span>Read more</span>
+                  <ArrowRightIcon className="inline-link__icon" />
+                </span>
               </AppLink>
               <ProjectStackCarousel
                 ariaLabel={`${post.title} project stack`}

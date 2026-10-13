@@ -67,24 +67,26 @@ export function ProjectsPage() {
         {visibleProjects.map((project) => (
           <article className="post-list__item" key={project.slug}>
             <div className="post-list__body">
-              {project.image ? (
-                <figure className="post-list__media">
-                  <ContentImage alt={project.image.alt} src={project.image.src} />
-                </figure>
-              ) : null}
+              <AppLink className="post-list__primary-link" href={getProjectPath(project.slug)}>
+                {project.image ? (
+                  <figure className="post-list__media">
+                    <ContentImage alt={project.image.alt} src={project.image.src} />
+                  </figure>
+                ) : null}
 
-              <p className="post-list__meta">
-                {[project.category, formatContentDate(project.date)]
-                  .filter(Boolean)
-                  .map((item, index) => (
-                    <span key={`${project.slug}-meta-${index}`}>{item}</span>
-                  ))}
-              </p>
-              <h2 className="post-list__title">{project.title}</h2>
-              <p className="post-list__excerpt">{project.excerpt}</p>
-              <AppLink className="inline-link" href={getProjectPath(project.slug)}>
-                <span>Open project</span>
-                <ArrowRightIcon className="inline-link__icon" />
+                <p className="post-list__meta">
+                  {[project.category, formatContentDate(project.date)]
+                    .filter(Boolean)
+                    .map((item, index) => (
+                      <span key={`${project.slug}-meta-${index}`}>{item}</span>
+                    ))}
+                </p>
+                <h2 className="post-list__title">{project.title}</h2>
+                <p className="post-list__excerpt">{project.excerpt}</p>
+                <span className="inline-link">
+                  <span>Open project</span>
+                  <ArrowRightIcon className="inline-link__icon" />
+                </span>
               </AppLink>
             </div>
           </article>

@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import {
   blogPosts,
   blogEntries,
@@ -16,11 +17,16 @@ import { ContentImage } from '../components/atoms/ContentImage.jsx'
 import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
 import { Chip } from '../components/atoms/Chip.jsx'
 import { PageHero } from '../components/molecules/PageHero.jsx'
+import { ArticleReadingProgress } from '../components/molecules/ArticleReadingProgress.jsx'
+import { ProjectOutcome } from '../components/molecules/ProjectOutcome.jsx'
+import { ProjectProof } from '../components/molecules/ProjectProof.jsx'
+import { ProjectSummary } from '../components/molecules/ProjectSummary.jsx'
 import { ProjectStackCarousel } from '../components/organisms/ProjectStackCarousel.jsx'
 import { TableOfContents } from '../components/organisms/TableOfContents.jsx'
 import { NotFoundPage } from './NotFoundPage.jsx'
 
 export function ArticlePage() {
+  const articleRef = useRef(null)
   const currentPath = useCurrentPath()
   const isProjectRoute =
     currentPath.startsWith('/projects/') || currentPath.startsWith('/series/')
@@ -40,10 +46,20 @@ export function ArticlePage() {
     )
     .filter(Boolean)
   const articleLinks = (article.links ?? []).filter((link) => link?.label && link?.href)
-  const hasArticleFooter = Boolean(article.tags?.length || articleLinks.length || relatedEntries.length)
+  const projectLinks = isProjectRoute ? articleLinks : []
+  const footerLinks = isProjectRoute ? [] : articleLinks
+  const hasArticleFooter = Boolean(article.tags?.length || footerLinks.length || relatedEntries.length)
+  const outcomeSection = isProjectRoute
+    ? article.sections.find((section) => section.id === 'outcome')
+    : null
+  const articleSections = outcomeSection
+    ? article.sections.filter((section) => section.id !== outcomeSection.id)
+    : article.sections
 
   return (
     <div className="page-shell page-shell--article">
+      <ArticleReadingProgress targetRef={articleRef} />
+
       <PageHero
         aside={<TableOfContents items={article.toc} />}
         className="page-hero--article"
@@ -53,11 +69,33 @@ export function ArticlePage() {
         title={article.title}
       />
 
-      <article className="article-layout">
+      <article className="article-layout" ref={articleRef}>
         <div className="article-layout__body">
+          {isProjectRoute ? <ProjectSummary meta={article.meta} stack={article.stack} /> : null}
+
+          {projectLinks.length ? (
+            <div aria-label="Project links" className="project-actions">
+              {projectLinks.map((link) => (
+                <AppLink
+                  className="page-action-link"
+                  href={link.href}
+                  key={`${link.label}-${link.href}`}
+                  target={link.href.startsWith('/') ? undefined : '_blank'}
+                >
+                  {link.label}
+                </AppLink>
+              ))}
+            </div>
+          ) : null}
+
           {article.coverImage ? (
             <figure className="article-cover">
-              <ContentImage alt={article.coverImage.alt} src={article.coverImage.src} />
+              <ContentImage
+                alt={article.coverImage.alt}
+                fetchPriority="high"
+                loading="eager"
+                src={article.coverImage.src}
+              />
             </figure>
           ) : null}
 
@@ -69,7 +107,7 @@ export function ArticlePage() {
           ) : null}
 
           <div className="article-prose">
-            {article.sections.map((section) => (
+            {articleSections.map((section) => (
               <section id={section.id} key={section.id}>
                 <h2>{section.heading}</h2>
                 {section.paragraphs.map((paragraph) => (
@@ -93,16 +131,21 @@ export function ArticlePage() {
               </section>
             ))}
           </div>
+
+          {isProjectRoute ? <ProjectOutcome meta={article.meta} section={outcomeSection} /> : null}
+          {isProjectRoute ? (
+            <ProjectProof evidence={article.evidence} screenshots={article.screenshots} />
+          ) : null}
         </div>
       </article>
 
       {hasArticleFooter ? (
         <footer className="article-footer">
-          {article.tags?.length || articleLinks.length ? (
+          {article.tags?.length || footerLinks.length ? (
             <div className="article-footer__tags">
-              {articleLinks.length ? (
+              {footerLinks.length ? (
                 <div className="article-footer__actions">
-                  {articleLinks.map((link) => (
+                  {footerLinks.map((link) => (
                     <AppLink
                       className="page-action-link"
                       href={link.href}

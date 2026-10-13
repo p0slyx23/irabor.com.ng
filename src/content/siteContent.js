@@ -1,11 +1,12 @@
 import { getContentDateSortValue } from "../core/dateFormatting.js";
-import excacoCoverImage from "../assets/images/projects/excaco-cover.png";
-import lgscElectionCoverImage from "../assets/images/projects/lgscelection-cover.png";
-import lugspaceCoverImage from "../assets/images/projects/lugspace-cover.png";
-import payshipCoverImage from "../assets/images/projects/payship-cover.png";
-import placeholderCoverImage from "../assets/images/projects/placeholder-cover.png";
-import primewaveCoverImage from "../assets/images/projects/primewave-cover.png";
-import travelBookingCoverImage from "../assets/images/projects/travebooking-cover.png";
+import excacoCoverImage from "../assets/images/projects/excaco-cover.webp";
+import lgscElectionCoverImage from "../assets/images/projects/lgscelection-cover.webp";
+import lugspaceCoverImage from "../assets/images/projects/lugspace-cover.webp";
+import payshipCoverImage from "../assets/images/projects/payship-cover.webp";
+import placeholderCoverImage from "../assets/images/projects/placeholder-cover.webp";
+import primewaveCleaningCoverImage from "../assets/images/projects/primewave-cleaning-cover.webp";
+import primewaveCoverImage from "../assets/images/projects/primewave-cover.webp";
+import travelBookingCoverImage from "../assets/images/projects/travebooking-cover.webp";
 import frontendResumeUrl from "../assets/files/irabor_joseph_ehis_frontend.pdf";
 import fullStackResumeUrl from "../assets/files/irabor_joseph_ehis_fullstack.pdf";
 
@@ -461,12 +462,48 @@ const lgscProjectStack = [
   },
 ];
 
+const primewaveCleaningProjectStack = [
+  {
+    id: "primewave-cleaning-react",
+    badge: "react",
+    badgeTone: "sky",
+    title: "react frontend",
+    description:
+      "Responsive role-based workspaces for customers, cleaners, and operations teams.",
+  },
+  {
+    id: "primewave-cleaning-php",
+    badge: "php",
+    badgeTone: "purple",
+    title: "php api workflows",
+    description:
+      "Authentication, booking, assignment, notification, and internal workflow actions.",
+  },
+  {
+    id: "primewave-cleaning-mysql",
+    badge: "sql",
+    badgeTone: "neutral",
+    title: "mysql data model",
+    description:
+      "Booking, cleaner, assignment, payment, and audit data managed in one system.",
+  },
+  {
+    id: "primewave-cleaning-mapbox",
+    badge: "map",
+    badgeTone: "green",
+    title: "mapbox location flows",
+    description:
+      "Address search and map-based location workflows through a provider-neutral adapter.",
+  },
+];
+
 const projectStacks = {
   "atlanticstay-booking-platform": atlanticStayProjectStack,
   "excaco-real-estate-platform": excacoProjectStack,
   "lgsc-election-results-platform": lgscProjectStack,
   "lugspace-student-community-platform": lugspaceProjectStack,
   "payship-fintech-platform": payshipProjectStack,
+  "primewave-cleaning-services": primewaveCleaningProjectStack,
   "primewave-digital-services-platform": primewaveProjectStack,
   "travel-booking-platform-backend": travelBookingPlatformProjectStack,
 };
@@ -478,6 +515,22 @@ export function getProjectStack(slug) {
 export const projectCategories = ["All", "Case Studies"];
 
 export const projectPosts = [
+  {
+    slug: "primewave-cleaning-services",
+    title: "Primewave Cleaning Services",
+    category: "Case Studies",
+    date: "",
+    sortDate: "",
+    readTime: "",
+    excerpt:
+      "A role-based platform for managing cleaning requests, cleaner work, and internal operations.",
+    tags: ["react", "php", "operations"],
+    featured: true,
+    image: {
+      src: primewaveCleaningCoverImage,
+      alt: "Primewave Cleaning Services interface",
+    },
+  },
   {
     slug: "primewave-digital-services-platform",
     title: "PrimeWave Digital Services Platform",
@@ -592,13 +645,101 @@ export const projectPosts = [
   },
 ].sort(
   (left, right) =>
+    Number(Boolean(right.featured)) - Number(Boolean(left.featured)) ||
     getContentDateSortValue(right.sortDate ?? right.date) -
-    getContentDateSortValue(left.sortDate ?? left.date),
+      getContentDateSortValue(left.sortDate ?? left.date),
 );
 
 export const homeRecentProjects = projectPosts.slice(0, 3);
 
 export const projectEntries = {
+  "primewave-cleaning-services": {
+    slug: "primewave-cleaning-services",
+    eyebrow: "case study",
+    title: "Primewave Cleaning Services",
+    lede: "A connected service workflow for customers, cleaners, and operations teams.",
+    meta: ["Product Design", "Full-Stack Development", "Completed"],
+    tags: ["react", "php", "mysql", "mapbox"],
+    coverImage: {
+      src: primewaveCleaningCoverImage,
+      alt: "Primewave Cleaning Services interface",
+    },
+    links: [
+      {
+        label: "Visit live platform",
+        href: "https://cleaning-service.primewaveinc.ca/",
+      },
+    ],
+    screenshots: [],
+    evidence: [
+      {
+        label: "Platform",
+        value: "Web application",
+        detail: "Built with a React frontend and PHP API layer.",
+      },
+      {
+        label: "Workflow",
+        value: "Role-based operations",
+        detail:
+          "Supports separate customer, cleaner, and operations workspaces.",
+      },
+    ],
+    stack: primewaveCleaningProjectStack,
+    toc: [
+      { id: "overview", label: "Overview" },
+      { id: "challenge", label: "Challenge" },
+      { id: "role", label: "My Role" },
+      { id: "solution", label: "Solution" },
+      { id: "outcome", label: "Outcome" },
+    ],
+    sections: [
+      {
+        id: "overview",
+        heading: "Project Overview",
+        paragraphs: [
+          "Primewave Cleaning Services is a role-based platform for managing cleaning requests from booking through assignment, service delivery, and follow-up.",
+          "The product brings customer booking, cleaner onboarding, availability, assignments, timesheets, notifications, and operations workflows into one system.",
+        ],
+      },
+      {
+        id: "challenge",
+        heading: "Challenge",
+        paragraphs: [
+          "Cleaning operations require different workflows for customers, cleaners, and internal teams.",
+          "The system needed to keep scheduling, eligibility, assignments, payments, and audit activity connected without exposing the wrong actions to the wrong role.",
+        ],
+      },
+      {
+        id: "role",
+        heading: "My Role",
+        paragraphs: [
+          "I worked across product design and full-stack implementation for the platform.",
+        ],
+        list: [
+          "Designed role-based customer, cleaner, and operations flows",
+          "Built React interfaces and PHP API workflows",
+          "Implemented scheduling, assignment, notification, and audit patterns",
+        ],
+      },
+      {
+        id: "solution",
+        heading: "Solution",
+        paragraphs: [
+          "The platform uses role-aware workspaces to separate booking, cleaner work, and internal operations.",
+          "Operations confirms service windows before assignment, while cleaner eligibility and availability support more controlled scheduling.",
+        ],
+      },
+      {
+        id: "outcome",
+        heading: "Outcome",
+        paragraphs: [
+          "The project delivers a connected workflow for booking, cleaner onboarding, availability, scheduling, assignments, and operations review.",
+          "It demonstrates product thinking across service operations, role-based access, responsive frontend work, and backend workflow design.",
+        ],
+      },
+    ],
+    related: [],
+  },
   "payship-fintech-platform": {
     slug: "payship-fintech-platform",
     eyebrow: "case study",
@@ -1340,11 +1481,184 @@ export const projectEntries = {
   },
 };
 
-export const blogCategories = ["All"];
+export const blogCategories = ["All", "Engineering", "Product", "Notes"];
 
-export const blogPosts = [];
+export const blogPosts = [
+  {
+    slug: "designing-role-based-cleaning-operations",
+    title: "Designing role-based cleaning operations",
+    category: "Product",
+    date: "",
+    readTime: "",
+    excerpt:
+      "What it takes to connect customer bookings, cleaner work, and operations oversight without blurring responsibilities.",
+    tags: ["product-design", "operations", "react", "php"],
+    featured: true,
+    image: {
+      src: primewaveCleaningCoverImage,
+      alt: "Primewave Cleaning Services platform shown across desktop and mobile",
+    },
+  },
+  {
+    slug: "making-election-results-easier-to-read",
+    title: "Making election results easier to read",
+    category: "Product",
+    date: "",
+    readTime: "",
+    excerpt:
+      "Notes from building a responsive platform for presenting changing election information with clarity.",
+    tags: ["civic-tech", "information-design", "react", "php"],
+    featured: false,
+    image: {
+      src: lgscElectionCoverImage,
+      alt: "LGSC election results platform",
+    },
+  },
+  {
+    slug: "turning-mobile-product-direction-into-flutter-ui",
+    title: "Turning mobile product direction into Flutter UI",
+    category: "Engineering",
+    date: "",
+    readTime: "",
+    excerpt:
+      "How product direction, reusable interface patterns, and native delivery came together for PayShip.",
+    tags: ["flutter", "mobile", "frontend", "fintech"],
+    featured: false,
+    image: {
+      src: payshipCoverImage,
+      alt: "PayShip native mobile product screens",
+    },
+  },
+];
 
-export const blogEntries = {};
+export const blogEntries = {
+  "designing-role-based-cleaning-operations": {
+    slug: "designing-role-based-cleaning-operations",
+    eyebrow: "Product notes",
+    title: "Designing role-based cleaning operations",
+    lede: "A service platform has to make the next action clear for customers, cleaners, and the team running operations.",
+    meta: ["Product", "Primewave Cleaning Services"],
+    tags: ["product-design", "operations", "react", "php"],
+    coverImage: {
+      src: primewaveCleaningCoverImage,
+      alt: "Primewave Cleaning Services platform shown across desktop and mobile",
+    },
+    toc: [
+      { id: "context", label: "Context" },
+      { id: "roles", label: "Different roles, different work" },
+      { id: "workflow", label: "One connected workflow" },
+    ],
+    sections: [
+      {
+        id: "context",
+        heading: "A service request is more than a booking",
+        paragraphs: [
+          "Primewave Cleaning Services brings cleaning requests from booking through assignment, service delivery, and follow-up into one connected platform.",
+          "The work includes customer booking, cleaner onboarding, availability, assignments, timesheets, notifications, and operations workflows.",
+        ],
+      },
+      {
+        id: "roles",
+        heading: "Different roles need different decisions",
+        paragraphs: [
+          "Customers need a straightforward path to request a service. Cleaners need to understand availability and assigned work. Operations teams need a dependable view of service windows, eligibility, assignments, payments, and audit activity.",
+          "Treating those roles as one generic dashboard would expose the wrong actions and make the workflow harder to trust.",
+        ],
+      },
+      {
+        id: "workflow",
+        heading: "One connected workflow, not one shared screen",
+        paragraphs: [
+          "The platform separates booking, cleaner work, and internal operations into role-aware workspaces while keeping the underlying workflow connected.",
+          "That approach lets operations confirm service windows before assignment and use cleaner eligibility and availability to support more controlled scheduling.",
+        ],
+      },
+    ],
+    related: ["making-election-results-easier-to-read"],
+  },
+  "making-election-results-easier-to-read": {
+    slug: "making-election-results-easier-to-read",
+    eyebrow: "Product notes",
+    title: "Making election results easier to read",
+    lede: "Clarity and reliability matter when a platform is responsible for presenting changing election information.",
+    meta: ["Product", "LGSC Election Results Platform"],
+    tags: ["civic-tech", "information-design", "react", "php"],
+    coverImage: { src: lgscElectionCoverImage, alt: "LGSC election results platform" },
+    toc: [
+      { id: "context", label: "Context" },
+      { id: "clarity", label: "Clarity under change" },
+      { id: "delivery", label: "The delivery model" },
+    ],
+    sections: [
+      {
+        id: "context",
+        heading: "Information people can find and understand",
+        paragraphs: [
+          "The LGSC Election Results Platform was built as a centralized location for viewing election outcomes, candidate standings, and voting progress.",
+          "The product needed to make that information accessible across desktop and mobile devices while supporting result updates and user access during high-traffic periods.",
+        ],
+      },
+      {
+        id: "clarity",
+        heading: "Clarity under change",
+        paragraphs: [
+          "Election platforms need accuracy, reliability, and a clear way to present information that changes over time.",
+          "The design focus was on readable standings, vote percentages, and progress information rather than asking visitors to interpret an overloaded dashboard.",
+        ],
+      },
+      {
+        id: "delivery",
+        heading: "The delivery model",
+        paragraphs: [
+          "React supports the responsive interface, while PHP APIs handle backend processing and data delivery.",
+          "The architecture prioritizes maintainability, scalable information presentation, and reliable platform performance.",
+        ],
+      },
+    ],
+    related: ["designing-role-based-cleaning-operations"],
+  },
+  "turning-mobile-product-direction-into-flutter-ui": {
+    slug: "turning-mobile-product-direction-into-flutter-ui",
+    eyebrow: "Engineering notes",
+    title: "Turning mobile product direction into Flutter UI",
+    lede: "Product direction only becomes useful when it can be carried into a coherent, production-ready mobile interface.",
+    meta: ["Engineering", "PayShip"],
+    tags: ["flutter", "mobile", "frontend", "fintech"],
+    coverImage: { src: payshipCoverImage, alt: "PayShip native mobile product screens" },
+    toc: [
+      { id: "context", label: "Context" },
+      { id: "translation", label: "From direction to interface" },
+      { id: "delivery", label: "Native delivery" },
+    ],
+    sections: [
+      {
+        id: "context",
+        heading: "A mobile product with connected financial flows",
+        paragraphs: [
+          "PayShip brings payments, virtual card services, digital asset transactions, and international payment experiences into one native mobile product for iOS and Android.",
+          "The interface work had to support a cohesive journey across multiple financial services rather than treating each flow as an isolated screen.",
+        ],
+      },
+      {
+        id: "translation",
+        heading: "From direction to interface",
+        paragraphs: [
+          "The work focused on translating product direction into Flutter interfaces that are clear, consistent, and ready for implementation.",
+          "Reusable patterns and careful structure matter because high-trust financial products ask people to complete important actions with confidence.",
+        ],
+      },
+      {
+        id: "delivery",
+        heading: "Native delivery",
+        paragraphs: [
+          "Flutter provided a single mobile codebase for iOS and Android delivery, while Firebase tooling supported notification touchpoints.",
+          "The resulting work demonstrates frontend implementation for a production-ready mobile product experience.",
+        ],
+      },
+    ],
+    related: ["making-election-results-easier-to-read"],
+  },
+};
 
 export function getProjectBySlug(slug) {
   return projectEntries[slug] ?? null;
@@ -1632,7 +1946,8 @@ export const snippets = [
   },
 ].sort(
   (left, right) =>
-    getContentDateSortValue(right.updatedAt) - getContentDateSortValue(left.updatedAt),
+    getContentDateSortValue(right.updatedAt) -
+    getContentDateSortValue(left.updatedAt),
 );
 
 export const newsletterPage = {
@@ -1646,13 +1961,13 @@ export const newsletterPage = {
   ],
   issues: [
     {
-      title: "Travel Booking Platform Backend",
+      title: "Designing role-based cleaning operations",
       excerpt:
-        "Custom PHP backend workflows for auth, bookings, payments, media, and admin operations.",
+        "Keeping customer, cleaner, and operations workflows connected without making responsibilities unclear.",
     },
     {
-      title: "PayShip",
-      excerpt: "The first published case study in the portfolio archive.",
+      title: "Making election results easier to read",
+      excerpt: "Building for clarity when election information changes over time.",
     },
   ],
 };
