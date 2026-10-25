@@ -154,6 +154,24 @@ function FirebaseLogo() {
   );
 }
 
+function MapboxLogo() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="monogram-badge__logo monogram-badge__logo--mapbox"
+      height="40"
+      viewBox="0 0 256 256"
+      width="40"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M128 0C57.305 0 0 57.305 0 128s57.305 128 128 128 128-57.305 128-128S198.695 0 128 0Zm60.76 159.388c-43.77 43.77-121.952 29.804-121.952 29.804S52.697 111.154 96.612 67.24c24.333-24.333 64.647-23.325 90.133 2.015 25.485 25.341 26.349 65.8 2.015 90.133Zm-46.074-84.373-12.526 25.772-25.773 12.526 25.773 12.526 12.526 25.773 12.526-25.773 25.773-12.526-25.773-12.526-12.526-25.773Z"
+        fill="#4264FB"
+      />
+    </svg>
+  )
+}
+
 function NodeLogo() {
   return (
     <svg
@@ -406,6 +424,9 @@ function renderLogoForLabel(label = "") {
     case "fb":
     case "firebase":
       return <FirebaseLogo />;
+    case "map":
+    case "mapbox":
+      return <MapboxLogo />;
     case "ts":
       return <TypeScriptLogo />;
     case "dt":

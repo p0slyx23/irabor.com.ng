@@ -465,6 +465,12 @@
   /* height: var(--icon-size-resource); */
 }
 
+.monogram-badge__logo.monogram-badge__logo--mapbox,
+.monogram-badge--lg .monogram-badge__logo.monogram-badge__logo--mapbox {
+  width: 40px;
+  height: 40px;
+}
+
 .monogram-badge--sky {
   background: #cee4fb;
   color: #4577bb;
