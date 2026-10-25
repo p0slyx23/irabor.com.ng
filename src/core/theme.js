@@ -14,6 +14,10 @@ const THEME_CHROME = {
   },
 }
 
+export function getThemeChrome(theme) {
+  return THEME_CHROME[theme] ?? THEME_CHROME.light
+}
+
 function isThemePreference(value) {
   return value === 'system' || value === 'light' || value === 'dark'
 }
@@ -72,7 +76,7 @@ export function applyTheme(theme, themePreference) {
   const appleStatusBarMeta = document.querySelector(
     'meta[name="apple-mobile-web-app-status-bar-style"]',
   )
-  const themeChrome = THEME_CHROME[theme] ?? THEME_CHROME.light
+  const themeChrome = getThemeChrome(theme)
 
   root.dataset.theme = theme
   root.dataset.themePreference = themePreference

@@ -64,7 +64,7 @@ export default function AppShell() {
 
   return (
     <div className="site-shell" data-route={currentRoute.id}>
-      <StatusBar />
+      <StatusBar theme={theme} />
 
       <a className="skip-link" href="#main-content">
         Skip to content
