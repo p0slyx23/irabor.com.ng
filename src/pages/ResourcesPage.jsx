@@ -1,11 +1,7 @@
 import { startTransition, useDeferredValue, useId, useState } from 'react'
-import { AppLink } from '../components/atoms/AppLink.jsx'
-import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
 import { MonogramBadge } from '../components/atoms/MonogramBadge.jsx'
 import { Chip } from '../components/atoms/Chip.jsx'
-import { NewsletterForm } from '../components/molecules/NewsletterForm.jsx'
 import { SearchField } from '../components/molecules/SearchField.jsx'
-import { StarCluster } from '../components/molecules/StarCluster.jsx'
 import { resourceCategories, resources } from '../content/siteContent.js'
 
 export function ResourcesPage() {
@@ -87,11 +83,6 @@ export function ResourcesPage() {
               <p className="resource-card__description">{resource.description}</p>
             </div>
 
-            <AppLink className="resource-card__action" href="/newsletter">
-              <ArrowRightIcon className="inline-link__icon" />
-              <span className="sr-only">Open {resource.title}</span>
-            </AppLink>
-
             <MonogramBadge
               className="resource-card__badge"
               imageAlt={resource.image?.alt ?? `${resource.title} logo`}
@@ -124,14 +115,15 @@ export function ResourcesPage() {
         </section>
       ) : null}
 
+      {/* Newsletter is intentionally hidden until a subscription service is connected.
       <section className="newsletter-feature">
-        {/* <StarCluster /> */}
         <NewsletterForm
           buttonLabel="Subscribe me"
           note="Occasional notes on product design, frontend systems, and the decisions behind the work in this portfolio."
           title="Newsletter"
         />
       </section>
+      */}
     </div>
   )
 }

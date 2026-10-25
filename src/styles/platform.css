@@ -280,8 +280,8 @@
 
 .site-footer {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-areas: "social brand meta";
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "brand social meta";
   align-items: center;
   width: min(var(--shell-max-width), calc(100% - (var(--site-gutter) * 2)));
   margin: 0 auto;
@@ -294,11 +294,11 @@
   grid-area: brand;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: auto;
   min-width: 18px;
   height: 20px;
-  justify-self: center;
+  justify-self: start;
   align-self: center;
 }
 

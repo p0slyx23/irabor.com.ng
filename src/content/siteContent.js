@@ -1831,6 +1831,15 @@ export const resources = [
     description:
       "Purpose-built iconography used to support product clarity across finance and platform experiences.",
   },
+  {
+    id: "mapbox",
+    title: "mapbox",
+    category: "Tooling",
+    logoText: "map",
+    logoTone: "green",
+    description:
+      "Location search and map-based address workflows used for service booking and operational planning.",
+  },
 ];
 
 export const projectsPage = {
@@ -1973,6 +1982,39 @@ export const snippets = [
     projectTitle: "ExcaCo",
     stack: ["React", "Property UI"],
     updatedAt: "2026-06-08",
+  },
+  {
+    id: "cleaning-role-workspace-routing",
+    title: "roleWorkspaceResolver",
+    description:
+      "Routes customer, cleaner, and operations users into the actions and workspaces relevant to their role.",
+    category: "React",
+    projectSlug: "primewave-cleaning-services",
+    projectTitle: "Primewave Cleaning Services",
+    stack: ["React", "Role-based UI"],
+    updatedAt: "2026-10-25",
+  },
+  {
+    id: "cleaning-assignment-eligibility",
+    title: "assignmentEligibilityCheck",
+    description:
+      "Checks cleaner eligibility and availability before operations confirms a service assignment.",
+    category: "PHP",
+    projectSlug: "primewave-cleaning-services",
+    projectTitle: "Primewave Cleaning Services",
+    stack: ["PHP", "Scheduling"],
+    updatedAt: "2026-10-25",
+  },
+  {
+    id: "cleaning-address-search-adapter",
+    title: "addressSearchAdapter",
+    description:
+      "Keeps booking address search and map-based location selection behind a provider-neutral adapter.",
+    category: "Utilities",
+    projectSlug: "primewave-cleaning-services",
+    projectTitle: "Primewave Cleaning Services",
+    stack: ["Mapbox", "Location flows"],
+    updatedAt: "2026-10-25",
   },
 ].sort(
   (left, right) =>
