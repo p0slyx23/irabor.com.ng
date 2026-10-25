@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useReducedMotionPreference } from './useReducedMotionPreference.js'
 import {
   applyTheme,
@@ -27,7 +27,7 @@ export function useThemeEngine() {
     })
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     persistThemePreference(themePreference)
 
     if (!mountedRef.current) {

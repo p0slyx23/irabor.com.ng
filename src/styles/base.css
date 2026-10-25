@@ -168,6 +168,13 @@ html[data-theme-transition='active'] *::after {
   transition-timing-function: ease;
 }
 
+/* Keep the fixed mobile chrome aligned with the toggle's new icon. */
+html[data-theme-transition='active'] .status-bar,
+html[data-theme-transition='active'] .site-header,
+html[data-theme-transition='active'] .site-mobile-nav__panel {
+  transition-duration: 0ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
