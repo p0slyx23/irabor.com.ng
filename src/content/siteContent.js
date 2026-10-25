@@ -2,6 +2,7 @@ import { getContentDateSortValue } from "../core/dateFormatting.js";
 import excacoCoverImage from "../assets/images/projects/excaco-cover.webp";
 import lgscElectionCoverImage from "../assets/images/projects/lgscelection-cover.webp";
 import lugspaceCoverImage from "../assets/images/projects/lugspace-cover.webp";
+import mapboxLogoImage from "../assets/images/mapbox-seeklogo.svg";
 import payshipCoverImage from "../assets/images/projects/payship-cover.webp";
 import placeholderCoverImage from "../assets/images/projects/placeholder-cover.webp";
 import primewaveCleaningCoverImage from "../assets/images/projects/primewave-cleaning-cover.webp";
@@ -1837,6 +1838,10 @@ export const resources = [
     category: "Tooling",
     logoText: "map",
     logoTone: "green",
+    image: {
+      src: mapboxLogoImage,
+      alt: "Mapbox logo",
+    },
     description:
       "Location search and map-based address workflows used for service booking and operational planning.",
   },
