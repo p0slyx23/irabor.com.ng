@@ -442,6 +442,10 @@
   margin-top: 0;
 }
 
+.home-experience .page-actions {
+  margin-top: var(--space-32);
+}
+
 .experience-section__heading {
   display: grid;
   gap: var(--space-12);
@@ -1509,6 +1513,7 @@
     width: auto;
     min-width: var(--control-height-touch);
     height: var(--control-height-touch);
+    justify-content: flex-start;
   }
 
   .site-header__actions .icon-button,
