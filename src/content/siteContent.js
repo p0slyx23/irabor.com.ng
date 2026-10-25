@@ -7,20 +7,20 @@ import placeholderCoverImage from "../assets/images/projects/placeholder-cover.w
 import primewaveCleaningCoverImage from "../assets/images/projects/primewave-cleaning-cover.webp";
 import primewaveCoverImage from "../assets/images/projects/primewave-cover.webp";
 import travelBookingCoverImage from "../assets/images/projects/travebooking-cover.webp";
-import frontendResumeUrl from "../assets/files/irabor_joseph_ehis_frontend.pdf";
-import fullStackResumeUrl from "../assets/files/irabor_joseph_ehis_fullstack.pdf";
+import resumeUrl from "../assets/files/resume.pdf";
+// import fullStackResumeUrl from "../assets/files/irabor_joseph_ehis_fullstack.pdf";
 
 export const siteBrand = {
   cycle: "Product Design + Mobile",
   name: "irabor",
   footerLabel: "irabor 2026",
-  tagline: "Frontend & Full-Stack Developer",
+  tagline: "Frontend Developer",
   location: "Lagos, Nigeria",
   email: "irabor.art@gmail.com",
   phone: "+2349163866675",
   resumes: [
-    { label: "View frontend CV", url: frontendResumeUrl },
-    { label: "View full-stack CV", url: fullStackResumeUrl },
+    { label: "View résumé", url: resumeUrl },
+    // { label: "View full-stack CV", url: fullStackResumeUrl },
   ],
   profileImage: {
     src: "",
@@ -57,36 +57,66 @@ export const socialLinks = [
 export const aboutPage = {
   eyebrow: "About",
   title: "About me",
-  lede: "I design and build digital products across product design, frontend engineering, mobile development, and backend systems with an emphasis on scalable architecture and production-ready execution.",
+  lede: "I design and build digital products across product design, frontend engineering, and mobile development with an emphasis on maintainable, production-ready execution.",
   paragraphs: [
     "My work sits between product design and implementation, which means I care as much about how an interface behaves in code as how it looks in a mockup.",
     "Across fintech, travel, civic, real-estate, and service platforms, I focus on building systems that stay readable, maintainable, and trustworthy as products grow.",
-    "I am most useful on teams that need product thinking, frontend execution, mobile delivery, backend architecture, and design decisions that can survive real-world constraints.",
+    "I am most useful on teams that need product thinking, frontend execution, mobile delivery, and design decisions that can survive real-world constraints.",
   ],
   capabilities: [
     "UI/UX design for product interfaces and flows",
     "Design systems and reusable component thinking",
     "Flutter-based mobile interface implementation",
     "React frontend architecture and product UI delivery",
-    "PHP-backed platform and API collaboration",
     "Accessibility-minded interaction and content structure",
-    "PHP API architecture and backend development",
-    "Database design and data modelling",
-    "Authentication and authorization systems",
-    "Backend integrations and platform workflows",
-    "Scalable application architecture",
-    "Content management and business workflow systems",
   ],
   principles: [
     "Typography and structure before ornament",
     "Reusable systems over one-off screens",
     "Interfaces that stay clear under pressure",
     "Design decisions that hold up in implementation",
-    "Backend systems should be as maintainable as interfaces",
-    "Scalable architecture over short-term fixes",
   ],
   availability:
-    "Open to product design, mobile, frontend, backend, and full-stack product collaborations where systems thinking and execution quality matter.",
+    "Open to product design, mobile, and frontend collaborations where systems thinking and execution quality matter.",
+};
+
+export const experienceSection = {
+  title: "Experience",
+  entries: [
+    {
+      id: "prime-wave-inc",
+      period: "Mar 2025 — Present",
+      title: "Engineer → Senior Engineer → Lead Engineer",
+      company: "Prime Wave Inc",
+      companyUrl: "",
+      summary:
+        "Build and ship websites, design systems, mobile apps, and cross-platform digital experiences. Lead technical architecture for CMS tools, REST APIs, continuous integration, accessibility initiatives, and developer experience.",
+      technologies: ["JavaScript", "TypeScript", "React", "WordPress", "Contentful", "Accessibility"],
+      isDemo: false,
+    },
+    {
+      id: "zoan-technology",
+      period: "Jul 2024 — Feb 2026",
+      title: "UI Engineer → Lead Engineer",
+      company: "Zoan Technology",
+      companyUrl: "",
+      summary:
+        "Developed interactive web applications with Ember and SCSS, translated Figma prototypes into responsive interfaces, and built cross-platform Flutter applications with REST API and state-management integrations.",
+      technologies: ["Ember", "SCSS", "Flutter", "Dart", "REST APIs", "Figma"],
+      isDemo: false,
+    },
+    {
+      id: "semantic",
+      period: "Nov 2021 — Jun 2022",
+      title: "Junior Engineer",
+      company: "Semantic",
+      companyUrl: "",
+      summary:
+        "Conducted unit, integration, and performance testing; deployed and maintained web applications on AWS, Azure, and on-premises infrastructure with a focus on reliability and performance.",
+      technologies: ["AWS", "Azure", "Testing", "Web Applications"],
+      isDemo: false,
+    },
+  ],
 };
 
 export function getProjectPath(slug) {

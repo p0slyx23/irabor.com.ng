@@ -127,6 +127,25 @@
   border: 0;
 }
 
+.button:not(.button--text) {
+  box-shadow: 4px 4px 0 var(--color-primary);
+}
+
+.button:not(.button--text):hover {
+  transform: translate(-1px, -1px);
+}
+
+.button:not(.button--text):active {
+  box-shadow: 0 0 0 transparent;
+  transform: translate(4px, 4px);
+}
+
+.button:disabled,
+.button[aria-disabled='true'] {
+  box-shadow: none;
+  transform: none;
+}
+
 .button--sm {
   min-height: 32px;
   padding-inline: var(--space-12);
@@ -147,7 +166,7 @@
 .button-group {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-12);
+  gap: var(--space-8);
 }
 
 .chip {
@@ -162,7 +181,7 @@
   color: var(--color-text-primary);
   font-family: var(--font-ui);
   font-size: 0.875rem;
-  font-weight: 600;
+  /* font-weight: 600; */
   cursor: pointer;
 }
 

@@ -37,6 +37,7 @@ Rules:
 25. Include only the social links you want visible. The app supports "github", "mail", and "linkedin", but you do not need to include all three.
 26. If a project cover image is not ready yet, use an empty string for image.src or coverImage.src. The app will fall back to the placeholder cover.
 27. Use empty arrays or empty objects for sections you are not filling yet, instead of placeholder prose.
+28. For experienceSection.entries, use objects with exactly these keys: "id", "period", "title", "company", "companyUrl", "summary", "technologies", and "isDemo". Use only real employment, contract, internship, or volunteer experience. Set "isDemo" to false for real entries and use an empty string when there is no company URL.
 ```
 
 Image rule for this project:

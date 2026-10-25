@@ -3,18 +3,14 @@
     "cycle": "Product Design + Mobile",
     "name": "your-name",
     "footerLabel": "your-name 2026",
-    "tagline": "Frontend & Full-Stack Developer",
+    "tagline": "Frontend Developer",
     "location": "City, Country",
     "email": "hello@example.com",
     "phone": "+234 916 386 6675",
     "resumes": [
       {
-        "label": "View frontend CV",
-        "url": "/assets/files/your-name-frontend-cv.pdf"
-      },
-      {
-        "label": "View full-stack CV",
-        "url": "/assets/files/your-name-full-stack-cv.pdf"
+        "label": "View résumé",
+        "url": "/assets/files/resume.pdf"
       }
     ],
     "profileImage": {
@@ -52,6 +48,21 @@
       "Principle two"
     ],
     "availability": "Short note on the kind of work, roles, or collaborations you are open to."
+  },
+  "experienceSection": {
+    "title": "Experience",
+    "entries": [
+      {
+        "id": "company-role-date",
+        "period": "2024 - Present",
+        "title": "Frontend Developer",
+        "company": "Company name",
+        "companyUrl": "https://example.com",
+        "summary": "Use 1-2 concise sentences describing the frontend work you owned and the product context.",
+        "technologies": ["React", "TypeScript", "Accessibility"],
+        "isDemo": false
+      }
+    ]
   },
   "projectCategories": [
     "All",

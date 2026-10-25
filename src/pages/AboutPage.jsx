@@ -1,5 +1,6 @@
 import { AppLink } from '../components/atoms/AppLink.jsx'
-import { aboutPage, projectEntries, siteBrand } from '../content/siteContent.js'
+import { ExperienceList } from '../components/organisms/ExperienceList.jsx'
+import { aboutPage, experienceSection, projectEntries, siteBrand } from '../content/siteContent.js'
 
 function getProjectStatusCounts() {
   const projects = Object.values(projectEntries)
@@ -135,6 +136,16 @@ export function AboutPage() {
             </div>
           </section>
         </aside>
+      </section>
+
+      <section aria-labelledby="experience-title" className="experience-section">
+        <header className="experience-section__heading">
+          <h2 id="experience-title" className="section-heading">
+            {experienceSection.title}
+          </h2>
+        </header>
+
+        <ExperienceList entries={experienceSection.entries} />
       </section>
 
       <section className="about-grid">

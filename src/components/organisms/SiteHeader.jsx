@@ -1,6 +1,7 @@
 import { useEffect, useEffectEvent, useId, useRef, useState } from 'react'
 import { cx } from '../../core/cx.js'
 import { AppLink } from '../atoms/AppLink.jsx'
+import { siteBrand } from '../../content/siteContent.js'
 import { BrandMarkIcon, CloseIcon, MenuIcon } from '../atoms/Icons.jsx'
 import { ThemeToggle } from '../atoms/ThemeToggle.jsx'
 
@@ -213,10 +214,17 @@ export function SiteHeader({
               <p className="sr-only" id={menuLabelId}>
                 Navigation
               </p>
-              <button className="icon-button" onClick={closeMenu} type="button">
-                <CloseIcon className="icon-button__icon" />
-                <span className="sr-only">Close navigation menu</span>
-              </button>
+              <div className="site-mobile-nav__header-actions">
+                <ThemeToggle
+                  onToggle={onToggleTheme}
+                  theme={theme}
+                  themePreference={themePreference}
+                />
+                <button className="icon-button" onClick={closeMenu} type="button">
+                  <CloseIcon className="icon-button__icon" />
+                  <span className="sr-only">Close navigation menu</span>
+                </button>
+              </div>
             </div>
 
             <nav aria-label="Mobile navigation" className="site-mobile-nav__links">
@@ -236,12 +244,16 @@ export function SiteHeader({
               ))}
             </nav>
 
-            <ThemeToggle
-              className="theme-toggle--panel"
-              onToggle={onToggleTheme}
-              theme={theme}
-              themePreference={themePreference}
-            />
+            {siteBrand.resumes?.[0] ? (
+              <AppLink
+                className="page-action-link site-mobile-nav__resume"
+                href={siteBrand.resumes[0].url}
+                onClick={closeMenu}
+                target="_blank"
+              >
+                {siteBrand.resumes[0].label}
+              </AppLink>
+            ) : null}
           </aside>
         </div>
       ) : null}
