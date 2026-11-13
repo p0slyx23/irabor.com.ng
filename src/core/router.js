@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react'
 
 const ROUTE_EVENT = 'portfolio:navigate'
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+export function withBasePath(path) {
+  if (!BASE_PATH || !path?.startsWith('/') || path.startsWith('//') || path === BASE_PATH || path.startsWith(`${BASE_PATH}/`)) return path
+  return `${BASE_PATH}${path}`
+}
 
 export function normalizePath(pathname = '/') {
+  if (BASE_PATH && (pathname === BASE_PATH || pathname.startsWith(`${BASE_PATH}/`))) pathname = pathname.slice(BASE_PATH.length) || '/'
   if (!pathname || pathname === '/') {
     return '/'
   }
@@ -24,7 +31,7 @@ export function navigateTo(pathname, { replace = false } = {}) {
   }
 
   const method = replace ? 'replaceState' : 'pushState'
-  window.history[method]({}, '', nextPath)
+  window.history[method]({}, '', withBasePath(nextPath))
   window.dispatchEvent(new Event(ROUTE_EVENT))
   window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
 }

@@ -32,7 +32,15 @@ Most portfolio content lives in [src/content/siteContent.js](./src/content/siteC
 
 Place a replacement resume in `src/assets/files/resume.pdf`. Project covers and other image assets live under `src/assets/images/`.
 
-## Scripts
+## V1 live archive
+
+This branch preserves Portfolio V1. Its live archive is hosted at [GitHub Pages](https://p0slyx23.github.io/irabor.com.ng/).
+
+Run `npm run build:github-pages` after changing V1, then commit the updated source and `docs` output. GitHub Pages publishes the `v1` branch's `/docs` directory. The build uses `/irabor.com.ng/` as its base path and includes a `404.html` fallback for direct project links.
+
+Portfolio V2 is maintained on `v2` and deployed through Vercel. `main` remains the primary repository branch.
+
+## Commands
 
 | Command | Purpose |
 | --- | --- |

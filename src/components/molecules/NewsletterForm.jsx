@@ -5,7 +5,6 @@ import { Button } from '../atoms/Button.jsx'
 export function NewsletterForm({
   buttonLabel = 'Join newsletter',
   className,
-  eyebrow = 'Newsletter',
   note = 'One useful issue when something worth reading is actually ready.',
   title = 'Stay in the loop without subscribing to noise.',
 }) {

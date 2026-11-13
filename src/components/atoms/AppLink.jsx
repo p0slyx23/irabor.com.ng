@@ -1,4 +1,4 @@
-import { navigateTo } from '../../core/router.js'
+import { navigateTo, withBasePath } from '../../core/router.js'
 import { cx } from '../../core/cx.js'
 
 function shouldIntercept(event, href, target) {
@@ -35,7 +35,7 @@ export function AppLink({
   return (
     <a
       className={cx(className)}
-      href={href}
+      href={withBasePath(href)}
       onClick={handleClick}
       rel={rel ?? (target === '_blank' ? 'noreferrer' : undefined)}
       target={target}
