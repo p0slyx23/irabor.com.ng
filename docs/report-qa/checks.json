@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-11-13T11:45:44.640Z",
+  "checks": [
+    {
+      "name": "Five distinct concept sections",
+      "passed": true
+    },
+    {
+      "name": "Embedded images decode",
+      "passed": true
+    },
+    {
+      "name": "Internal links resolve",
+      "passed": true
+    },
+    {
+      "name": "Desktop has no page overflow",
+      "passed": true
+    },
+    {
+      "name": "Project selection updates preview",
+      "passed": true
+    },
+    {
+      "name": "Workshop loading state",
+      "passed": true
+    },
+    {
+      "name": "Workshop error state",
+      "passed": true
+    },
+    {
+      "name": "Workshop empty state",
+      "passed": true
+    },
+    {
+      "name": "Workshop ready state",
+      "passed": true
+    },
+    {
+      "name": "Atlas explains API boundary",
+      "passed": true
+    },
+    {
+      "name": "Gallery advances",
+      "passed": true
+    },
+    {
+      "name": "Gallery returns",
+      "passed": true
+    },
+    {
+      "name": "Search narrows to matching note",
+      "passed": true
+    },
+    {
+      "name": "Search has honest empty state",
+      "passed": true
+    },
+    {
+      "name": "Reduced motion disables replay",
+      "passed": true
+    },
+    {
+      "name": "Narrow preview mode",
+      "passed": true
+    },
+    {
+      "name": "Phone has no page overflow",
+      "passed": true
+    },
+    {
+      "name": "Print hides sticky toolbar",
+      "passed": true
+    }
+  ],
+  "note": "Browser QA for this standalone report, not an audit of the deployed portfolio."
+}

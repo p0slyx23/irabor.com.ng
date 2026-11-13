@@ -1,0 +1,141 @@
+{
+  "checks": [
+    {
+      "name": "Report preview loaded",
+      "passed": true
+    },
+    {
+      "name": "No desktop overflow",
+      "passed": true
+    },
+    {
+      "name": "Report selects direction 2",
+      "passed": true
+    },
+    {
+      "name": "Current comparison visible",
+      "passed": true
+    },
+    {
+      "name": "Report controls affect preview",
+      "passed": true
+    },
+    {
+      "name": "No phone report overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 1 at 1440px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 1 images load at 1440px",
+      "passed": true
+    },
+    {
+      "name": "Direction 2 at 1440px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 2 images load at 1440px",
+      "passed": true
+    },
+    {
+      "name": "Direction 3 at 1440px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 3 images load at 1440px",
+      "passed": true
+    },
+    {
+      "name": "Direction 4 at 1440px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 4 images load at 1440px",
+      "passed": true
+    },
+    {
+      "name": "Direction 5 at 1440px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 5 images load at 1440px",
+      "passed": true
+    },
+    {
+      "name": "Direction 1 at 390px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 1 images load at 390px",
+      "passed": true
+    },
+    {
+      "name": "Direction 2 at 390px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 2 images load at 390px",
+      "passed": true
+    },
+    {
+      "name": "Direction 3 at 390px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 3 images load at 390px",
+      "passed": true
+    },
+    {
+      "name": "Direction 4 at 390px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 4 images load at 390px",
+      "passed": true
+    },
+    {
+      "name": "Direction 5 at 390px has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Direction 5 images load at 390px",
+      "passed": true
+    },
+    {
+      "name": "Project index selects actual case",
+      "passed": true
+    },
+    {
+      "name": "Project detail opens with correct content",
+      "passed": true
+    },
+    {
+      "name": "Escape closes detail",
+      "passed": true
+    },
+    {
+      "name": "Mobile filter shows only PayShip",
+      "passed": true
+    },
+    {
+      "name": "Menu and header theme stay synchronized",
+      "passed": true
+    },
+    {
+      "name": "Status strip shares theme background",
+      "passed": true
+    },
+    {
+      "name": "Menu closes and restores focus",
+      "passed": true
+    },
+    {
+      "name": "Reduced motion removes transitions",
+      "passed": true
+    }
+  ],
+  "note": "Local prototype/report checks, not a physical-device or production audit."
+}
