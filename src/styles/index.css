@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
-
 @import './tokens.css';
 @import './base.css';
 @import './components.css';
 @import './platform.css';
+@import './portfolio.css';
+@import './profile.css';

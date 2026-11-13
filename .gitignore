@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Reproducible local browser review captures and check output
+.impeccable/review/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

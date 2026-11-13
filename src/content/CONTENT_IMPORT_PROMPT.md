@@ -1,5 +1,11 @@
 Use this prompt with ChatGPT when you want your real portfolio data arranged into the app's structure:
 
+The published portfolio follows About, Experience, and Projects. Its introduction
+and About copy come from `profileContent`. Work history comes from
+`experienceSection`, and the project rows link to `projectEntries` case studies.
+Fill those fields first. Keep writing, resource, and snippet payloads empty for
+this three-section portfolio.
+
 ```text
 Fill the attached JSON payload for my portfolio website.
 
@@ -38,6 +44,7 @@ Rules:
 26. If a project cover image is not ready yet, use an empty string for image.src or coverImage.src. The app will fall back to the placeholder cover.
 27. Use empty arrays or empty objects for sections you are not filling yet, instead of placeholder prose.
 28. For experienceSection.entries, use objects with exactly these keys: "id", "period", "title", "company", "companyUrl", "summary", "technologies", and "isDemo". Use only real employment, contract, internship, or volunteer experience. Set "isDemo" to false for real entries and use an empty string when there is no company URL.
+29. For profileContent, use exactly "name", "introduction", and "about". Keep the introduction to one short sentence. Use an array of separate paragraph strings for "about", grounded in the supplied résumé and projects. Keep earlier roles in experienceSection.title in chronological order, separated by " → ", so the latest role is presented first in the interface.
 ```
 
 Image rule for this project:

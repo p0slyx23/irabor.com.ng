@@ -79,7 +79,7 @@
 
 .button:hover,
 .chip:hover,
-.icon-button:hover,
+.icon-button:not(.theme-toggle):hover,
 .social-link:hover,
 .site-header__menu-button:hover {
   transform: translateY(-1px);
@@ -645,7 +645,7 @@
 
   .button:hover,
   .chip:hover,
-  .icon-button:hover,
+  .icon-button:not(.theme-toggle):hover,
   .social-link:hover,
   .site-header__menu-button:hover {
     transform: none;

@@ -1,0 +1,604 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T14:43:11.350Z",
+  "title": "Design System — Irabor",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Primary",
+        "tonalRamp": [
+          "oklch(15% 0.2277 308.77)",
+          "oklch(25% 0.2277 308.77)",
+          "oklch(37% 0.2277 308.77)",
+          "oklch(49% 0.2277 308.77)",
+          "oklch(61% 0.2277 308.77)",
+          "oklch(73% 0.2277 308.77)",
+          "oklch(85% 0.2277 308.77)",
+          "oklch(95% 0.2277 308.77)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Primary Hover",
+        "tonalRamp": [
+          "oklch(15% 0.1928 313.35)",
+          "oklch(25% 0.1928 313.35)",
+          "oklch(37% 0.1928 313.35)",
+          "oklch(49% 0.1928 313.35)",
+          "oklch(61% 0.1928 313.35)",
+          "oklch(73% 0.1928 313.35)",
+          "oklch(85% 0.1928 313.35)",
+          "oklch(95% 0.1928 313.35)"
+        ]
+      },
+      "primary-active": {
+        "role": "primary",
+        "displayName": "Primary Active",
+        "tonalRamp": [
+          "oklch(15% 0.1166 310.70)",
+          "oklch(25% 0.1166 310.70)",
+          "oklch(37% 0.1166 310.70)",
+          "oklch(49% 0.1166 310.70)",
+          "oklch(61% 0.1166 310.70)",
+          "oklch(73% 0.1166 310.70)",
+          "oklch(85% 0.1166 310.70)",
+          "oklch(95% 0.1166 310.70)"
+        ]
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "Primary Dark",
+        "tonalRamp": [
+          "oklch(15% 0.2289 349.82)",
+          "oklch(25% 0.2289 349.82)",
+          "oklch(37% 0.2289 349.82)",
+          "oklch(49% 0.2289 349.82)",
+          "oklch(61% 0.2289 349.82)",
+          "oklch(73% 0.2289 349.82)",
+          "oklch(85% 0.2289 349.82)",
+          "oklch(95% 0.2289 349.82)"
+        ]
+      },
+      "primary-hover-dark": {
+        "role": "primary",
+        "displayName": "Primary Hover Dark",
+        "tonalRamp": [
+          "oklch(15% 0.1546 346.19)",
+          "oklch(25% 0.1546 346.19)",
+          "oklch(37% 0.1546 346.19)",
+          "oklch(49% 0.1546 346.19)",
+          "oklch(61% 0.1546 346.19)",
+          "oklch(73% 0.1546 346.19)",
+          "oklch(85% 0.1546 346.19)",
+          "oklch(95% 0.1546 346.19)"
+        ]
+      },
+      "primary-active-dark": {
+        "role": "primary",
+        "displayName": "Primary Active Dark",
+        "tonalRamp": [
+          "oklch(15% 0.2480 357.19)",
+          "oklch(25% 0.2480 357.19)",
+          "oklch(37% 0.2480 357.19)",
+          "oklch(49% 0.2480 357.19)",
+          "oklch(61% 0.2480 357.19)",
+          "oklch(73% 0.2480 357.19)",
+          "oklch(85% 0.2480 357.19)",
+          "oklch(95% 0.2480 357.19)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Background",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "text-primary": {
+        "role": "neutral",
+        "displayName": "Text Primary",
+        "tonalRamp": [
+          "oklch(15% 0.0228 305.18)",
+          "oklch(25% 0.0228 305.18)",
+          "oklch(37% 0.0228 305.18)",
+          "oklch(49% 0.0228 305.18)",
+          "oklch(61% 0.0228 305.18)",
+          "oklch(73% 0.0228 305.18)",
+          "oklch(85% 0.0228 305.18)",
+          "oklch(95% 0.0228 305.18)"
+        ]
+      },
+      "text-secondary": {
+        "role": "neutral",
+        "displayName": "Text Secondary",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border",
+        "tonalRamp": [
+          "oklch(15% 0 0 / 0.22)",
+          "oklch(25% 0 0 / 0.22)",
+          "oklch(37% 0 0 / 0.22)",
+          "oklch(49% 0 0 / 0.22)",
+          "oklch(61% 0 0 / 0.22)",
+          "oklch(73% 0 0 / 0.22)",
+          "oklch(85% 0 0 / 0.22)",
+          "oklch(95% 0 0 / 0.22)"
+        ]
+      },
+      "border-strong": {
+        "role": "neutral",
+        "displayName": "Border Strong",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "row-hover": {
+        "role": "neutral",
+        "displayName": "Row Hover",
+        "tonalRamp": [
+          "oklch(15% 0.1928 313.35 / 0.09)",
+          "oklch(25% 0.1928 313.35 / 0.09)",
+          "oklch(37% 0.1928 313.35 / 0.09)",
+          "oklch(49% 0.1928 313.35 / 0.09)",
+          "oklch(61% 0.1928 313.35 / 0.09)",
+          "oklch(73% 0.1928 313.35 / 0.09)",
+          "oklch(85% 0.1928 313.35 / 0.09)",
+          "oklch(95% 0.1928 313.35 / 0.09)"
+        ]
+      },
+      "background-dark": {
+        "role": "neutral",
+        "displayName": "Background Dark",
+        "tonalRamp": [
+          "oklch(15% 0.0287 286.07)",
+          "oklch(25% 0.0287 286.07)",
+          "oklch(37% 0.0287 286.07)",
+          "oklch(49% 0.0287 286.07)",
+          "oklch(61% 0.0287 286.07)",
+          "oklch(73% 0.0287 286.07)",
+          "oklch(85% 0.0287 286.07)",
+          "oklch(95% 0.0287 286.07)"
+        ]
+      },
+      "surface-dark": {
+        "role": "neutral",
+        "displayName": "Surface Dark",
+        "tonalRamp": [
+          "oklch(15% 0.0329 294.20)",
+          "oklch(25% 0.0329 294.20)",
+          "oklch(37% 0.0329 294.20)",
+          "oklch(49% 0.0329 294.20)",
+          "oklch(61% 0.0329 294.20)",
+          "oklch(73% 0.0329 294.20)",
+          "oklch(85% 0.0329 294.20)",
+          "oklch(95% 0.0329 294.20)"
+        ]
+      },
+      "text-primary-dark": {
+        "role": "neutral",
+        "displayName": "Text Primary Dark",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "text-secondary-dark": {
+        "role": "neutral",
+        "displayName": "Text Secondary Dark",
+        "tonalRamp": [
+          "oklch(15% 0.0370 303.07)",
+          "oklch(25% 0.0370 303.07)",
+          "oklch(37% 0.0370 303.07)",
+          "oklch(49% 0.0370 303.07)",
+          "oklch(61% 0.0370 303.07)",
+          "oklch(73% 0.0370 303.07)",
+          "oklch(85% 0.0370 303.07)",
+          "oklch(95% 0.0370 303.07)"
+        ]
+      },
+      "border-dark": {
+        "role": "neutral",
+        "displayName": "Border Dark",
+        "tonalRamp": [
+          "oklch(15% 0 0 / 0.16)",
+          "oklch(25% 0 0 / 0.16)",
+          "oklch(37% 0 0 / 0.16)",
+          "oklch(49% 0 0 / 0.16)",
+          "oklch(61% 0 0 / 0.16)",
+          "oklch(73% 0 0 / 0.16)",
+          "oklch(85% 0 0 / 0.16)",
+          "oklch(95% 0 0 / 0.16)"
+        ]
+      },
+      "border-strong-dark": {
+        "role": "neutral",
+        "displayName": "Border Strong Dark",
+        "tonalRamp": [
+          "oklch(15% 0 0 / 0.66)",
+          "oklch(25% 0 0 / 0.66)",
+          "oklch(37% 0 0 / 0.66)",
+          "oklch(49% 0 0 / 0.66)",
+          "oklch(61% 0 0 / 0.66)",
+          "oklch(73% 0 0 / 0.66)",
+          "oklch(85% 0 0 / 0.66)",
+          "oklch(95% 0 0 / 0.66)"
+        ]
+      },
+      "row-hover-dark": {
+        "role": "neutral",
+        "displayName": "Row Hover Dark",
+        "tonalRamp": [
+          "oklch(15% 0.2289 349.82 / 0.12)",
+          "oklch(25% 0.2289 349.82 / 0.12)",
+          "oklch(37% 0.2289 349.82 / 0.12)",
+          "oklch(49% 0.2289 349.82 / 0.12)",
+          "oklch(61% 0.2289 349.82 / 0.12)",
+          "oklch(73% 0.2289 349.82 / 0.12)",
+          "oklch(85% 0.2289 349.82 / 0.12)",
+          "oklch(95% 0.2289 349.82 / 0.12)"
+        ]
+      },
+      "nav-glass-surface": {
+        "role": "neutral",
+        "displayName": "Nav Glass Surface",
+        "tonalRamp": [
+          "oklch(15% 0 0 / 0.7)",
+          "oklch(25% 0 0 / 0.7)",
+          "oklch(37% 0 0 / 0.7)",
+          "oklch(49% 0 0 / 0.7)",
+          "oklch(61% 0 0 / 0.7)",
+          "oklch(73% 0 0 / 0.7)",
+          "oklch(85% 0 0 / 0.7)",
+          "oklch(95% 0 0 / 0.7)"
+        ]
+      },
+      "nav-glass-border": {
+        "role": "neutral",
+        "displayName": "Nav Glass Border",
+        "tonalRamp": [
+          "oklch(15% 0.0639 309.68 / 0.17)",
+          "oklch(25% 0.0639 309.68 / 0.17)",
+          "oklch(37% 0.0639 309.68 / 0.17)",
+          "oklch(49% 0.0639 309.68 / 0.17)",
+          "oklch(61% 0.0639 309.68 / 0.17)",
+          "oklch(73% 0.0639 309.68 / 0.17)",
+          "oklch(85% 0.0639 309.68 / 0.17)",
+          "oklch(95% 0.0639 309.68 / 0.17)"
+        ]
+      },
+      "nav-glass-highlight": {
+        "role": "neutral",
+        "displayName": "Nav Glass Highlight",
+        "tonalRamp": [
+          "oklch(15% 0 0 / 0.9)",
+          "oklch(25% 0 0 / 0.9)",
+          "oklch(37% 0 0 / 0.9)",
+          "oklch(49% 0 0 / 0.9)",
+          "oklch(61% 0 0 / 0.9)",
+          "oklch(73% 0 0 / 0.9)",
+          "oklch(85% 0 0 / 0.9)",
+          "oklch(95% 0 0 / 0.9)"
+        ]
+      },
+      "nav-glass-hover": {
+        "role": "neutral",
+        "displayName": "Nav Glass Hover",
+        "tonalRamp": [
+          "oklch(15% 0.2277 308.77 / 0.07)",
+          "oklch(25% 0.2277 308.77 / 0.07)",
+          "oklch(37% 0.2277 308.77 / 0.07)",
+          "oklch(49% 0.2277 308.77 / 0.07)",
+          "oklch(61% 0.2277 308.77 / 0.07)",
+          "oklch(73% 0.2277 308.77 / 0.07)",
+          "oklch(85% 0.2277 308.77 / 0.07)",
+          "oklch(95% 0.2277 308.77 / 0.07)"
+        ]
+      },
+      "nav-glass-surface-dark": {
+        "role": "neutral",
+        "displayName": "Nav Glass Surface Dark",
+        "tonalRamp": [
+          "oklch(15% 0.0277 293.50 / 0.76)",
+          "oklch(25% 0.0277 293.50 / 0.76)",
+          "oklch(37% 0.0277 293.50 / 0.76)",
+          "oklch(49% 0.0277 293.50 / 0.76)",
+          "oklch(61% 0.0277 293.50 / 0.76)",
+          "oklch(73% 0.0277 293.50 / 0.76)",
+          "oklch(85% 0.0277 293.50 / 0.76)",
+          "oklch(95% 0.0277 293.50 / 0.76)"
+        ]
+      },
+      "nav-glass-border-dark": {
+        "role": "neutral",
+        "displayName": "Nav Glass Border Dark",
+        "tonalRamp": [
+          "oklch(15% 0 0 / 0.19)",
+          "oklch(25% 0 0 / 0.19)",
+          "oklch(37% 0 0 / 0.19)",
+          "oklch(49% 0 0 / 0.19)",
+          "oklch(61% 0 0 / 0.19)",
+          "oklch(73% 0 0 / 0.19)",
+          "oklch(85% 0 0 / 0.19)",
+          "oklch(95% 0 0 / 0.19)"
+        ]
+      },
+      "nav-glass-highlight-dark": {
+        "role": "neutral",
+        "displayName": "Nav Glass Highlight Dark",
+        "tonalRamp": [
+          "oklch(15% 0 0 / 0.13)",
+          "oklch(25% 0 0 / 0.13)",
+          "oklch(37% 0 0 / 0.13)",
+          "oklch(49% 0 0 / 0.13)",
+          "oklch(61% 0 0 / 0.13)",
+          "oklch(73% 0 0 / 0.13)",
+          "oklch(85% 0 0 / 0.13)",
+          "oklch(95% 0 0 / 0.13)"
+        ]
+      },
+      "nav-glass-hover-dark": {
+        "role": "neutral",
+        "displayName": "Nav Glass Hover Dark",
+        "tonalRamp": [
+          "oklch(15% 0 0 / 0.09)",
+          "oklch(25% 0 0 / 0.09)",
+          "oklch(37% 0 0 / 0.09)",
+          "oklch(49% 0 0 / 0.09)",
+          "oklch(61% 0 0 / 0.09)",
+          "oklch(73% 0 0 / 0.09)",
+          "oklch(85% 0 0 / 0.09)",
+          "oklch(95% 0 0 / 0.09)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Profile name",
+        "purpose": "Personal identity heading in the Inter profile."
+      },
+      "title": {
+        "displayName": "Profile titles",
+        "purpose": "Compact experience and project titles."
+      },
+      "body": {
+        "displayName": "Profile body",
+        "purpose": "About paragraphs and profile reading flow."
+      },
+      "label": {
+        "displayName": "Section labels",
+        "purpose": "Uppercase About, Experience, and Projects headings."
+      },
+      "ui": {
+        "displayName": "Navigation",
+        "purpose": "Manrope labels in the fixed shell."
+      },
+      "case-study-display": {
+        "displayName": "Case-study display",
+        "purpose": "Manrope article hero titles."
+      }
+    },
+    "shadows": [
+      {
+        "name": "navigation-light",
+        "value": "0 6px 22px rgba(33, 16, 51, 0.07)",
+        "purpose": "Diffuse shadow beneath floating light-theme controls."
+      },
+      {
+        "name": "navigation-dark",
+        "value": "0 8px 26px rgba(0, 0, 0, 0.2)",
+        "purpose": "Diffuse shadow beneath floating dark-theme controls."
+      },
+      {
+        "name": "button-offset",
+        "value": "4px 4px 0 var(--color-primary)",
+        "purpose": "Shared supporting button depth before press."
+      }
+    ],
+    "motion": [
+      {
+        "name": "transition-fast",
+        "value": "140ms ease",
+        "purpose": "Shared control state changes."
+      },
+      {
+        "name": "transition-normal",
+        "value": "220ms ease",
+        "purpose": "Theme transitions."
+      },
+      {
+        "name": "page-enter",
+        "value": "280ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Non-home route entrance with 8px upward movement. The home route renders directly to keep section anchors stable."
+      },
+      {
+        "name": "profile-arrow",
+        "value": "180ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Small directional arrow movement."
+      },
+      {
+        "name": "row-hover",
+        "value": "180ms ease",
+        "purpose": "Compact project hover fill."
+      },
+      {
+        "name": "mobile-panel-enter",
+        "value": "260ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Mobile navigation panel entrance."
+      },
+      {
+        "name": "mobile-panel-exit",
+        "value": "140ms ease",
+        "purpose": "Mobile navigation panel exit."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "profile-intermediate",
+        "value": "1100px"
+      },
+      {
+        "name": "profile-stack-and-mobile-navigation",
+        "value": "900px"
+      },
+      {
+        "name": "fixed-mobile-gutters",
+        "value": "720px"
+      },
+      {
+        "name": "compact-profile-rows",
+        "value": "540px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Shared accent-filled action for supporting pages.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\">Back to home</button>",
+      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid transparent;border-radius:var(--radius-4,4px);background:transparent;color:var(--color-text-primary,#19141f);font-family:var(--font-ui,Manrope,sans-serif);font-size:.9375rem;font-weight:600;cursor:pointer;box-shadow:4px 4px 0 var(--color-primary,#7901b1);transition:color 140ms ease,background-color 140ms ease,border-color 140ms ease,box-shadow 140ms ease,transform 140ms ease}.ds-button-primary:hover{transform:translate(-1px,-1px)}.ds-button-primary:active{box-shadow:0 0 0 transparent;transform:translate(4px,4px)}.ds-button-primary:focus-visible{outline:2px solid var(--color-primary,#7901b1);outline-offset:3px}.ds-button-primary:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}.ds-button-primary{background:var(--color-primary,#7901b1);color:var(--color-on-primary,#fff)}.ds-button-primary:hover{background:var(--color-primary-hover,#9a46c1)}.ds-button-primary:active{background:var(--color-primary-active,#2e0044)}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Shared action with a strong outline and offset accent shadow.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">View project</button>",
+      "css": ".ds-button-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid transparent;border-radius:var(--radius-4,4px);background:transparent;color:var(--color-text-primary,#19141f);font-family:var(--font-ui,Manrope,sans-serif);font-size:.9375rem;font-weight:600;cursor:pointer;box-shadow:4px 4px 0 var(--color-primary,#7901b1);transition:color 140ms ease,background-color 140ms ease,border-color 140ms ease,box-shadow 140ms ease,transform 140ms ease}.ds-button-secondary:hover{transform:translate(-1px,-1px)}.ds-button-secondary:active{box-shadow:0 0 0 transparent;transform:translate(4px,4px)}.ds-button-secondary:focus-visible{outline:2px solid var(--color-primary,#7901b1);outline-offset:3px}.ds-button-secondary:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}.ds-button-secondary{border-color:var(--color-border-strong,#3f3f3f)}.ds-button-secondary:hover{border-color:var(--color-primary,#7901b1);color:var(--color-primary,#7901b1)}"
+    },
+    {
+      "name": "Ghost button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Shared transparent action with a subtle outline.",
+      "html": "<button class=\"ds-button-ghost\" type=\"button\">View all projects</button>",
+      "css": ".ds-button-ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid transparent;border-radius:var(--radius-4,4px);background:transparent;color:var(--color-text-primary,#19141f);font-family:var(--font-ui,Manrope,sans-serif);font-size:.9375rem;font-weight:600;cursor:pointer;box-shadow:4px 4px 0 var(--color-primary,#7901b1);transition:color 140ms ease,background-color 140ms ease,border-color 140ms ease,box-shadow 140ms ease,transform 140ms ease}.ds-button-ghost:hover{transform:translate(-1px,-1px)}.ds-button-ghost:active{box-shadow:0 0 0 transparent;transform:translate(4px,4px)}.ds-button-ghost:focus-visible{outline:2px solid var(--color-primary,#7901b1);outline-offset:3px}.ds-button-ghost:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}.ds-button-ghost{border-color:var(--color-border,rgba(63,63,63,.22))}.ds-button-ghost:hover{border-color:var(--color-primary,#7901b1);color:var(--color-primary,#7901b1)}"
+    },
+    {
+      "name": "Text button",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Unboxed action from the shared Button variant set.",
+      "html": "<button class=\"ds-button-text\" type=\"button\">Read more</button>",
+      "css": ".ds-button-text{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0;min-height:auto;border:0;border-radius:var(--radius-4,4px);background:transparent;color:var(--color-text-primary,#19141f);font-family:var(--font-ui,Manrope,sans-serif);font-size:.9375rem;font-weight:600;cursor:pointer;transition:color 140ms ease,transform 140ms ease}.ds-button-text:hover{transform:translateY(-1px)}.ds-button-text:focus-visible{outline:2px solid var(--color-primary,#7901b1);outline-offset:3px}.ds-button-text:disabled{opacity:.5;cursor:not-allowed;transform:none}"
+    },
+    {
+      "name": "Floating navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Three-link desktop glass group with an accent-filled active item.",
+      "html": "<nav aria-label=\"Primary navigation\" class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-active\" href=\"/#about\" aria-current=\"location\">About</a><a class=\"ds-nav-link\" href=\"/#experience\">Experience</a><a class=\"ds-nav-link\" href=\"/#projects\">Projects</a></nav>",
+      "css": ".ds-nav{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:4px;border:1px solid var(--nav-glass-border,rgba(70,50,85,.17));border-radius:16px;background:var(--color-background,#fff);box-shadow:inset 0 1px 0 var(--nav-glass-highlight,rgba(255,255,255,.9)),var(--nav-glass-shadow,0 6px 22px rgba(33,16,51,.07))}.ds-nav-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 16px;border-radius:11px;color:var(--color-text-secondary,#3d3d3d);font-family:var(--font-ui,Manrope,sans-serif);font-size:.8125rem;font-weight:600;text-decoration:none;transition:color 140ms ease,background-color 140ms ease}.ds-nav-link:hover{background:var(--nav-glass-hover,rgba(121,1,177,.07));color:var(--color-primary,#7901b1)}.ds-nav-active,.ds-nav-active:hover{background:var(--color-primary,#7901b1);color:var(--color-on-primary,#fff)}.ds-nav-link:focus-visible{outline:2px solid var(--color-primary,#7901b1);outline-offset:3px}@supports(backdrop-filter:blur(1px)){.ds-nav{background:var(--nav-glass-surface,rgba(255,255,255,.7));backdrop-filter:blur(20px) saturate(150%)}}@media(prefers-reduced-transparency:reduce),(prefers-contrast:more){.ds-nav{background:var(--color-background,#fff);border-color:var(--color-border-strong,#3f3f3f);backdrop-filter:none;box-shadow:none}}"
+    },
+    {
+      "name": "Theme control",
+      "kind": "button",
+      "refersTo": "theme-toggle",
+      "description": "Neutral theme icon inside its glass control group.",
+      "html": "<div class=\"ds-theme-group\"><button aria-label=\"Switch color theme\" class=\"ds-theme\" type=\"button\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M21.5 14.0784C20.3003 14.7189 18.9301 15.0821 17.4751 15.0821C12.7491 15.0821 8.91792 11.2509 8.91792 6.52485C8.91792 5.06986 9.28105 3.69968 9.92163 2.5C5.66765 3.49698 2.5 7.31513 2.5 11.8731C2.5 17.1899 6.8101 21.5 12.1269 21.5C16.6849 21.5 20.503 18.3324 21.5 14.0784Z\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.5\"/></svg></button></div>",
+      "css": ".ds-theme-group{display:inline-flex;padding:3px;border:1px solid var(--nav-glass-border,rgba(70,50,85,.17));border-radius:14px;background:var(--color-background,#fff);box-shadow:inset 0 1px 0 var(--nav-glass-highlight,rgba(255,255,255,.9)),var(--nav-glass-shadow,0 6px 22px rgba(33,16,51,.07))}.ds-theme{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;border:0;border-radius:10px;background:transparent;color:var(--color-text-primary,#19141f);cursor:pointer}.ds-theme svg{display:block;width:18px;height:18px}.ds-theme:hover{background:transparent;color:var(--color-text-primary,#19141f);transform:none}.ds-theme:focus-visible{outline:2px solid var(--color-primary,#7901b1);outline-offset:3px}@supports(backdrop-filter:blur(1px)){.ds-theme-group{background:var(--nav-glass-surface,rgba(255,255,255,.7));backdrop-filter:blur(20px) saturate(150%)}}@media(max-width:900px){.ds-theme{width:44px;height:44px}}@media(prefers-reduced-transparency:reduce),(prefers-contrast:more){.ds-theme-group{background:var(--color-background,#fff);border-color:var(--color-border-strong,#3f3f3f);backdrop-filter:none;box-shadow:none}}"
+    },
+    {
+      "name": "Technology tag",
+      "kind": "chip",
+      "refersTo": "technology-tag",
+      "description": "Compact pill treatment used in profile experience and project rows.",
+      "html": "<span class=\"ds-tag\">React</span>",
+      "css": ".ds-tag{display:inline-flex;align-items:center;min-height:27px;padding:3px 11px;border:0;border-radius:999px;background:var(--color-row-hover,rgba(154,70,193,.09));color:var(--color-primary,#7901b1);font-family:Inter,var(--font-body,Manrope,sans-serif);font-size:.6875rem;font-weight:550;line-height:1.5}@media(forced-colors:active){.ds-tag{border:1px solid ButtonText}}"
+    },
+    {
+      "name": "Project card text",
+      "kind": "card",
+      "refersTo": "project-row",
+      "description": "Title, description, and tags extracted from the compact linked project row.",
+      "html": "<a class=\"ds-project\" href=\"/#projects\"><h3 class=\"ds-project-title\">Selected project <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M5 12H18M12.5 6.5L18 12L12.5 17.5\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.5\"/></svg></h3><p class=\"ds-project-copy\">Frontend interfaces, reusable components, and responsive product experiences.</p><ul class=\"ds-project-tags\" aria-label=\"Project technologies\"><li>React</li><li>JavaScript</li></ul></a>",
+      "css": ".ds-project{position:relative;isolation:isolate;display:grid;gap:10px;padding:0;border-radius:8px;color:var(--color-text-primary,#19141f);font-family:Inter,var(--font-body,Manrope,sans-serif);text-decoration:none}.ds-project::before{content:\"\";position:absolute;inset:-16px;z-index:-1;border-radius:12px;background:transparent;transition:background 180ms ease;pointer-events:none}.ds-project-title{margin:0;font-size:1rem;font-weight:600;line-height:1.5;letter-spacing:-.015em}.ds-project-title svg{display:inline-block;width:16px;height:16px;margin-left:6px;vertical-align:-2px;transform:rotate(-45deg);transition:transform 180ms cubic-bezier(.16,1,.3,1)}.ds-project-copy{margin:0;max-width:56ch;color:var(--color-text-secondary,#3d3d3d);font-size:.875rem;line-height:1.75}.ds-project-tags{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 0;padding:0;list-style:none}.ds-project-tags li{display:inline-flex;align-items:center;min-height:27px;padding:3px 11px;border-radius:999px;background:var(--color-row-hover,rgba(154,70,193,.09));color:var(--color-primary,#7901b1);font-size:.6875rem;font-weight:550;line-height:1.5}.ds-project:focus-visible{outline:2px solid var(--color-primary,#7901b1);outline-offset:4px}.ds-project:focus-visible .ds-project-title{color:var(--color-primary,#7901b1)}@media(hover:hover) and (pointer:fine){.ds-project:hover::before{background:var(--color-row-hover,rgba(154,70,193,.09))}.ds-project:hover .ds-project-title{color:var(--color-primary,#7901b1)}.ds-project:hover svg{transform:translate(2px,-2px) rotate(-45deg)}}@media(prefers-reduced-motion:reduce){.ds-project-title svg{transition:none}}"
+    },
+    {
+      "name": "Search field",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "Transparent bottom-bordered input used on supporting collection pages.",
+      "html": "<label class=\"ds-search\"><span class=\"ds-search-label\">Search projects</span><input class=\"ds-search-input\" type=\"search\" placeholder=\"Search projects\"/></label>",
+      "css": ".ds-search{display:grid;gap:8px;max-width:360px;font-family:var(--font-ui,Manrope,sans-serif)}.ds-search-label{color:var(--color-text-secondary,#3d3d3d);font-size:.8125rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}.ds-search-input{width:100%;min-height:44px;border:0;border-bottom:1px solid var(--color-border-strong,#3f3f3f);border-radius:0;background:transparent;color:var(--color-text-primary,#19141f);font-family:inherit;font-size:1rem}.ds-search-input::placeholder{color:var(--color-muted,#656565)}.ds-search-input:hover{border-bottom-color:var(--color-primary-hover,#9a46c1)}.ds-search-input:focus-visible{border-bottom-color:var(--color-primary,#7901b1);outline:none}"
+    },
+    {
+      "name": "Experience entry",
+      "kind": "custom",
+      "description": "Profile role history with a compact date column and open spacing.",
+      "html": "<article class=\"ds-experience\"><p class=\"ds-experience-period\">Mar 2025 — Present</p><div class=\"ds-experience-body\"><h3>Lead Engineer · Prime Wave Inc</h3><ul class=\"ds-experience-previous\" aria-label=\"Previous roles\"><li>Senior Engineer</li><li>Engineer</li></ul><p>Build and ship websites, design systems, mobile apps, and cross-platform digital experiences.</p></div></article>",
+      "css": ".ds-experience{display:grid;grid-template-columns:108px minmax(0,1fr);gap:24px;font-family:Inter,var(--font-body,Manrope,sans-serif);color:var(--color-text-primary,#19141f)}.ds-experience-period{margin:0;padding-top:3px;color:var(--color-text-secondary,#3d3d3d);font-size:.625rem;font-weight:550;letter-spacing:.035em;line-height:1.65;font-variant-numeric:tabular-nums}.ds-experience-body{display:grid;gap:10px}.ds-experience-body h3{margin:0;font-size:1rem;font-weight:600;line-height:1.5;letter-spacing:-.015em}.ds-experience-previous{margin:-4px 0 0;padding:0;list-style:none;color:var(--color-text-secondary,#3d3d3d);font-size:.875rem;line-height:1.6}.ds-experience-body>p{margin:0;color:var(--color-text-secondary,#3d3d3d);font-size:.875rem;line-height:1.75}@media(max-width:540px){.ds-experience{grid-template-columns:1fr;gap:9px}.ds-experience-period{font-size:.6875rem}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Brittany Chiang-inspired portfolio",
+    "overview": "The portfolio follows the user’s Brittany Chiang reference through a persistent personal introduction, compact experience entries, and a readable project list. White and violet define the light theme. Near-black, pale lavender, and pink define the dark theme.\n\nThe floating navigation uses the existing glass treatment. The main profile uses Inter, while navigation and case-study pages use Manrope. Project screenshots, factual descriptions, and generous section spacing carry the visual hierarchy.",
+    "keyCharacteristics": [
+      "A persistent identity column accompanies the desktop reading flow.",
+      "Compact project and experience rows keep the work easy to scan.",
+      "Glass surfaces are concentrated in the floating navigation controls.",
+      "Both themes share typography, spacing, and component geometry."
+    ],
+    "rules": [],
+    "dos": [
+      "Do use the semantic CSS variables so controls and content follow the selected theme.",
+      "Do scope Inter to the profile content and use Manrope for navigation and case-study pages.",
+      "Do preserve clear focus indicators, reduced-motion behavior, and opaque accessibility fallbacks.",
+      "Do retain the original project screenshots and their aspect ratio."
+    ],
+    "donts": [
+      "Don’t add a glass surface or border around the header logo.",
+      "Don’t add a hover color, background, or movement to the theme toggle.",
+      "Don’t extend the floating navigation glass across the full header width.",
+      "Don’t add resting panels or heavy shadows to the compact profile rows."
+    ]
+  }
+}
+

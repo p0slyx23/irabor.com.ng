@@ -151,6 +151,15 @@ export function GitHubIcon({ className, ...rest }) {
   )
 }
 
+export function ContactIcon({ className, ...rest }) {
+  return (
+    <svg aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" {...rest}>
+      <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-2 2V11.5a9.5 9.5 0 0 1 19 0Z" />
+      <path d="M7 10h10M7 14h6" />
+    </svg>
+  )
+}
+
 export function MailIcon({ className, ...rest }) {
   return (
     <svg

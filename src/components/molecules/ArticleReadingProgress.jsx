@@ -16,7 +16,8 @@ export function ArticleReadingProgress({ targetRef }) {
     const measureProgress = () => {
       frameId = null
 
-      const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0
+      const headerBounds = document.querySelector('.site-header')?.getBoundingClientRect()
+      const headerHeight = headerBounds && headerBounds.top <= 1 ? headerBounds.height : 0
       const articleBounds = target.getBoundingClientRect()
       const readableViewportHeight = Math.max(window.innerHeight - headerHeight, 1)
       const scrollableDistance = Math.max(articleBounds.height - readableViewportHeight, 1)

@@ -1,7 +1,7 @@
 {
   "name": "irabor",
   "short_name": "irabor",
-  "description": "Portfolio, case studies, resources, and product work by Irabor.",
+  "description": "Frontend development, experience, and projects by Irabor.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

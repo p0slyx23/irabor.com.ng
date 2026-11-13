@@ -18,6 +18,15 @@
       "alt": "Portrait of Your Name"
     }
   },
+  "profileContent": {
+    "name": "Your Name",
+    "introduction": "One short sentence about the interfaces and products you build.",
+    "about": [
+      "Your frontend background and the work you focus on.",
+      "Your current role and the responsibilities you can support with evidence.",
+      "The product contexts and engineering principles that shape your work."
+    ]
+  },
   "socialLinks": [
     {
       "label": "GitHub",

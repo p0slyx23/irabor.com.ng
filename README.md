@@ -26,8 +26,9 @@ npm run build
 Most portfolio content lives in [src/content/siteContent.js](./src/content/siteContent.js).
 
 - Update `siteBrand` for identity, contact details, social links, and resume links.
+- Update `profileContent` for the introduction and About section.
 - Update `experienceSection` to add or edit work history.
-- Update project and blog entries as you publish new work.
+- Update `projectPosts`, `projectEntries`, and the `portfolioProjects` ordering as you publish new work.
 - Use [src/content/portfolioPayload.template.json](./src/content/portfolioPayload.template.json) as the structured content template.
 
 Place a replacement resume in `src/assets/files/resume.pdf`. Project covers and other image assets live under `src/assets/images/`.

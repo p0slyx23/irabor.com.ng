@@ -75,45 +75,70 @@ export function ResourcesPage() {
         </div>
       </section>
 
-      <section className="resource-list" aria-label="Featured resources">
-        {featuredResources.map((resource) => (
-          <article className="resource-card" key={resource.id}>
-            <div className="resource-card__copy">
-              <h2 className="resource-card__title">{resource.title}</h2>
-              <p className="resource-card__description">{resource.description}</p>
-            </div>
+      <p aria-atomic="true" aria-live="polite" className="collection-result-count" role="status">
+        Showing {filteredResources.length} of {resources.length} resources
+      </p>
 
-            <MonogramBadge
-              className="resource-card__badge"
-              imageAlt={resource.image?.alt ?? `${resource.title} logo`}
-              imageSrc={resource.image?.src ?? ''}
-              label={resource.logoText}
-              size="lg"
-              tone={resource.logoTone}
-            />
-          </article>
-        ))}
-      </section>
+      {filteredResources.length ? (
+        <>
+          <section className="resource-list" aria-label="Featured resources">
+            {featuredResources.map((resource) => (
+              <article className="resource-card" key={resource.id}>
+                <div className="resource-card__copy">
+                  <h2 className="resource-card__title">{resource.title}</h2>
+                  <p className="resource-card__description">{resource.description}</p>
+                </div>
 
-      {remainingResources.length ? (
-        <section className="resource-mini-grid" aria-label="More resources">
-          {remainingResources.map((resource) => (
-            <article className="resource-mini-card" key={resource.id}>
-              <MonogramBadge
-                imageAlt={resource.image?.alt ?? `${resource.title} logo`}
-                imageSrc={resource.image?.src ?? ''}
-                label={resource.logoText}
-                tone={resource.logoTone}
-              />
-              <div className="resource-mini-card__body">
-                <p className="eyebrow eyebrow--compact">{resource.category}</p>
-                <h2>{resource.title}</h2>
-                <p>{resource.description}</p>
-              </div>
-            </article>
-          ))}
+                <MonogramBadge
+                  className="resource-card__badge"
+                  imageAlt={resource.image?.alt ?? `${resource.title} logo`}
+                  imageSrc={resource.image?.src ?? ''}
+                  label={resource.logoText}
+                  size="lg"
+                  tone={resource.logoTone}
+                />
+              </article>
+            ))}
+          </section>
+
+          {remainingResources.length ? (
+            <section className="resource-mini-grid" aria-label="More resources">
+              {remainingResources.map((resource) => (
+                <article className="resource-mini-card" key={resource.id}>
+                  <MonogramBadge
+                    imageAlt={resource.image?.alt ?? `${resource.title} logo`}
+                    imageSrc={resource.image?.src ?? ''}
+                    label={resource.logoText}
+                    tone={resource.logoTone}
+                  />
+                  <div className="resource-mini-card__body">
+                    <p className="eyebrow eyebrow--compact">{resource.category}</p>
+                    <h2>{resource.title}</h2>
+                    <p>{resource.description}</p>
+                  </div>
+                </article>
+              ))}
+            </section>
+          ) : null}
+        </>
+      ) : (
+        <section className="empty-state empty-state--centered">
+          <h2 className="empty-state__title">No resources found.</h2>
+          <p className="empty-state__copy">Try another search or reset the filters.</p>
+          <button
+            className="page-action-link"
+            onClick={() => {
+              startTransition(() => {
+                setQuery('')
+                setActiveCategory('All')
+              })
+            }}
+            type="button"
+          >
+            Reset search and filters
+          </button>
         </section>
-      ) : null}
+      )}
 
       {/* Newsletter is intentionally hidden until a subscription service is connected.
       <section className="newsletter-feature">

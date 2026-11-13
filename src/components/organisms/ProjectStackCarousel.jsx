@@ -52,7 +52,7 @@ export function ProjectStackCarousel({ ariaLabel, items, title }) {
     }
 
     viewport.scrollBy({
-      behavior: 'smooth',
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
       left: viewport.clientWidth * 0.82 * direction,
     })
   }

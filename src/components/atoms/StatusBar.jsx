@@ -8,7 +8,7 @@ export default function StatusBar({ theme }) {
       aria-hidden="true"
       className="status-bar"
       data-theme={theme}
-      style={{ backgroundColor: color }}
+      style={{ '--status-bar-color': color }}
     />
   )
 }

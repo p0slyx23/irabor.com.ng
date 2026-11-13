@@ -1,12 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import placeholderCoverImage from '../../assets/images/projects/placeholder-cover.webp'
 
-export function ContentImage({ alt, fallbackSrc = placeholderCoverImage, src, ...rest }) {
+function ImageWithFallback({ alt, fallbackSrc, src, ...rest }) {
   const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc)
-
-  useEffect(() => {
-    setCurrentSrc(src || fallbackSrc)
-  }, [fallbackSrc, src])
 
   return (
     <img
@@ -19,6 +15,18 @@ export function ContentImage({ alt, fallbackSrc = placeholderCoverImage, src, ..
         }
       }}
       src={currentSrc}
+      {...rest}
+    />
+  )
+}
+
+export function ContentImage({ alt, fallbackSrc = placeholderCoverImage, src, ...rest }) {
+  return (
+    <ImageWithFallback
+      alt={alt}
+      fallbackSrc={fallbackSrc}
+      key={JSON.stringify([src, fallbackSrc])}
+      src={src}
       {...rest}
     />
   )

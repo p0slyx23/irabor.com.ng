@@ -1,18 +1,16 @@
 import { useEffect } from 'react'
 import { useThemeEngine } from '../core/useThemeEngine.js'
-import { normalizePath, useCurrentPath } from '../core/router.js'
+import { navigateTo, normalizePath, scrollToHash, useCurrentPath } from '../core/router.js'
 import {
-  getBlogPostBySlug,
-  getBlogSlugFromPath,
   getProjectBySlug,
   getProjectSlugFromPath,
   siteBrand,
-  siteNavigation,
+  // siteNavigation,
 } from '../content/siteContent.js'
-import { SiteHeader } from '../components/organisms/SiteHeader.jsx'
+// import { SiteHeader } from '../components/organisms/SiteHeader.jsx'
 import { SiteFooter } from '../components/organisms/SiteFooter.jsx'
 import { SocialRail } from '../components/organisms/SocialRail.jsx'
-import StatusBar from '../components/atoms/StatusBar.jsx'
+// import StatusBar from '../components/atoms/StatusBar.jsx'
 import { notFoundRoute, routes } from './routes.js'
 
 function getCurrentRoute(pathname) {
@@ -31,16 +29,13 @@ function getCurrentRoute(pathname) {
 
 export default function AppShell() {
   const currentPath = useCurrentPath()
-  const { announcement, theme, themePreference, toggleTheme } = useThemeEngine()
+  const { announcement } = useThemeEngine()
+  // Restore theme, themePreference, and toggleTheme here when re-enabling SiteHeader.
   const currentRoute = getCurrentRoute(currentPath)
   const PageComponent = currentRoute.component
   const pageTitle = (() => {
     if (currentRoute.id === 'project-article') {
       return getProjectBySlug(getProjectSlugFromPath(currentPath))?.title ?? currentRoute.title
-    }
-
-    if (currentRoute.id === 'blog-article') {
-      return getBlogPostBySlug(getBlogSlugFromPath(currentPath))?.title ?? currentRoute.title
     }
 
     return currentRoute.title
@@ -51,20 +46,17 @@ export default function AppShell() {
   }, [pageTitle])
 
   useEffect(() => {
-    const frameId = window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-      document.documentElement.scrollTop = 0
-      document.body.scrollTop = 0
-    })
-
-    return () => {
-      window.cancelAnimationFrame(frameId)
+    if (currentRoute.redirect) {
+      navigateTo(currentRoute.redirect, { replace: true })
+      return undefined
     }
-  }, [currentPath])
+
+    return scrollToHash(window.location.hash)
+  }, [currentPath, currentRoute.redirect])
 
   return (
     <div className="site-shell" data-route={currentRoute.id}>
-      <StatusBar theme={theme} />
+      {/* <StatusBar theme={theme} /> */}
 
       <a className="skip-link" href="#main-content">
         Skip to content
@@ -73,28 +65,28 @@ export default function AppShell() {
       <p aria-live="polite" className="sr-only" role="status">
         {announcement}
       </p>
+      <SocialRail className="social-rail--floating" />
 
       <div className="site-canvas">
         <div className="site-screen" data-route={currentRoute.id}>
-          <SiteHeader
+          {/* <SiteHeader
             currentPath={currentPath}
             navigation={siteNavigation}
             onToggleTheme={toggleTheme}
             theme={theme}
             themePreference={themePreference}
-          />
+          /> */}
 
           <div className="site-screen__body">
-            <SocialRail />
 
-            <main className="site-main" id="main-content">
+            <main className="site-main" id="main-content" tabIndex={-1}>
               <div className="route-frame motion-page-enter" key={currentPath}>
                 <PageComponent />
               </div>
             </main>
           </div>
 
-          <SiteFooter />
+          {currentRoute.id !== 'home' && currentRoute.id !== 'project-archive' ? <SiteFooter /> : null}
         </div>
       </div>
     </div>

@@ -59,6 +59,11 @@ export function ArticlePage() {
   return (
     <div className="page-shell page-shell--article">
       <ArticleReadingProgress targetRef={articleRef} />
+      {isProjectRoute ? (
+        <AppLink className="profile-text-link page-back-link project-back-link" href="/#projects">
+          <ArrowRightIcon aria-hidden="true" /> Back to projects
+        </AppLink>
+      ) : null}
 
       <PageHero
         aside={<TableOfContents items={article.toc} />}

@@ -1,96 +1,61 @@
 import { AppLink } from '../components/atoms/AppLink.jsx'
-import { ContentImage } from '../components/atoms/ContentImage.jsx'
-import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
+import { ArrowRightIcon, BrandMarkIcon } from '../components/atoms/Icons.jsx'
 import { ExperienceList } from '../components/organisms/ExperienceList.jsx'
-import { ProjectStackCarousel } from '../components/organisms/ProjectStackCarousel.jsx'
-import { formatContentDate } from '../core/dateFormatting.js'
+import { ProjectCard } from '../components/organisms/ProjectCard.jsx'
 import {
-  getProjectPath,
-  getProjectStack,
   experienceSection,
-  homeRecentProjects,
+  portfolioProjects,
+  profileContent,
   siteBrand,
 } from '../content/siteContent.js'
 
 export function HomePage() {
-  const featuredExperience = experienceSection.entries.slice(0, 4)
   const resume = siteBrand.resumes?.[0]
 
   return (
-    <div className="page-shell home-page">
-      <header className="page-heading">
-        <p className="eyebrow">Case studies</p>
-        <h1 className="page-heading__title">Recent case studies</h1>
-        <p className="page-heading__lede">
-          Selected product work across frontend platforms, mobile apps, and interface
-          systems.
-        </p>
+    <div className="profile-layout">
+      <header className="profile-identity">
+        <div>
+          <h1 id="profile-name"><BrandMarkIcon className="profile-identity__mark" />{profileContent.name}</h1>
+          <p className="profile-identity__role">{siteBrand.tagline}</p>
+          <p className="profile-identity__intro">{profileContent.introduction}</p>
+          <p className="profile-identity__location">{siteBrand.location}</p>
+        </div>
+
       </header>
 
-      <section className="post-list" aria-label="Recent case studies">
-        {homeRecentProjects.map((post, index) => (
-          <article className="post-list__item" key={post.slug}>
-            <div className="post-list__body">
-              <AppLink className="post-list__primary-link" href={getProjectPath(post.slug)}>
-                {post.image ? (
-                  <figure className="post-list__media">
-                    <ContentImage
-                      alt={post.image.alt}
-                      fetchPriority={index === 0 ? 'high' : undefined}
-                      loading={index === 0 ? 'eager' : undefined}
-                      src={post.image.src}
-                    />
-                  </figure>
-                ) : null}
+      <div className="profile-content">
+        <section aria-labelledby="about-title" className="profile-section profile-about" id="about">
+          <h2 className="profile-section__heading" id="about-title">About</h2>
+          {profileContent.about.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </section>
 
-                <p className="post-list__meta">
-                  {[post.category, formatContentDate(post.date)]
-                    .filter(Boolean)
-                    .map((item, index) => (
-                      <span key={`${post.slug}-meta-${index}`}>{item}</span>
-                    ))}
-                </p>
-                <h2 className="post-list__title">{post.title}</h2>
-                <p className="post-list__excerpt">{post.excerpt}</p>
-                <span className="inline-link">
-                  <span>Read more</span>
-                  <ArrowRightIcon className="inline-link__icon" />
-                </span>
-              </AppLink>
-              <ProjectStackCarousel
-                ariaLabel={`${post.title} project stack`}
-                items={getProjectStack(post.slug)}
-              />
-            </div>
-          </article>
-        ))}
-      </section>
-
-      <div className="page-actions">
-        <AppLink className="page-action-link" href="/projects">
-          View all projects
-        </AppLink>
-      </div>
-
-      {featuredExperience.length ? (
-        <section aria-labelledby="home-experience-title" className="experience-section home-experience">
-          <header className="experience-section__heading">
-            <h2 id="home-experience-title" className="section-heading">
-              {experienceSection.title}
-            </h2>
-          </header>
-
-          <ExperienceList entries={featuredExperience} />
-
+        <section aria-labelledby="experience-title" className="profile-section profile-experience" id="experience">
+          <h2 className="profile-section__heading" id="experience-title">Experience</h2>
+          <ExperienceList entries={experienceSection.entries} />
           {resume ? (
-            <div className="page-actions">
-              <AppLink className="page-action-link" href={resume.url} target="_blank">
-                View résumé
-              </AppLink>
-            </div>
+            <AppLink className="profile-text-link profile-text-link--external" href={resume.url} target="_blank">
+              View full résumé <ArrowRightIcon aria-hidden="true" />
+            </AppLink>
           ) : null}
         </section>
-      ) : null}
+
+        <section aria-labelledby="projects-title" className="profile-section profile-projects" id="projects">
+          <h2 className="profile-section__heading" id="projects-title">Projects</h2>
+          <div className="profile-project-list">
+            {portfolioProjects.slice(0, 4).map((project) => (
+              <ProjectCard compact key={project.slug} project={project} />
+            ))}
+          </div>
+          <AppLink className="profile-text-link profile-text-link--external" href="/archive">
+            View full project archive <ArrowRightIcon aria-hidden="true" />
+          </AppLink>
+        </section>
+
+        <footer className="profile-colophon">
+          <p>© {new Date().getFullYear()} {profileContent.name}</p>
+        </footer>
+      </div>
     </div>
   )
 }

@@ -171,12 +171,20 @@ function parseNamedMonthDate(value) {
   }
 }
 
+function parseYearDate(value) {
+  if (!/^\d{4}$/.test(value.trim())) return null
+  const year = Number(value)
+  if (!isValidDate(year, 0, 1)) return null
+  return { date: new Date(year, 0, 1), precision: 'year' }
+}
+
 function parseContentDate(value = '') {
   if (!value) {
     return null
   }
 
   return (
+    parseYearDate(value) ??
     parseRelativeDate(value) ??
     parseIsoDate(value) ??
     parseNumericDayDate(value) ??
@@ -190,6 +198,10 @@ export function formatContentDate(value = '') {
 
   if (!parsedDate) {
     return value
+  }
+
+  if (parsedDate.precision === 'year') {
+    return String(parsedDate.date.getFullYear())
   }
 
   if (parsedDate.precision === 'month') {

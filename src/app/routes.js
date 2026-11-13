@@ -1,16 +1,7 @@
 import { HomePage } from '../pages/HomePage.jsx'
-import { AboutPage } from '../pages/AboutPage.jsx'
-import { BlogPage } from '../pages/BlogPage.jsx'
 import { ArticlePage } from '../pages/ArticlePage.jsx'
-import { ResourcesPage } from '../pages/ResourcesPage.jsx'
-import { ProjectsPage } from '../pages/ProjectsPage.jsx'
-import { SnippetsPage } from '../pages/SnippetsPage.jsx'
-import { NewsletterPage } from '../pages/NewsletterPage.jsx'
 import { NotFoundPage } from '../pages/NotFoundPage.jsx'
-
-function matchBlogArticleRoute(pathname) {
-  return pathname.startsWith('/blog/') && pathname !== '/blog'
-}
+import { ProjectArchivePage } from '../pages/ProjectArchivePage.jsx'
 
 function matchProjectRoute(pathname) {
   return (
@@ -20,19 +11,12 @@ function matchProjectRoute(pathname) {
 }
 
 export const routes = [
-  { id: 'home', path: '/', title: 'Home', component: HomePage },
-  { id: 'about', path: '/about', title: 'About', component: AboutPage },
-  { id: 'blog', path: '/blog', title: 'Blog', component: BlogPage },
-  {
-    id: 'blog-article',
-    path: '/blog/:slug',
-    title: 'Article',
-    component: ArticlePage,
-    matcher: matchBlogArticleRoute,
-  },
-  { id: 'resources', path: '/resources', title: 'Resources', component: ResourcesPage },
-  { id: 'projects', path: '/projects', title: 'Projects', component: ProjectsPage },
-  { id: 'projects-legacy', path: '/series', title: 'Projects', component: ProjectsPage },
+  { id: 'home', path: '/', title: 'Frontend Developer', component: HomePage },
+  { id: 'project-archive', path: '/archive', title: 'All Projects', component: ProjectArchivePage },
+  { id: 'home', path: '/about', title: 'About', component: HomePage, redirect: '/#about' },
+  { id: 'home', path: '/experience', title: 'Experience', component: HomePage, redirect: '/#experience' },
+  { id: 'home', path: '/projects', title: 'Projects', component: HomePage, redirect: '/#projects' },
+  { id: 'home', path: '/series', title: 'Projects', component: HomePage, redirect: '/#projects' },
   {
     id: 'project-article',
     path: '/projects/:slug',
@@ -40,8 +24,6 @@ export const routes = [
     component: ArticlePage,
     matcher: matchProjectRoute,
   },
-  { id: 'snippets', path: '/snippets', title: 'Snippets', component: SnippetsPage },
-  { id: 'newsletter', path: '/newsletter', title: 'Newsletter', component: NewsletterPage },
 ]
 
 export const notFoundRoute = {

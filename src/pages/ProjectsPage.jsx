@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { AppLink } from '../components/atoms/AppLink.jsx'
-import { ContentImage } from '../components/atoms/ContentImage.jsx'
-import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
-import { formatContentDate } from '../core/dateFormatting.js'
-import { getProjectPath, projectPosts, projectsPage } from '../content/siteContent.js'
+import { ProjectCard } from '../components/organisms/ProjectCard.jsx'
+import { projectPosts, projectsPage } from '../content/siteContent.js'
 
 const INITIAL_PROJECT_COUNT = 4
 const PROJECT_BATCH_SIZE = 2
@@ -58,42 +55,25 @@ export function ProjectsPage() {
   return (
     <div className="page-shell projects-page">
       <header className="page-heading">
-        <p className="eyebrow">{projectsPage.eyebrow}</p>
         <h1 className="page-heading__title">{projectsPage.title}</h1>
         <p className="page-heading__lede">{projectsPage.lede}</p>
       </header>
 
-      <section aria-label="Project case studies" className="post-list">
-        {visibleProjects.map((project) => (
-          <article className="post-list__item" key={project.slug}>
-            <div className="post-list__body">
-              <AppLink className="post-list__primary-link" href={getProjectPath(project.slug)}>
-                {project.image ? (
-                  <figure className="post-list__media">
-                    <ContentImage alt={project.image.alt} src={project.image.src} />
-                  </figure>
-                ) : null}
-
-                <p className="post-list__meta">
-                  {[project.category, formatContentDate(project.date)]
-                    .filter(Boolean)
-                    .map((item, index) => (
-                      <span key={`${project.slug}-meta-${index}`}>{item}</span>
-                    ))}
-                </p>
-                <h2 className="post-list__title">{project.title}</h2>
-                <p className="post-list__excerpt">{project.excerpt}</p>
-                <span className="inline-link">
-                  <span>Open project</span>
-                  <ArrowRightIcon className="inline-link__icon" />
-                </span>
-              </AppLink>
-            </div>
-          </article>
+      <section aria-label="Project case studies" className="project-grid">
+        {visibleProjects.map((project, index) => (
+          <ProjectCard eager={index < 2} key={project.slug} project={project} />
         ))}
       </section>
 
-      {hasMoreProjects ? <div aria-hidden="true" className="scroll-sentinel" ref={sentinelRef} /> : null}
+      <p className="collection-result-count" role="status">Showing {visibleProjects.length} of {projectPosts.length} projects</p>
+      {hasMoreProjects ? (
+        <div className="page-actions">
+          <div aria-hidden="true" className="scroll-sentinel" ref={sentinelRef} />
+          <button className="page-action-link" onClick={() => setVisibleCount((count) => Math.min(count + PROJECT_BATCH_SIZE, projectPosts.length))} type="button">
+            Show more projects
+          </button>
+        </div>
+      ) : null}
     </div>
   )
 }

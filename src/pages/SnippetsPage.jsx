@@ -79,52 +79,79 @@ export function SnippetsPage() {
         </div>
       </section>
 
-      <div className="table-shell">
-        <table className="data-table">
-          <caption className="sr-only">
-            Developer snippets with title, description, category, and last updated date
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Description</th>
-              <th scope="col">Category</th>
-              <th scope="col">Last updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredSnippets.map((snippet) => (
-              <tr className={snippet.highlighted ? 'is-highlighted' : undefined} key={snippet.id}>
-                <th data-label="Name" scope="row">
-                  <AppLink className="data-table__title" href={`/snippets#${snippet.id}`}>
-                    {snippet.title}
-                  </AppLink>
-                </th>
-                <td data-label="Description">
-                  <div className="data-table__description">
-                    <p>{snippet.description}</p>
-                    {snippet.projectSlug && snippet.projectTitle ? (
-                      <AppLink
-                        className="data-table__project-link"
-                        href={getProjectPath(snippet.projectSlug)}
-                      >
-                        From {snippet.projectTitle}
-                      </AppLink>
-                    ) : null}
-                    {snippet.stack?.length ? (
-                      <p className="data-table__subcopy">{snippet.stack.join(' / ')}</p>
-                    ) : null}
-                  </div>
-                </td>
-                <td data-label="Category">{snippet.category}</td>
-                <td data-label="Last updated">
-                  <time dateTime={snippet.updatedAt}>{formatContentDate(snippet.updatedAt)}</time>
-                </td>
+      <p aria-atomic="true" aria-live="polite" className="collection-result-count" role="status">
+        Showing {filteredSnippets.length} of {snippets.length} snippets
+      </p>
+
+      {filteredSnippets.length ? (
+        <div className="table-shell">
+          <table className="data-table">
+            <caption className="sr-only">
+              Developer snippets with title, description, category, and last updated date
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Category</th>
+                <th scope="col">Last updated</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {filteredSnippets.map((snippet) => (
+                <tr
+                  className={snippet.highlighted ? 'is-highlighted' : undefined}
+                  id={snippet.id}
+                  key={snippet.id}
+                >
+                  <th data-label="Name" scope="row">
+                    <a className="data-table__title" href={`#${snippet.id}`}>
+                      {snippet.title}
+                    </a>
+                  </th>
+                  <td data-label="Description">
+                    <div className="data-table__description">
+                      <p>{snippet.description}</p>
+                      {snippet.projectSlug && snippet.projectTitle ? (
+                        <AppLink
+                          className="data-table__project-link"
+                          href={getProjectPath(snippet.projectSlug)}
+                        >
+                          From {snippet.projectTitle}
+                        </AppLink>
+                      ) : null}
+                      {snippet.stack?.length ? (
+                        <p className="data-table__subcopy">{snippet.stack.join(' / ')}</p>
+                      ) : null}
+                    </div>
+                  </td>
+                  <td data-label="Category">{snippet.category}</td>
+                  <td data-label="Last updated">
+                    <time dateTime={snippet.updatedAt}>{formatContentDate(snippet.updatedAt)}</time>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <section className="empty-state empty-state--centered">
+          <h2 className="empty-state__title">No snippets found.</h2>
+          <p className="empty-state__copy">Try another search or reset the filters.</p>
+          <button
+            className="page-action-link"
+            onClick={() => {
+              startTransition(() => {
+                setQuery('')
+                setActiveCategory('All')
+              })
+            }}
+            type="button"
+          >
+            Reset search and filters
+          </button>
+        </section>
+      )}
     </div>
   )
 }

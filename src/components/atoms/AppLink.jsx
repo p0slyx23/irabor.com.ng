@@ -3,7 +3,7 @@ import { cx } from '../../core/cx.js'
 
 function shouldIntercept(event, href, target) {
   return (
-    href?.startsWith('/') &&
+    (href?.startsWith('/') || href?.startsWith('#')) &&
     target !== '_blank' &&
     !event.defaultPrevented &&
     event.button === 0 &&

@@ -29,12 +29,20 @@ export const siteBrand = {
 };
 
 export const siteNavigation = [
-  { path: "/about", label: "About" },
-  { path: "/blog", label: "Posts" },
-  { path: "/projects", label: "Projects" },
-  { path: "/resources", label: "Resources" },
-  { path: "/snippets", label: "Snippets" },
+  { path: "/#about", label: "About" },
+  { path: "/#experience", label: "Experience" },
+  { path: "/#projects", label: "Projects" },
 ];
+
+export const profileContent = {
+  name: "Irabor",
+  introduction: "I build clear, maintainable interfaces for the web and mobile.",
+  about: [
+    "I’m a frontend developer working at the intersection of product design and engineering. I build interfaces with React and Flutter, paying close attention to how a product looks, behaves, and holds together as it grows.",
+    "At Prime Wave Inc, my work spans websites, design systems, mobile apps, and the tools that support them. I bring design decisions into code, build reusable components, and work on the architecture behind dependable digital experiences.",
+    "My projects cover fintech, travel, civic services, real estate, and service operations. Across those different contexts, I care about clear information, accessible interactions, and code that another developer can understand and maintain.",
+  ],
+};
 
 export const socialLinks = [
   // {
@@ -88,7 +96,7 @@ export const experienceSection = {
       period: "Mar 2025 — Present",
       title: "Engineer → Senior Engineer → Lead Engineer",
       company: "Prime Wave Inc",
-      companyUrl: "",
+      companyUrl: "https://primewaveinc.ca/",
       summary:
         "Build and ship websites, design systems, mobile apps, and cross-platform digital experiences. Lead technical architecture for CMS tools, REST APIs, continuous integration, accessibility initiatives, and developer experience.",
       technologies: ["JavaScript", "TypeScript", "React", "WordPress", "Contentful", "Accessibility"],
@@ -549,8 +557,8 @@ export const projectPosts = [
     slug: "primewave-cleaning-services",
     title: "Primewave Cleaning Services",
     category: "Case Studies",
-    date: "",
-    sortDate: "",
+    date: "2026",
+    sortDate: "2026",
     readTime: "",
     excerpt:
       "A role-based platform for managing cleaning requests, cleaner work, and internal operations.",
@@ -568,7 +576,7 @@ export const projectPosts = [
     date: "Jul 2025",
     readTime: "8 min",
     excerpt:
-      "A multi-service digital platform built to connect businesses and professionals with technology consulting, HR services, career development resources, training programs, and business support solutions.",
+      "A digital services platform connecting businesses with technology consulting, HR services, training, and career resources.",
     tags: ["react", "php", "business-platform", "hr-tech", "consulting"],
     featured: false,
     image: {
@@ -584,7 +592,7 @@ export const projectPosts = [
     sortDate: "Aug 2025",
     readTime: "8 min",
     excerpt:
-      "A vacation rental and property discovery platform designed to simplify accommodation search, property management, and booking experiences across multiple listings.",
+      "A vacation-rental platform for discovering properties, browsing listings, and managing accommodation bookings.",
     tags: ["react", "php", "travel-tech", "booking-platform", "marketplace"],
     featured: false,
     image: {
@@ -599,7 +607,7 @@ export const projectPosts = [
     date: "Nov 2025",
     readTime: "8 min",
     excerpt:
-      "A digital community platform created to support student engagement, communication, and access to campus-related resources within a centralized online environment.",
+      "A student community platform bringing campus communication, resources, and engagement into one responsive interface.",
     tags: ["react", "php", "community-platform", "education", "student-portal"],
     featured: false,
     image: {
@@ -614,7 +622,7 @@ export const projectPosts = [
     date: "Jan 2026",
     readTime: "8 min",
     excerpt:
-      "A modern real estate and property showcase platform built to present residential developments, property listings, and investment opportunities through a premium digital experience.",
+      "A real-estate website for exploring residential developments, property listings, and investment opportunities.",
     tags: [
       "react",
       "php",
@@ -635,7 +643,7 @@ export const projectPosts = [
     date: "May 2026",
     readTime: "8 min",
     excerpt:
-      "A real-time election results platform designed to provide transparent access to candidate standings, vote percentages, and election updates through a responsive digital dashboard.",
+      "A responsive dashboard for following real-time election results, candidate standings, and vote percentages.",
     tags: ["react", "php", "civic-tech", "elections", "real-time-data"],
     featured: false,
     image: {
@@ -650,7 +658,7 @@ export const projectPosts = [
     date: "Mar 2025",
     readTime: "5 min",
     excerpt:
-      "Frontend development for a native fintech mobile product spanning payments, virtual cards, digital asset transactions, and international payment flows across iOS and Android.",
+      "Native iOS and Android fintech interfaces for payments, virtual cards, and digital asset transactions, built with Flutter.",
     tags: ["fintech", "mobile", "flutter", "dart", "notifications"],
     featured: true,
     image: {
@@ -665,7 +673,7 @@ export const projectPosts = [
     date: "Feb 2026",
     readTime: "",
     excerpt:
-      "Backend architecture and API workflows for a travel booking platform covering auth, bookings, payments, media handling, and admin operations.",
+      "Backend architecture and APIs supporting authentication, bookings, payments, media, and administration for a travel platform.",
     tags: ["backend", "php", "payments", "cloudinary"],
     featured: true,
     image: {
@@ -680,7 +688,17 @@ export const projectPosts = [
       getContentDateSortValue(left.sortDate ?? left.date),
 );
 
-export const homeRecentProjects = projectPosts.slice(0, 3);
+// Lead with frontend and mobile work while retaining every project case study.
+export const portfolioProjects = [
+  "primewave-cleaning-services",
+  "lgsc-election-results-platform",
+  "payship-fintech-platform",
+  "lugspace-student-community-platform",
+  "excaco-real-estate-platform",
+  "primewave-digital-services-platform",
+  "atlanticstay-booking-platform",
+  "travel-booking-platform-backend",
+].map((slug) => projectPosts.find((project) => project.slug === slug)).filter(Boolean);
 
 export const projectEntries = {
   "primewave-cleaning-services": {

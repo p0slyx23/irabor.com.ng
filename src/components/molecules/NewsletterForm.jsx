@@ -5,7 +5,6 @@ import { Button } from '../atoms/Button.jsx'
 export function NewsletterForm({
   buttonLabel = 'Join newsletter',
   className,
-  eyebrow = 'Newsletter',
   note = 'One useful issue when something worth reading is actually ready.',
   title = 'Stay in the loop without subscribing to noise.',
 }) {
@@ -14,7 +13,6 @@ export function NewsletterForm({
   return (
     <section className={cx('newsletter-block', className)}>
       <div className="newsletter-block__copy">
-        {/* <p className="eyebrow eyebrow--compact">{eyebrow}</p> */}
         <h2 className="newsletter-block__title">{title}</h2>
         <p className="newsletter-block__note">{note}</p>
       </div>
