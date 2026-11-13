@@ -1,7 +1,7 @@
 import { AppLink } from '../components/atoms/AppLink.jsx'
 import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
 import { getProjectBySlug, getProjectPath, projectPosts } from '../content/siteContent.js'
-import { getContentDateSortValue } from '../core/dateFormatting.js'
+import { getContentDateSortValue, getContentYear } from '../core/dateFormatting.js'
 
 const technologyLabels = {
   react: 'React', php: 'PHP', sql: 'MySQL', flutter: 'Flutter',
@@ -10,7 +10,11 @@ const technologyLabels = {
 }
 
 export function ProjectArchivePage() {
-  const projects = [...projectPosts].sort((left, right) =>
+  const currentYear = new Date().getFullYear()
+  const projects = projectPosts.filter((project) => {
+    const year = getContentYear(project.sortDate || project.date)
+    return year !== null && year < currentYear
+  }).sort((left, right) =>
     getContentDateSortValue(right.sortDate || right.date) - getContentDateSortValue(left.sortDate || left.date),
   )
 
@@ -19,7 +23,7 @@ export function ProjectArchivePage() {
       <AppLink className="profile-text-link project-archive__back" href="/#projects">
         <ArrowRightIcon aria-hidden="true" /> Irabor
       </AppLink>
-      <h1>All Projects</h1>
+      <h1>Project Archive</h1>
       <table className="project-archive__table">
         <thead><tr><th scope="col">Year</th><th scope="col">Project</th><th scope="col" className="project-archive__stack">Built with</th><th scope="col" className="project-archive__live">Links</th></tr></thead>
         <tbody>

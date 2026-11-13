@@ -11,8 +11,8 @@ function matchProjectRoute(pathname) {
 }
 
 export const routes = [
-  { id: 'home', path: '/', title: 'Frontend Developer', component: HomePage },
-  { id: 'project-archive', path: '/archive', title: 'All Projects', component: ProjectArchivePage },
+  { id: 'home', path: '/', title: 'Frontend Engineer', component: HomePage },
+  { id: 'project-archive', path: '/archive', title: 'Project Archive', component: ProjectArchivePage },
   { id: 'home', path: '/about', title: 'About', component: HomePage, redirect: '/#about' },
   { id: 'home', path: '/experience', title: 'Experience', component: HomePage, redirect: '/#experience' },
   { id: 'home', path: '/projects', title: 'Projects', component: HomePage, redirect: '/#projects' },

@@ -189,7 +189,7 @@ The desktop profile has two columns (0.8fr / 1.2fr) and a responsive gap (clamp(
 
 At widths from 901px through 1100px, the column ratio becomes narrower on the identity side (0.7fr / 1.3fr) with a reduced gap (48px). At 900px and below, the profile stacks into one column with a maximum width (680px), the identity scrolls with the page, and section spacing reduces (72px). At 540px and below, experience dates stack above their descriptions, project copy precedes its thumbnail, and section spacing reduces again (64px).
 
-Desktop content begins with 32px main padding, and the profile identity sticks at 48px. Mobile section headings span the viewport and stick to its top edge with 18px vertical padding. Their translucent theme-colored surface uses 20px backdrop blur and 150% saturation. Reduced-transparency, increased-contrast, and forced-color modes use a solid fallback. Navigation and the status-gradient overlay are temporarily commented out in AppShell. Safe-area spacing is zero. Homepage content ends at the footer, with zero trailing layout padding. Desktop section headings are visually hidden and retain accessible section names.
+Desktop content begins with 32px main padding, and the profile identity sticks at 48px. Mobile section headings span the viewport and stick to its top edge with 18px vertical padding and solid theme-colored backgrounds. Navigation and the status-gradient overlay are temporarily commented out in AppShell. Safe-area spacing is zero. Homepage content ends at the footer, with zero trailing layout padding. Desktop section headings are visually hidden and retain accessible section names.
 
 ## Elevation & Depth
 
@@ -210,7 +210,7 @@ Profile project thumbnails have small corners (4px), their links have a modest r
 
 ### Navigation
 
-The SiteHeader component is temporarily disabled at its AppShell entry point. The logo sits beside the profile name. The active frosted section headings use an opaque fallback when backdrop filtering is unavailable.
+The SiteHeader component is temporarily disabled at its AppShell entry point. The logo sits beside the profile name. Mobile section headings stick to the top with solid, theme-aware backgrounds.
 
 At 900px and below, a combined theme/menu control opens a full-screen navigation panel. Links use larger Manrope text (clamp(1.5rem, 5vw, 2.25rem)) and generous target height (64px). The modal traps focus, closes with Escape, restores focus to the trigger, and locks background scrolling.
 
@@ -234,7 +234,11 @@ Profile tags use a low-opacity accent fill and accent text, a compact minimum he
 
 ### Text links and supporting buttons
 
-The profile résumé, archive, and company links use diagonal arrows. The homepage displays four selected projects and an archive link. The archive at /archive lists all projects newest first, including year-only dates, with technologies and every available project link. On phones, Year and Project form the table, with project titles linking to case studies. The desktop archive includes every available external project link, arranged side by side. Column headings use the homepage section-heading typography and 18px vertical padding, with full-width frosted glass on mobile. Desktop archive headings have an exact 55px height and a borderless frosted surface. They stay aligned and stick to the top as the table scrolls. The archive back link uses plain text with zero margin and scrolls with the page. The final project row has zero bottom border. Case studies include sticky frosted-glass back links, pinned 12px from the top. Left-pointing arrows move 4px left on hover or keyboard focus. Diagonal arrows move up and right, and right-pointing arrows move right. Links use plain text decoration in every interaction state. The profile footer contains right-aligned copyright text. A 56px circular frosted contact toggle sits 24px from the bottom and right edges. It renders through a body portal at z-index 1000 above page layers. Opening reveals 48px GitHub and email links in an upward fan with a 55ms stagger. The speech-bubble icon cross-fades into a close icon. Escape, outside interaction, leaving keyboard focus, and link selection dismiss the links. Closed links are inert. Reduced-motion preferences remove the reveal transitions. Shared button variants remain available for supporting pages.
+The profile résumé, archive, and company links use diagonal arrows. The homepage displays every current-year project. The archive at /archive lists earlier years newest first, including year-only dates, with technologies and every available project link. On phones, Year and Project form the table, with project titles linking to case studies. Desktop external project links sit side by side.
+
+Column headings use the homepage label typography and 18px vertical padding on mobile. Desktop headings have an exact 52.33px height. Solid native table cells provide the sticky surface, with no divider beneath the headings or the final row. The archive back link uses plain text with zero margin and scrolls with the page. Case studies include solid sticky back links, pinned 12px from the top. Left-pointing arrows move 4px left on hover or keyboard focus. Diagonal arrows move up and right, and right-pointing arrows move right. Links retain plain text decoration in every interaction state.
+
+The profile footer contains right-aligned copyright text. A 56px circular solid contact toggle sits 24px from the bottom and right edges. It renders through a body portal at z-index 1000 above page layers. Opening reveals 48px GitHub and email links in an upward fan with a 55ms stagger. Both opening and closing use matching 280ms transitions. The speech-bubble icon cross-fades into a close icon. Escape, outside interaction, leaving keyboard focus, and link selection dismiss the links. Closed links are inert. Reduced-motion preferences remove the reveal transitions.
 
 ### Search fields
 
@@ -244,7 +248,7 @@ Supporting collection pages use a labeled transparent field with a bottom border
 
 Shared state changes use the fast transition (140ms ease). Profile arrows and row fills use brief transitions (180ms). The mobile panel enters over a short eased interval (260ms) and exits quickly (140ms). Reduced-motion preferences disable page, navigation, and arrow animation.
 
-The home route renders directly to keep section anchors stable. Anchor positioning waits for fonts to settle. Other routes use a short entrance (280ms) with subtle upward movement (8px).
+Homepage content enters with a 350ms fade, a 10px rise, and a 4px blur resolving to sharp text. The initial delay is 40ms, followed by 50ms staggers. Section containers retain stable geometry. Direct hash links skip the entrance, and anchor positioning waits for fonts to settle. The archive has no route animation, transforms, or filters so sticky table content remains on stable paint layers. Other routes use a short entrance (280ms) with subtle upward movement (8px).
 
 ## Do's and Don'ts
 

@@ -229,6 +229,10 @@ export function getContentDateSortValue(value = '') {
   return parsedDate ? parsedDate.date.getTime() : 0
 }
 
+export function getContentYear(value = '') {
+  return parseContentDate(value)?.date.getFullYear() ?? null
+}
+
 const TIMELINE_META_RULES = [
   {
     kind: 'created',

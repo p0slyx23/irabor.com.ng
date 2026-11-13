@@ -4,12 +4,12 @@ import { ArrowRightIcon } from '../atoms/Icons.jsx'
 import { getProjectPath } from '../../content/siteContent.js'
 import { formatContentDate } from '../../core/dateFormatting.js'
 
-export function ProjectCard({ project, compact = false, featured = false, eager = false }) {
+export function ProjectCard({ project, compact = false, featured = false, eager = false, entranceIndex = 0 }) {
   const date = formatContentDate(project.date)
   const Heading = compact ? 'h3' : 'h2'
 
   return (
-    <article className={`project-card${compact ? ' project-card--compact' : ''}${featured ? ' project-card--featured' : ''}`}>
+    <article className={`project-card profile-enter${compact ? ' project-card--compact' : ''}${featured ? ' project-card--featured' : ''}`} style={{ '--entrance-index': entranceIndex }}>
       <AppLink className="project-card__link" href={getProjectPath(project.slug)}>
         <figure className="project-card__media">
           <ContentImage

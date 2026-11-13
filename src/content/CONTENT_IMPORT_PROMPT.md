@@ -6,6 +6,12 @@ and About copy come from `profileContent`. Work history comes from
 Fill those fields first. Keep writing, resource, and snippet payloads empty for
 this three-section portfolio.
 
+The homepage shows projects from the current calendar year. The archive shows
+earlier years. Supply a real year in every project date. Set portfolio versions
+and branch names explicitly, using v1 for the 2025 archive and v2 for the current
+site. Hosting metadata accepts separate vercel and githubPages URLs. Add each
+published URL to the project's links array with its own descriptive label.
+
 ```text
 Fill the attached JSON payload for my portfolio website.
 
