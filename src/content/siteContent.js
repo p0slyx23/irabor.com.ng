@@ -14,7 +14,7 @@ import resumeUrl from "../assets/files/resume.pdf";
 
 export const siteBrand = {
   cycle: "Product Design + Mobile",
-  name: "irabor",
+  name: "irabor joseph",
   footerLabel: "irabor 2026",
   tagline: "Frontend Engineer",
   portfolioVersion: "v2",
@@ -44,11 +44,11 @@ export const siteNavigation = [
 
 export const profileContent = {
   name: "Irabor",
-  introduction: "I build clear, maintainable interfaces for the web and mobile.",
+  introduction: "I build clear, maintainable interfaces for the web and mobile. Make we build something useful.",
   about: [
     "I’m a frontend engineer working at the intersection of product design and engineering. I build interfaces with React and Flutter, paying close attention to how a product looks, behaves, and holds together as it grows.",
     "At Prime Wave Inc, my work spans websites, design systems, mobile apps, and the tools that support them. I bring design decisions into code, build reusable components, and work on the architecture behind dependable digital experiences.",
-    "My projects cover fintech, travel, civic services, real estate, and service operations. Across those different contexts, I care about clear information, accessible interactions, and code that another developer can understand and maintain.",
+    "My projects cover fintech, travel, civic services, real estate, and service operations. Across those different contexts, I care about clear information and accessible interactions. I want interfaces wey people fit use with ease, and code wey another developer fit understand and maintain.",
   ],
 };
 
@@ -563,27 +563,27 @@ export const projectCategories = ["All", "Case Studies"];
 export const projectPosts = [
   {
     slug: "portfolio-v1",
-    title: "Portfolio v1",
+    title: "Personal Website V1",
     version: "v1",
     branch: "v1",
     category: "Case Studies",
     date: "2025",
-    excerpt: "The first version of my React portfolio, bringing together project case studies, experience, résumé access, and development resources.",
+    excerpt: "The first version of my React portfolio, bringing together project case studies, experience, résumé access, and development resources. Na here the journey start.",
     tags: ["React", "Vite", "CSS"],
     featured: false,
-    image: { src: portfolioV1CoverImage, alt: "Portfolio version one homepage" },
+    image: { src: portfolioV1CoverImage, alt: "Personal Website v1 homepage" },
   },
   {
     slug: "portfolio-v2",
-    title: "Portfolio v2",
+    title: "Irabor V2",
     version: "v2",
     branch: "v2",
     category: "Case Studies",
     date: "2026",
-    excerpt: "My current frontend engineering portfolio, with responsive case studies, year-based project collections, and accessible interactive details.",
+    excerpt: "My current frontend engineering portfolio, with responsive case studies, year-based project collections, and small details wey make the experience feel right.",
     tags: ["React", "Vite", "Framer Motion"],
     featured: true,
-    image: { src: portfolioV2CoverImage, alt: "Portfolio version two homepage" },
+    image: { src: portfolioV2CoverImage, alt: "Irabor V2 homepage" },
   },
   {
     slug: "primewave-cleaning-services",
@@ -737,17 +737,17 @@ export const portfolioProjects = [
 export const projectEntries = {
   "portfolio-v1": {
     slug: "portfolio-v1",
-    title: "Portfolio v1",
+    title: "Personal Website V1",
     version: "v1",
     branch: "v1",
     eyebrow: "case study",
     lede: "The first version of my personal frontend portfolio.",
-    coverImage: { src: portfolioV1CoverImage, alt: "Portfolio version one homepage" },
+    coverImage: { src: portfolioV1CoverImage, alt: "Personal Website v1 homepage" },
     meta: ["Frontend Engineering", "Completed", "Created 2025"],
     tags: ["React", "Vite", "CSS"],
     hosting: { vercel: "", githubPages: "https://p0slyx23.github.io/irabor.com.ng/" },
     links: [
-      { label: "Visit Portfolio v1", href: "https://p0slyx23.github.io/irabor.com.ng/" },
+      { label: "Visit Personal Website v1", href: "https://p0slyx23.github.io/irabor.com.ng/" },
       { label: "View source on GitHub", href: "https://github.com/p0slyx23/irabor.com.ng/tree/v1" },
     ],
     stack: [
@@ -762,17 +762,17 @@ export const projectEntries = {
   },
   "portfolio-v2": {
     slug: "portfolio-v2",
-    title: "Portfolio v2",
+    title: "Irabor V2",
     version: "v2",
     branch: "v2",
     eyebrow: "case study",
     lede: "A focused portfolio for my frontend engineering work.",
-    coverImage: { src: portfolioV2CoverImage, alt: "Portfolio version two homepage" },
+    coverImage: { src: portfolioV2CoverImage, alt: "Irabor V2 homepage" },
     meta: ["Frontend Engineering", "Live", "Created 2026"],
     tags: ["React", "Vite", "Framer Motion"],
     hosting: { vercel: "https://irabor.com.ng/", githubPages: "" },
     links: [
-      { label: "Visit portfolio", href: "https://irabor.com.ng/" },
+      { label: "Visit Irabor V2", href: "https://irabor.com.ng/" },
       { label: "View source on GitHub", href: "https://github.com/p0slyx23/irabor.com.ng/tree/v2" },
     ],
     stack: [

@@ -8,8 +8,8 @@ export function NotFoundPage() {
         <WindowIllustration />
 
         <div className="not-found__content">
-          <h1>Don&apos;t worry!</h1>
-          <p>Sometimes I feel lost too... even though it&apos;s just 404 page :)</p>
+          <h1>This page don waka.</h1>
+          <p>The link may have changed. Head back home to find my work.</p>
 
           <div className="button-group">
             <Button href="/" variant="primary">

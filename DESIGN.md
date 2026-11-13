@@ -216,6 +216,8 @@ At 900px and below, a combined theme/menu control opens a full-screen navigation
 
 ### Theme toggle
 
+Light is the default theme. Legacy automatic preferences resolve to light. Explicit light and dark choices are stored locally, and device color-scheme changes do not update the chosen theme.
+
 The theme button uses a transparent square hit area inside the glass control group. Desktop dimensions are compact (40px), expanding for mobile touch (44px). The icon is small (18px), with a visible keyboard focus outline. Its hover presentation stays neutral.
 
 ### Experience rows

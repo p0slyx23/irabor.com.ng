@@ -195,7 +195,22 @@ try {
   })()`
 
   await size(1440)
+  if (!v1Archive) {
+    await cdp('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'dark'}]})
+  }
   await navigate('/')
+  if (!v1Archive) {
+    await check('New visitors start in light mode on dark devices', "document.documentElement.dataset.theme==='light' && document.documentElement.dataset.themePreference==='light'")
+    await evaluate("localStorage.setItem('portfolio-theme','system')")
+    await cdp('Page.reload')
+    await settle()
+    await check('Legacy automatic preferences migrate to light', "document.documentElement.dataset.theme==='light' && localStorage.getItem('portfolio-theme')==='light'")
+    await cdp('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'}]})
+    await cdp('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'dark'}]})
+    await wait(300)
+    await check('Device theme changes keep the selected light theme', "document.documentElement.dataset.theme==='light' && document.querySelector('meta[name=\"theme-color\"]').content==='#ffffff'")
+    await cdp('Emulation.setEmulatedMedia',{features:[]})
+  }
   await theme('dark')
   if (v1Archive) {
     await evaluate("Promise.all([...document.images].map(img=>{img.loading='eager';return img.decode().catch(()=>{})}))")
@@ -229,6 +244,7 @@ try {
     await check('Status gradient is commented out', "!document.querySelector('.status-bar')")
     await check('Safe-area spacing is zero', "parseFloat(getComputedStyle(document.querySelector('.site-shell')).getPropertyValue('--safe-area-top'))===0")
     await check('Homepage shows current-year projects including V2', "document.querySelectorAll('.project-card').length===5 && !!document.querySelector('a[href=\"/projects/portfolio-v2\"]') && !document.querySelector('a[href=\"/projects/payship-fintech-platform\"]')")
+    await check('Irabor V2 thumbnail preserves the full image', "getComputedStyle(document.querySelector('a[href=\"/projects/portfolio-v2\"] img')).objectFit==='contain'")
     await check('Profile role is Frontend Engineer', "document.querySelector('.profile-identity__role').textContent==='Frontend Engineer'")
     await check('Homepage entrance matches reference timing', "(() => {const name=getComputedStyle(document.querySelector('#profile-name'));const role=getComputedStyle(document.querySelector('.profile-identity__role'));return name.animationName==='profile-content-enter' && name.animationDuration==='0.35s' && Math.abs(parseFloat(name.animationDelay)-0.04)<0.001 && Math.abs(parseFloat(role.animationDelay)-parseFloat(name.animationDelay)-0.05)<0.001})()")
     const sectionTopBeforeEntrance = await evaluate("document.getElementById('experience').getBoundingClientRect().top")
@@ -246,6 +262,10 @@ try {
     await check('Contact trigger uses a speech bubble', "document.querySelector('.social-rail__toggle-icon svg').innerHTML.includes('M7 10h10M7 14h6')")
     await check('Contact buttons use solid circular surfaces', "[...document.querySelectorAll('.social-rail--floating a')].every(el=>{const s=getComputedStyle(el);return s.borderRadius==='50%' && s.backdropFilter==='none' && !s.backgroundColor.startsWith('rgba(')})")
     await screenshot('desktop.png')
+    await evaluate("document.getElementById('projects').scrollIntoView({behavior:'instant'})")
+    await evaluate("Promise.all([...document.querySelectorAll('#projects img')].map(img=>{img.loading='eager';return img.decode().catch(()=>{})}))")
+    await check('Irabor V2 cover image loads successfully', "(() => {const img=document.querySelector('a[href=\"/projects/portfolio-v2\"] img');return img.complete && img.naturalWidth>0})()")
+    await screenshot('v2-cover-desktop.png',{preserveScroll:true})
     await key('Tab','Tab',9)
     await check('Keyboard navigation remains available', "document.activeElement !== document.body")
     for (const width of [320,390,768,900,901,1024,1440]) {
@@ -257,6 +277,11 @@ try {
       await theme(desired)
       await noOverflow('Mobile '+desired+' fits')
       await screenshot('mobile-'+desired+'.png')
+      if (desired==='light') {
+        await evaluate("document.getElementById('projects').scrollIntoView({behavior:'instant'})")
+        await evaluate("Promise.all([...document.querySelectorAll('#projects img')].map(img=>{img.loading='eager';return img.decode().catch(()=>{})}))")
+        await screenshot('v2-cover-mobile.png',{preserveScroll:true})
+      }
       await evaluate("document.getElementById('experience').scrollIntoView({behavior:'instant'});window.scrollBy({top:150,behavior:'instant'})")
       await wait(200)
       await check('Full-width sticky heading '+desired, "(() => {const r=document.querySelector('#experience h2').getBoundingClientRect();return Math.abs(r.top)<2 && Math.abs(r.left)<2 && Math.abs(r.width-innerWidth)<2})()")
@@ -369,6 +394,12 @@ try {
     await navigate('/#experience')
     await waitFor(sectionIsAligned('experience'))
     await check('Deep links open directly at their section', "!document.querySelector('.profile-layout--enter') && location.hash==='#experience'")
+    await theme('light')
+    await cdp('Emulation.setDeviceMetricsOverride',{width:960,height:748,deviceScaleFactor:2,mobile:false})
+    await navigate('/')
+    await evaluate("document.activeElement?.blur();Promise.all([...document.images].map(img=>{img.loading='eager';return img.decode().catch(()=>{})}))")
+    await screenshot('portfolio-v2-light.png')
+    await check('V2 cover capture uses the light theme', "document.documentElement.dataset.theme==='light' && getComputedStyle(document.body).backgroundColor==='rgb(255, 255, 255)'")
     await check('No runtime errors', 'true')
     checks.at(-1).passed=runtimeErrors.length===0 && consoleErrors.length===0
     if(!checks.at(-1).passed) throw new Error('Runtime errors')

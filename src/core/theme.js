@@ -1,7 +1,6 @@
 import { MOTION_DURATION_MS } from './motion.js'
 
 export const THEME_STORAGE_KEY = 'portfolio-theme'
-export const THEME_MEDIA_QUERY = '(prefers-color-scheme: dark)'
 export const THEME_TRANSITION_DURATION_MS = MOTION_DURATION_MS.normal
 const THEME_CHROME = {
   light: {
@@ -19,19 +18,19 @@ export function getThemeChrome(theme) {
 }
 
 function isThemePreference(value) {
-  return value === 'system' || value === 'light' || value === 'dark'
+  return value === 'light' || value === 'dark'
 }
 
 export function getStoredThemePreference() {
   if (typeof window === 'undefined') {
-    return 'system'
+    return 'light'
   }
 
   try {
     const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
-    return isThemePreference(storedTheme) ? storedTheme : 'system'
+    return isThemePreference(storedTheme) ? storedTheme : 'light'
   } catch {
-    return 'system'
+    return 'light'
   }
 }
 
@@ -47,16 +46,8 @@ export function persistThemePreference(themePreference) {
   }
 }
 
-export function getSystemTheme() {
-  if (typeof window === 'undefined') {
-    return 'light'
-  }
-
-  return window.matchMedia(THEME_MEDIA_QUERY).matches ? 'dark' : 'light'
-}
-
-export function resolveTheme(themePreference, systemTheme = getSystemTheme()) {
-  return themePreference === 'system' ? systemTheme : themePreference
+export function resolveTheme(themePreference) {
+  return themePreference === 'dark' ? 'dark' : 'light'
 }
 
 export function getInitialThemeState() {
@@ -88,31 +79,6 @@ export function applyTheme(theme, themePreference) {
 
   if (appleStatusBarMeta) {
     appleStatusBarMeta.setAttribute('content', themeChrome.appleStatusBarStyle)
-  }
-}
-
-export function subscribeToSystemTheme(onChange) {
-  if (typeof window === 'undefined') {
-    return () => {}
-  }
-
-  const mediaQuery = window.matchMedia(THEME_MEDIA_QUERY)
-  const handleChange = (event) => {
-    onChange(event.matches ? 'dark' : 'light')
-  }
-
-  if (typeof mediaQuery.addEventListener === 'function') {
-    mediaQuery.addEventListener('change', handleChange)
-
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange)
-    }
-  }
-
-  mediaQuery.addListener(handleChange)
-
-  return () => {
-    mediaQuery.removeListener(handleChange)
   }
 }
 

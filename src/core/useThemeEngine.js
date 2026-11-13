@@ -3,11 +3,9 @@ import { useReducedMotionPreference } from './useReducedMotionPreference.js'
 import {
   applyTheme,
   getInitialThemeState,
-  getSystemTheme,
   persistThemePreference,
   resolveTheme,
   runThemeTransition,
-  subscribeToSystemTheme,
 } from './theme.js'
 
 export function useThemeEngine() {
@@ -15,17 +13,10 @@ export function useThemeEngine() {
   const [themePreference, setThemePreference] = useState(
     () => getInitialThemeState().themePreference,
   )
-  const [systemTheme, setSystemTheme] = useState(getSystemTheme)
   const [announcement, setAnnouncement] = useState('')
   const mountedRef = useRef(false)
   const announcementTimeoutRef = useRef(null)
-  const theme = resolveTheme(themePreference, systemTheme)
-
-  useEffect(() => {
-    return subscribeToSystemTheme((nextSystemTheme) => {
-      setSystemTheme(nextSystemTheme)
-    })
-  }, [])
+  const theme = resolveTheme(themePreference)
 
   useLayoutEffect(() => {
     persistThemePreference(themePreference)

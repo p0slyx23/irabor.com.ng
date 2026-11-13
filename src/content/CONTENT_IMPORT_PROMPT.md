@@ -12,6 +12,11 @@ and branch names explicitly, using v1 for the 2025 archive and v2 for the curren
 site. Hosting metadata accepts separate vercel and githubPages URLs. Add each
 published URL to the project's links array with its own descriptive label.
 
+Use mostly clear English with a light touch of Nigerian Pidgin, around 10% of
+conversational copy. Keep it natural in the introduction, About paragraphs, and
+personal project summaries. Keep navigation, action labels, employment details,
+and technical explanations precise and easy to understand.
+
 ```text
 Fill the attached JSON payload for my portfolio website.
 
