@@ -5,12 +5,9 @@ export function ThemeToggle({
   className,
   onToggle,
   theme,
-  themePreference,
 }) {
   const currentThemeLabel = theme === 'dark' ? 'Dark' : 'Light'
   const nextTheme = theme === 'dark' ? 'light' : 'dark'
-  const preferenceLabel =
-    themePreference === 'system' ? `System / ${currentThemeLabel}` : currentThemeLabel
   const Icon = theme === 'dark' ? SunIcon : MoonIcon
 
   return (
@@ -23,7 +20,7 @@ export function ThemeToggle({
     >
       <Icon className="icon-button__icon theme-toggle__icon" />
       <span className="sr-only">
-        Current theme is {preferenceLabel}. Activate to switch to {nextTheme}.
+        Current theme is {currentThemeLabel}. Activate to switch to {nextTheme}.
       </span>
     </button>
   )
