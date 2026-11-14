@@ -84,9 +84,9 @@ export function SocialRail({ className = '' }) {
       <nav aria-label="Contact links" aria-hidden={!isOpen} className="social-rail__links" id={linksId} inert={!isOpen ? true : undefined}>
         {socialLinks.map((item, index) => {
           const Icon = iconMap[item.icon]
-          const lane = index % 2
-          const horizontalOffset = lane === 0 ? -70 : 0
-          const verticalOffset = -64 - Math.floor(index / 2) * 64 - lane * 16
+          const angle = (index * Math.PI) / (2 * Math.max(socialLinks.length - 1, 1))
+          const horizontalOffset = -Math.round(Math.sin(angle) * 88)
+          const verticalOffset = -Math.round(Math.cos(angle) * 88)
 
           return (
             <AppLink
