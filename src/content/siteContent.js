@@ -53,11 +53,11 @@ export const profileContent = {
 };
 
 export const socialLinks = [
-  // {
-  //   label: "LinkedIn",
-  //   href: "https://www.linkedin.com/joseph-irabor",
-  //   icon: "linkedin",
-  // },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/joseph-irabor-9ba8373aa/",
+    icon: "linkedin",
+  },
   {
     label: "GitHub",
     href: "https://github.com/p0slyx23",

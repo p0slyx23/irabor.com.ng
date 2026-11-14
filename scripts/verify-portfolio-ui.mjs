@@ -276,6 +276,8 @@ try {
     for (const desired of ['dark','light']) {
       await theme(desired)
       await noOverflow('Mobile '+desired+' fits')
+      await check('Mobile safe-area canvas is transparent '+desired, "[document.documentElement,document.body].every(el=>getComputedStyle(el).backgroundColor==='rgba(0, 0, 0, 0)')")
+      await check('Mobile browser tint is unrestricted '+desired, "!matchMedia(document.querySelector('meta[name=\"theme-color\"]').media).matches")
       await screenshot('mobile-'+desired+'.png')
       if (desired==='light') {
         await evaluate("document.getElementById('projects').scrollIntoView({behavior:'instant'})")
@@ -290,11 +292,28 @@ try {
     }
     await evaluate("document.querySelector('.social-rail__toggle').focus()")
     await key('Enter','Enter',13)
-    await wait(400)
+    await wait(450)
     await check('Keyboard opens the contact fan', "document.querySelector('.social-rail__toggle').getAttribute('aria-expanded')==='true' && !document.querySelector('.social-rail__links').inert")
+    await check('Three social links form an evenly spaced arc', `(() => {
+      const bounds = [...document.querySelectorAll('.social-rail__links a')].map(el => el.getBoundingClientRect());
+      if (bounds.length !== 3) return false;
+      const points = bounds.map(rect => ({x: rect.x + rect.width / 2, y: rect.y + rect.height / 2}));
+      const toggle = document.querySelector('.social-rail__toggle').getBoundingClientRect();
+      const center = {x: toggle.x + toggle.width / 2, y: toggle.y + toggle.height / 2};
+      const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+      const gaps = [distance(points[0], points[1]), distance(points[1], points[2])];
+      return points.every(point => Math.abs(distance(point, center) - 88) < 1)
+        && gaps.every(gap => gap >= 60) && Math.abs(gaps[0] - gaps[1]) < 1;
+    })()`)
     const openingTiming = await evaluate("[...document.querySelectorAll('.social-rail__links a')].map(el=>{const s=getComputedStyle(el);return {duration:s.transitionDuration,delay:s.transitionDelay.split(',').slice(0,2).join(',')}})")
     await check('Expanded links stay on screen and respond to pointer hits', "[...document.querySelectorAll('.social-rail__links a')].every(el=>{const r=el.getBoundingClientRect();return r.left>=0 && r.right<=innerWidth && r.top>=0 && r.bottom<=innerHeight && el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})")
     await screenshot('contact-open-mobile.png',{preserveScroll:true})
+    for (const width of [320,1440]) {
+      await size(width)
+      await check('Social arc stays inside the viewport at '+width+'px', "[...document.querySelectorAll('.social-rail__links a')].every(el=>{const r=el.getBoundingClientRect();return r.left>=0 && r.top>=0 && r.right<=innerWidth && r.bottom<=innerHeight})")
+      await screenshot('contact-open-'+width+'.png',{preserveScroll:true})
+    }
+    await size(390)
     await key('Tab','Tab',9)
     await check('Expanded links receive keyboard focus', "document.querySelector('.social-rail__links').contains(document.activeElement)")
     await key('Escape','Escape',27)
