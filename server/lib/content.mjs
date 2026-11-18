@@ -1,3 +1,10 @@
+import { mapAssetReferences } from '../../shared/content-data.mjs'
+
+export function applyAssetManifest(content, rows) {
+  const manifest = new Map(rows.map((row) => [row.asset_ref, row.public_url]))
+  return mapAssetReferences(content, (reference) => manifest.get(reference) || reference)
+}
+
 export const settingKeys = [
   'siteBrand', 'siteNavigation', 'profileContent', 'socialLinks', 'aboutPage',
   'experienceSection', 'projectCategories', 'blogCategories', 'blogPosts',

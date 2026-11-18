@@ -7,13 +7,18 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 export default defineConfig([
   globalIgnores(['dist']),
   {
-    files: ['server/**/*.mjs', 'scripts/export-content-seed.mjs'],
+    files: ['server/**/*.mjs', 'shared/**/*.mjs', 'scripts/export-content-seed.mjs'],
     extends: [js.configs.recommended],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: globals.node,
     },
+  },
+  {
+    files: ['src/**/*.mjs'],
+    extends: [js.configs.recommended],
+    languageOptions: { ecmaVersion: 'latest', sourceType: 'module', globals: globals.browser },
   },
   {
     files: ['**/*.{js,jsx}'],

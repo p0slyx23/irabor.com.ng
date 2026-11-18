@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, extname, join, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
+import { getContentYear } from '../src/core/dateFormatting.js'
 
 // Test the actual production bundle, never a report or a design prototype.
 const baseline = process.argv.includes('--baseline')
@@ -15,6 +16,19 @@ const basePath = v1Archive ? '/irabor.com.ng' : ''
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = resolve(process.env.PORTFOLIO_QA_DIST || join(root, 'dist'))
 const output = join(root, '.impeccable', 'review')
+const apiOrigin = process.env.PORTFOLIO_QA_API_ORIGIN
+let apiMode = 'ready'
+let apiRequests = 0
+let expectedCurrentCount = 5
+let expectedArchiveCount = 5
+if (apiOrigin && !v1Archive) {
+  const response = await fetch(new URL('/api/content', apiOrigin), { signal: AbortSignal.timeout(20000) })
+  if (!response.ok) throw new Error('The local content API must be ready before browser QA.')
+  const { content } = await response.json()
+  const year = new Date().getFullYear()
+  expectedCurrentCount = content.portfolioProjects.filter(project => getContentYear(project.sortDate || project.date) === year).length
+  expectedArchiveCount = content.projectPosts.filter(project => getContentYear(project.sortDate || project.date) < year).length
+}
 await mkdir(output, { recursive: true })
 await readFile(join(dist, 'index.html'))
 const mime = {
@@ -27,6 +41,24 @@ const mime = {
 const server = createServer(async (req, res) => {
   try {
     const requested = decodeURIComponent(new URL(req.url, 'http://localhost').pathname)
+    if (requested === '/api/content' && apiOrigin) {
+      apiRequests++
+      if (apiMode === 'html') {
+        res.writeHead(200, { 'Content-Type': 'text/html' })
+        res.end('<!doctype html><title>Wrong service</title>')
+        return
+      }
+      if (apiMode === 'unavailable') {
+        res.writeHead(503, { 'Content-Type': 'application/json' })
+        res.end('{"error":"Test outage"}')
+        return
+      }
+      if (apiMode === 'slow') await new Promise(resolveDelay => setTimeout(resolveDelay, 1200))
+      const response = await fetch(new URL('/api/content', apiOrigin), { signal: AbortSignal.timeout(20000) })
+      res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'application/json', 'Cache-Control': 'no-store' })
+      res.end(Buffer.from(await response.arrayBuffer()))
+      return
+    }
     if (basePath && !requested.startsWith(`${basePath}/`)) throw new Error('Outside archive base path')
     const relative = requested.slice(basePath.length).replace(/^\/+/, '')
     const asset = resolve(dist, relative || 'index.html')
@@ -128,7 +160,7 @@ try {
       bodyOverflow: document.body.style.overflow,
       fonts: document.fonts.status,
       headerBottom: document.querySelector('.site-header')?.getBoundingClientRect().bottom,
-      routeTransform: getComputedStyle(document.querySelector('.route-frame')).transform,
+      routeTransform: document.querySelector('.route-frame') ? getComputedStyle(document.querySelector('.route-frame')).transform : null,
       sections: ['about','experience','projects'].map(id=>{
         const element = document.getElementById(id);
         return element ? {id, top: element.getBoundingClientRect().top, margin: getComputedStyle(element).scrollMarginTop} : {id};
@@ -138,7 +170,7 @@ try {
   }
   const settle = async () => {
     for (let attempt = 0; attempt < 80; attempt++) {
-      if (await evaluate("document.readyState === 'complete' && !!document.querySelector('#main-content h1')")) break
+      if (await evaluate("document.readyState === 'complete' && !!document.querySelector('.site-shell[data-route] #main-content h1')")) break
       await wait(100)
     }
     await evaluate("Promise.race([document.fonts.ready.then(()=>true), new Promise(r=>setTimeout(()=>r(false),2500))])")
@@ -243,7 +275,7 @@ try {
     await check('Floating navigation is commented out', "!document.querySelector('.site-header') && !document.querySelector('.site-mobile-nav')")
     await check('Status gradient is commented out', "!document.querySelector('.status-bar')")
     await check('Safe-area spacing is zero', "parseFloat(getComputedStyle(document.querySelector('.site-shell')).getPropertyValue('--safe-area-top'))===0")
-    await check('Homepage shows current-year projects including V2', "document.querySelectorAll('.project-card').length===5 && !!document.querySelector('a[href=\"/projects/portfolio-v2\"]') && !document.querySelector('a[href=\"/projects/payship-fintech-platform\"]')")
+    await check('Homepage shows current-year projects including V2', `document.querySelectorAll('.project-card').length===${expectedCurrentCount} && !!document.querySelector('a[href="/projects/portfolio-v2"]') && !document.querySelector('a[href="/projects/payship-fintech-platform"]')`)
     await check('Irabor V2 thumbnail preserves the full image', "getComputedStyle(document.querySelector('a[href=\"/projects/portfolio-v2\"] img')).objectFit==='contain'")
     await check('Profile role is Frontend Engineer', "document.querySelector('.profile-identity__role').textContent==='Frontend Engineer'")
     await check('Homepage entrance matches reference timing', "(() => {const name=getComputedStyle(document.querySelector('#profile-name'));const role=getComputedStyle(document.querySelector('.profile-identity__role'));return name.animationName==='profile-content-enter' && name.animationDuration==='0.35s' && Math.abs(parseFloat(name.animationDelay)-0.04)<0.001 && Math.abs(parseFloat(role.animationDelay)-parseFloat(name.animationDelay)-0.05)<0.001})()")
@@ -339,7 +371,7 @@ try {
     const profileHeadingPadding = await evaluate("getComputedStyle(document.querySelector('#experience h2')).paddingTop")
     await evaluate("document.querySelector('a[href=\"/archive\"]').click()")
     await settle()
-    await check('Archive includes only past-year projects', "location.pathname==='/archive' && document.querySelectorAll('.project-archive tbody tr').length===5 && [...document.querySelectorAll('.project-archive tbody tr')].every(row=>Number(row.querySelector('td').textContent)<new Date().getFullYear())")
+    await check('Archive includes only past-year projects', `location.pathname==='/archive' && document.querySelectorAll('.project-archive tbody tr').length===${expectedArchiveCount} && [...document.querySelectorAll('.project-archive tbody tr')].every(row=>Number(row.querySelector('td').textContent)<new Date().getFullYear())`)
     await check('V1 archive links to GitHub Pages', "!!document.querySelector('.project-archive a[href=\"https://p0slyx23.github.io/irabor.com.ng/\"]')")
     await check('Archive has stable unfiltered page layers', "(() => {const s=getComputedStyle(document.querySelector('.route-frame'));return s.animationName==='none' && s.transform==='none' && s.filter==='none' && getComputedStyle(document.querySelector('thead')).backdropFilter==='none'})()")
     await check('Archive years are newest first', "(() => {const years=[...document.querySelectorAll('.project-archive tbody tr')].map(row=>Number(row.querySelector('td').textContent));return years.every((year,index)=>index===0 || years[index-1]>=year)})()")
@@ -419,6 +451,37 @@ try {
     await evaluate("document.activeElement?.blur();Promise.all([...document.images].map(img=>{img.loading='eager';return img.decode().catch(()=>{})}))")
     await screenshot('portfolio-v2-light.png')
     await check('V2 cover capture uses the light theme', "document.documentElement.dataset.theme==='light' && getComputedStyle(document.body).backgroundColor==='rgb(255, 255, 255)'")
+    if (apiOrigin) {
+      await check('Project images and résumé use verified R2 objects', "[...document.querySelectorAll('.project-card img')].every(img=>img.src.includes('/portfolio/')) && document.querySelector('a[href*=\"resume.pdf\"]').href.includes('/portfolio/')")
+      for (const width of [1440, 390]) {
+        await size(width)
+        apiMode = 'html'
+        await cdp('Page.navigate', { url: origin + '/' })
+        await waitFor("!!document.querySelector('.content-gate button')")
+        await check(`Wrong API service offers recovery at ${width}`, "document.querySelector('.content-gate').getAttribute('aria-busy')==='false' && document.querySelector('.content-gate button').textContent.trim()==='Try again'")
+        await noOverflow(`Content error does not overflow at ${width}`)
+        await screenshot(`content-error-${width}.png`)
+        apiMode = 'slow'
+        await evaluate("document.querySelector('.content-gate button').click()")
+        await waitFor("document.querySelector('.content-gate')?.getAttribute('aria-busy')==='true'")
+        await check(`Loading is announced without fake progress at ${width}`, "!!document.querySelector('.content-gate [aria-live=\"polite\"]') && !document.querySelector('.content-gate button')")
+        await screenshot(`content-loading-${width}.png`)
+        await settle()
+        await waitFor("!!document.querySelector('.profile-layout')")
+        await check(`Retry restores real database content at ${width}`, "document.querySelector('#profile-name').textContent.includes('Irabor') && !document.querySelector('.content-gate')")
+      }
+      const requestStart = apiRequests
+      apiMode = 'unavailable'
+      await cdp('Page.navigate', { url: origin + '/' })
+      await waitFor("!!document.querySelector('.content-gate button')")
+      checks.push({ name: 'Temporary outage retries are bounded', passed: apiRequests - requestStart === 2 })
+      if (!checks.at(-1).passed) throw new Error('Unexpected retry count')
+      apiMode = 'ready'
+      await evaluate("document.querySelector('.content-gate button').click()")
+      await settle()
+      await waitFor("!!document.querySelector('.profile-layout')")
+      await check('Recovery returns keyboard focus to main content', "document.activeElement.id==='main-content'")
+    }
     await check('No runtime errors', 'true')
     checks.at(-1).passed=runtimeErrors.length===0 && consoleErrors.length===0
     if(!checks.at(-1).passed) throw new Error('Runtime errors')
@@ -432,7 +495,7 @@ try {
   const report = {
     mode: v1Archive ? 'v1-archive' : baseline ? 'baseline' : 'after', checkedAt: new Date().toISOString(), fullPage,
     checks, runtimeErrors, consoleErrors, failure: failure?.message || null, failureDiagnostics,
-    scope: `${process.env.PORTFOLIO_QA_ORIGIN ? 'Live-site' : 'Local production-bundle'} Chrome checks. Physical devices and assistive technology require separate verification.`,
+    scope: `${process.env.PORTFOLIO_QA_ORIGIN ? 'Live-site' : 'Local production-bundle'} Chrome checks${apiOrigin ? ' against the local API with real MySQL/R2 content, plus simulated service outages' : ''}. Physical devices and assistive technology require separate verification.`,
   }
   await writeFile(join(output, v1Archive ? 'v1-checks.json' : baseline ? 'baseline-checks.json' : 'ui-checks.json'), JSON.stringify(report, null, 2))
   socket?.close()

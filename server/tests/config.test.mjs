@@ -54,4 +54,6 @@ test('API configuration accepts only exact HTTP origins and valid ports', () => 
     assert.throws(() => getApiConfig({ CORS_ORIGINS }), /CORS_ORIGINS/)
   }
   for (const PORT of ['-1', '0', '65536', 'abc', '1.5']) assert.throws(() => getApiConfig({ PORT }), /PORT/)
+  assert.equal(getApiConfig({ HOST: '127.0.0.1' }).host, '127.0.0.1')
+  assert.throws(() => getApiConfig({ HOST: 'database.railway.internal' }), /local listen address/)
 })

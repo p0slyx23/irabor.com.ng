@@ -12,11 +12,14 @@
     "api:start": "node --env-file-if-exists=server/.env server/index.mjs",
     "db:check": "node --env-file-if-exists=server/.env server/check.mjs",
     "db:migrate": "node --env-file-if-exists=server/.env server/migrate.mjs",
-    "db:export-seed": "node scripts/export-content-seed.mjs",
+    "db:export-seed": "node --env-file-if-exists=server/.env scripts/export-content-seed.mjs",
+    "assets:check": "node --env-file-if-exists=server/.env server/assets.mjs --check",
+    "assets:sync": "node --env-file-if-exists=server/.env server/assets.mjs",
     "test:server": "node --test server/tests/*.test.mjs",
     "optimize:project-covers": "node scripts/optimize-project-covers.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1172.0",
     "framer-motion": "^12.38.0",
     "mysql2": "^3.24.6",
     "react": "^19.2.0",

@@ -1,11 +1,10 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { createServer } from 'vite'
-import { createSeedRecords } from '../server/lib/content.mjs'
+import { createDatabasePool } from '../server/lib/database.mjs'
+import { createSeedRecords, readPortfolioContent } from '../server/lib/content.mjs'
 
-// Asset tokens survive Vite's hashed production filenames. A future frontend
-// adapter resolves these references using its own bundled asset registry.
+// Asset references are independent of Vite's hashed production filenames.
 export function portableAssets(value) {
   if (typeof value === 'string') {
     return value.startsWith('/src/assets/') ? `asset:${value.slice(1)}` : value
@@ -26,7 +25,7 @@ function sqlText(value) {
 export function createSeedSql(content) {
   const records = portableAssets(createSeedRecords(content))
   const statements = [
-    '-- Initial portfolio content, exported from src/content/siteContent.js.',
+    '-- Portfolio content snapshot, exported from MySQL.',
     '-- Generated UTF-8 JSON literals. Do not edit an already-applied migration.',
     '-- Duplicate keys are left unchanged, preserving content edited in MySQL.',
     '-- Files stay in the repository. asset:src/assets/... references identify those files.',
@@ -68,14 +67,10 @@ async function main() {
   const outputFlag = process.argv.indexOf('--output')
   const output = outputFlag < 0 ? 'server/database/content-export.local.sql' : process.argv[outputFlag + 1]
   if (!output || output.startsWith('--')) throw new Error('Provide a file path after --output.')
-  const vite = await createServer({
-    configFile: false,
-    server: { middlewareMode: true },
-    optimizeDeps: { noDiscovery: true, include: [] },
-    appType: 'custom',
-  })
+  const pool = createDatabasePool()
   try {
-    const content = await vite.ssrLoadModule('/src/content/siteContent.js')
+    const content = await readPortfolioContent(pool)
+    content.getProjectStack = (slug) => content.projectStacks[slug] ?? []
     const projectFlag = process.argv.indexOf('--project')
     const slug = projectFlag < 0 ? null : process.argv[projectFlag + 1]
     if (projectFlag >= 0 && (!slug || slug.startsWith('--'))) throw new Error('Provide a slug after --project.')
@@ -87,7 +82,7 @@ async function main() {
       ? `Exported the ${slug} project update to ${output}.`
       : `Exported ${content.projectPosts.length} projects and ${content.experienceSection.entries.length} experience entries to ${output}.`)
   } finally {
-    await vite.close()
+    await pool.end()
   }
 }
 
