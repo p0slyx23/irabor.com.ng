@@ -23,6 +23,12 @@ npm run build
 
 ## Customize content
 
+Railway MySQL connection setup, migration SQL, and the read-only content API are
+available in [server/README.md](./server/README.md). The frontend still uses local
+content until the database is configured, verified, and its frontend cutover is
+completed. Keep all database credentials in the ignored `server/.env` or Railway
+Variables, never in Vite variables.
+
 Most portfolio content lives in [src/content/siteContent.js](./src/content/siteContent.js).
 
 - Update `siteBrand` for identity, contact details, social links, and resume links.
@@ -50,6 +56,12 @@ The homepage shows every project from the current calendar year. `/archive` show
 | `npm run dev` | Start the local development server. |
 | `npm run build` | Create a production build. |
 | `npm run lint` | Run ESLint. |
+| `npm run api:dev` | Start the local read-only content API. |
+| `npm run api:start` | Start the production content API. |
+| `npm run db:migrate` | Apply the MySQL schema and initial portfolio seed. |
+| `npm run db:check` | Verify MySQL connectivity and migrated content. |
+| `npm run db:export-seed` | Export current content to an ignored local SQL preview. |
+| `npm run test:server` | Run backend and migration safety tests without a database. |
 | `npm run optimize:project-covers` | Create optimized WebP project-cover files. |
 
 ## License
