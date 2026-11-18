@@ -47,6 +47,10 @@ export function getDatabaseConfig(env = process.env) {
 export function getApiConfig(env = process.env) {
   const port = Number(env.PORT || 3001)
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid API PORT.')
+  const host = env.HOST || '0.0.0.0'
+  if (!['0.0.0.0', '127.0.0.1', '::', '::1', 'localhost'].includes(host)) {
+    throw new Error('API HOST must be a local listen address, such as 0.0.0.0, not the MySQL hostname.')
+  }
   const origins = (env.CORS_ORIGINS || 'http://localhost:5173').split(',').map((value) => value.trim()).filter(Boolean)
   for (const origin of origins) {
     let parsed
@@ -55,5 +59,5 @@ export function getApiConfig(env = process.env) {
       throw new Error('CORS_ORIGINS must contain exact HTTP(S) origins, without paths or wildcards.')
     }
   }
-  return { port, host: env.HOST || '0.0.0.0', origins }
+  return { port, host, origins }
 }

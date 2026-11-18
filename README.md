@@ -12,6 +12,12 @@ Do not present Joseph Ehis Irabor's work history, writing, or project outcomes a
 
 ```bash
 npm install
+npm run api:dev
+```
+
+In a second terminal, start the frontend.
+
+```bash
 npm run dev
 ```
 
@@ -23,21 +29,22 @@ npm run build
 
 ## Customize content
 
-Railway MySQL connection setup, migration SQL, and the read-only content API are
-available in [server/README.md](./server/README.md). The frontend still uses local
-content until the database is configured, verified, and its frontend cutover is
-completed. Keep all database credentials in the ignored `server/.env` or Railway
-Variables, never in Vite variables.
+Content now lives in MySQL and is loaded through a read-only API. The
+[content module](./src/content/siteContent.js) contains page interfaces and lookup
+helpers, not the portfolio text. Use the
+[payload template](./src/content/portfolioPayload.template.json) when preparing
+new content, then apply reviewed SQL migrations to the database.
 
-Most portfolio content lives in [src/content/siteContent.js](./src/content/siteContent.js).
+[Server setup](./server/README.md) covers MySQL, migrations, Cloudflare R2, and
+deployment. Keep all database and R2 credentials in the ignored `server/.env`.
+For local development, leave `VITE_CONTENT_API_URL` empty in `.env.local` so Vite
+proxies `/api` to the API on port 3001. On Vercel, set `VITE_CONTENT_API_URL` to
+your own Railway API origin and redeploy. Forks must use their own API and data.
 
-- Update `siteBrand` for identity, contact details, social links, and resume links.
-- Update `profileContent` for the introduction and About section.
-- Update `experienceSection` to add or edit work history.
-- Update `projectPosts`, `projectEntries`, and the `portfolioProjects` ordering as you publish new work.
-- Use [src/content/portfolioPayload.template.json](./src/content/portfolioPayload.template.json) as the structured content template.
-
-Place a replacement resume in `src/assets/files/resume.pdf`. Project covers and other image assets live under `src/assets/images/`.
+Public covers and the resume are served from verified Cloudflare R2 objects.
+Local originals remain under `src/assets/` and provide bundled image fallbacks.
+After replacing a file, run `npm run assets:sync` to preview the plan, then
+`npm run assets:sync -- --apply` to upload, verify, and record its new URL.
 
 ## Portfolio versions and hosting
 
@@ -61,6 +68,9 @@ The homepage shows every project from the current calendar year. `/archive` show
 | `npm run db:migrate` | Apply the MySQL schema and initial portfolio seed. |
 | `npm run db:check` | Verify MySQL connectivity and migrated content. |
 | `npm run db:export-seed` | Export current content to an ignored local SQL preview. |
+| `npm run assets:check` | Check R2 access without uploading files. |
+| `npm run assets:sync` | Preview the public asset upload plan. |
+| `npm run assets:sync -- --apply` | Upload and verify public files, then record R2 URLs in MySQL. |
 | `npm run test:server` | Run backend and migration safety tests without a database. |
 | `npm run optimize:project-covers` | Create optimized WebP project-cover files. |
 

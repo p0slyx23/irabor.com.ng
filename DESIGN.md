@@ -65,6 +65,12 @@ typography:
     fontSize: "clamp(2.6rem, 6vw, 4rem)"
     lineHeight: 1.12
     letterSpacing: "-0.035em"
+  content-status:
+    fontFamily: "Manrope, Helvetica Neue, sans-serif"
+    fontSize: "clamp(1.5rem, 4vw, 2rem)"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "-0.02em"
 rounded:
   "4": "4px"
   "8": "8px"
@@ -207,6 +213,16 @@ The navigation group uses softly rounded corners (16px). Its active link has a s
 Profile project thumbnails have small corners (4px), their links have a modest radius (8px), and their expanded hover surfaces have softer corners (12px). Technology tags use pill geometry (999px). Shared supporting buttons use small corners (4px). Search fields use a square, bottom-border treatment.
 
 ## Components
+
+### Content loading and recovery
+
+Database content loads before the main portfolio mounts. Loading and retry states
+use the existing background, body face, focus treatment, and secondary button.
+Their status heading uses a compact 24–32px scale, with 16px supporting copy.
+The layout stays open and readable on mobile and desktop. A polite live region
+announces changes, failed requests offer a real retry action, and successful
+keyboard retries return focus to the main content. No decorative progress or
+spinner is shown.
 
 ### Navigation
 

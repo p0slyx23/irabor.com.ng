@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { createServer } from 'node:http'
 import test from 'node:test'
 import { createApiHandler } from '../lib/api.mjs'
-import { createFakePool } from './fixtures.mjs'
+import { createFakePool, createRows } from './fixtures.mjs'
 
 async function startApi(t, options = {}) {
   const pool = options.pool || createFakePool()
@@ -66,4 +66,19 @@ test('readiness validates content, not just a live database socket', async (t) =
   const { url } = await startApi(t)
   const response = await fetch(`${url}/readyz`)
   assert.deepEqual(await response.json(), { status: 'ready' })
+})
+
+test('API resolves verified asset locations without returning upload credentials', async (t) => {
+  const rows = createRows()
+  const brandRow = rows.settings.find((row) => row.content_key === 'siteBrand')
+  const brand = JSON.parse(brandRow.payload)
+  brand.resumes[0].url = 'asset:src/assets/files/resume.pdf'
+  brandRow.payload = JSON.stringify(brand)
+  const pool = createFakePool({ rows })
+  pool.execute = async () => [[{ asset_ref: 'asset:src/assets/files/resume.pdf', public_url: 'https://assets.example.com/portfolio/hash/resume.pdf' }]]
+  const { url } = await startApi(t, { pool })
+  const payload = await (await fetch(`${url}/api/content`)).json()
+  assert.equal(payload.schemaVersion, 1)
+  assert.equal(payload.content.siteBrand.resumes[0].url, 'https://assets.example.com/portfolio/hash/resume.pdf')
+  assert.ok(!JSON.stringify(payload).includes('R2_SECRET_ACCESS_KEY'))
 })

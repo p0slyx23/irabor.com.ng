@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { readPortfolioContent } from './content.mjs'
+import { applyAssetManifest, readPortfolioContent } from './content.mjs'
 
 export function createApiHandler({ pool, origins, logError = console.error }) {
   return async (request, response) => {
@@ -30,8 +30,10 @@ export function createApiHandler({ pool, origins, logError = console.error }) {
     if (path === '/healthz') return send(200, { status: 'ok' })
     if (!['/api/content', '/readyz'].includes(path)) return send(404, { error: 'Not found.' })
     try {
-      const content = await readPortfolioContent(pool)
+      const snapshot = await readPortfolioContent(pool)
+      const [assets] = await pool.execute('SELECT asset_ref, public_url FROM portfolio_assets')
       if (path === '/readyz') return send(200, { status: 'ready' })
+      const content = applyAssetManifest(snapshot, assets)
       const body = JSON.stringify({ schemaVersion: 1, content })
       const etag = `"${createHash('sha256').update(body).digest('hex')}"`
       response.setHeader('ETag', etag)

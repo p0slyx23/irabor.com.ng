@@ -26,7 +26,7 @@ Rules:
 3. Do not add comments.
 4. If information is missing, use an empty string, empty array, or false instead of inventing data. Never invent metrics, users, revenue, performance claims, launch dates, or client outcomes.
 5. Keep copy concise and portfolio-ready.
-6. For image paths, use this format exactly: /images/folder/file-name.ext
+6. For images, use a verified public R2 HTTPS URL or an existing portable asset reference such as asset:src/assets/images/projects/project-cover.webp. Do not invent URLs or object keys.
 7. For aboutPage.paragraphs and for projectEntries.sections/blogEntries.sections, keep each paragraph as a separate string inside "paragraphs".
 8. Keep slugs lowercase and hyphenated, and make projectEntries/blogEntries object keys match their slug.
 9. Keep dates human-readable for projectPosts.date and blogPosts.date. Use ISO format only for snippets.updatedAt.
@@ -45,7 +45,7 @@ Rules:
 16. For projectEntries.links, use objects with exactly these keys: "label" and "href". Include only links that work publicly, such as a live site, app-store listing, repository, or prototype. Use an empty array if there are no project links yet.
 17. For projectEntries.screenshots, use an array of objects with exactly these keys: "src", "alt", and "caption". Screenshots are optional: one strong cover image is enough until you have more. Use an empty array rather than duplicating the cover image.
 18. For projectEntries.evidence, use an array of objects with exactly these keys: "label", "value", and "detail". Include only verifiable proof such as a delivery milestone, supported platform, launch status, validated metric, or named system capability. Use an empty array when no evidence is available; never use invented numbers or placeholder evidence.
-19. Each project case study needs "overview", "challenge", "role", "solution", and "outcome" entries in both "toc" and "sections". Keep the outcome concise and factual. The outcome section should explain what was delivered and what it demonstrates, not repeat the solution list.
+19. Prefer "overview", "challenge", "role", "solution", and "outcome" sections when the supplied material supports them. A shorter factual case study may omit "solution". Keep "toc" aligned with the actual sections, and keep outcomes concise and verifiable.
 20. For resources, use objects with exactly these keys: "id", "title", "category", "logoText", "logoTone", "description", and "image".
 21. For snippets, use objects with exactly these keys: "id", "title", "description", "category", "projectSlug", "projectTitle", "stack", "updatedAt", and "highlighted".
 22. For snippets, keep them tied to real projects when possible by filling "projectSlug", "projectTitle", and "stack". Make "projectSlug" match an existing project slug exactly.
@@ -60,21 +60,17 @@ Rules:
 
 Image rule for this project:
 
-- Put image files inside `public/images/`
-- Example:
-  - `public/images/profile/irabor-portrait.jpg`
-  - `public/images/logos/typescript.svg`
-  - `public/images/projects/project-slug/project-cover.jpg`
-  - `public/images/blog/post-cover.jpg`
-- Reference them in data as:
-  - `"/images/profile/irabor-portrait.jpg"`
-  - `"/images/logos/typescript.svg"`
-  - `"/images/projects/project-slug/project-cover.jpg"`
-  - `"/images/blog/post-cover.jpg"`
+- Existing public covers and the resume are stored in Cloudflare R2.
+- Keep original cover files in `src/assets/images/projects/` and the resume in
+  `src/assets/files/resume.pdf`.
+- Existing database references use `asset:src/assets/...`; the API resolves them
+  through the verified asset manifest. A verified R2 HTTPS URL is also valid.
+- Do not invent a public bucket URL, hash, asset path, or screenshot.
 
 Recommended workflow:
 
 1. Copy `portfolioPayload.template.json`
 2. Paste it into ChatGPT with the prompt above
 3. Fill in your real data
-4. Replace the demo content in `siteContent.js` with the finalized data, or ask me to wire the JSON directly
+4. Ask for a reviewed SQL migration for the finalized content. Do not put the data back into `siteContent.js` or rewrite an applied migration.
+5. For new or changed public assets, preview `npm run assets:sync`, then apply the approved upload plan with `npm run assets:sync -- --apply`.

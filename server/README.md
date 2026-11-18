@@ -1,148 +1,195 @@
-# Railway MySQL setup
+# Railway MySQL and Cloudflare R2
 
-This is the database and read-only API foundation. The frontend still reads
-`src/content/siteContent.js` until its database cutover is configured and verified.
-Adding credentials alone does **not** switch the live website or remove its local
-content. No Railway services are created by these scripts.
+The React frontend loads content from the read-only API. MySQL holds portfolio
+settings, projects, experience, and verified public asset locations. Cloudflare
+R2 holds public cover images and the resume. Local asset originals are retained.
 
-## Local setup
+## Local development
 
-Use Node.js 22.12 or later (Node.js 24 LTS recommended) and MySQL 8.0 or later.
+Use Node.js 22.12 or later (24 LTS recommended) and MySQL 8.0 or later.
 Run commands from the repository root.
 
-1. Run `npm install`.
-2. Create `server/.env` using `server/.env.example`, if it does not already exist.
-3. Enter your connection URL in `MYSQL_URL`. This file is ignored by Git.
-4. Run `npm run db:migrate` to create the tables and import the current content.
-5. Run `npm run db:check` to verify connectivity and seeded content.
-6. Run `npm run api:dev` and open `http://localhost:3001/api/content`.
+1. Install dependencies with `npm install`.
+2. Fill the ignored `server/.env` using `server/.env.example`.
+3. Use Railway's `MYSQL_PUBLIC_URL` value as local `MYSQL_URL`. Private
+   `*.railway.internal` addresses cannot be reached from your computer.
+4. Run `npm run db:migrate`, then `npm run db:check`.
+5. Start the API with `npm run api:dev`.
+6. In another terminal, run `npm run dev`.
+7. Leave `VITE_CONTENT_API_URL` blank in root `.env.local` to use Vite's local
+   `/api` proxy to port 3001. Set it to an API origin to test a deployed API.
 
-For local access to Railway, use the MySQL service's **MYSQL_PUBLIC_URL** from its
-TCP proxy. A `*.railway.internal` host cannot be reached from your computer.
-Passwords containing reserved URL characters must be URL-encoded. Use Railway's
-generated URL rather than assembling one by hand. Never paste credentials in
-chat, commit them, or put them in a `VITE_*` variable.
+The browser never receives MySQL or R2 credentials. Never use a `VITE_` prefix
+for secrets. Local environment files are ignored by Git. Keep their values out
+of chat, screenshots, logs, and commits.
 
-The checked-in template has no real credentials. The API and database commands
-fail clearly if `MYSQL_URL` is empty. `DATABASE_URL` is also accepted when
-`MYSQL_URL` is unset.
+## Deploy the API to Railway
 
-## Railway API service
+Add a GitHub-backed service from branch `v2` in the same Railway project and
+environment as MySQL. Keep the root directory at the repository root.
 
-Keep the frontend on Vercel. Add a separate API service from this repository and
-the `v2` branch in the **same Railway project and environment** as MySQL.
-Keep its root directory at the repository root, not `/server`.
-
-Configure the API service with these values.
+The checked-in `railway.json` configures:
 
 | Setting | Value |
 | --- | --- |
-| Node version | `RAILPACK_NODE_VERSION=24` |
-| Build command | `npm ci --omit=dev` |
-| Pre-deploy command | `npm run db:migrate` |
-| Start command | `npm run api:start` |
-| Healthcheck path | `/readyz` |
-| `MYSQL_URL` | `${{MySQL.MYSQL_URL}}`, replacing `MySQL` with your database service name |
-| `CORS_ORIGINS` | `https://irabor.com.ng` plus any other exact frontend origins you intentionally allow |
+| Build | `npm ci --omit=dev` |
+| Pre-deploy | `npm run db:migrate` |
+| Start | `npm run api:start` |
+| Healthcheck | `/readyz` |
+| Application sleep | Disabled |
 
-Railway supplies `PORT` automatically. Use the **private** connection URL between
-these services. The default pool has five connections per API instance. Account
-for additional instances when setting the database's connection limit.
+Set `RAILPACK_NODE_VERSION=24` and `CORS_ORIGINS=https://irabor.com.ng` on
+the API service. Add exact local or preview origins only when needed.
+Origins have a scheme and optional port, with no path, trailing slash, or wildcard.
 
-An origin includes the scheme and hostname, and a port for local development.
-It does not include a trailing slash or path. Do not use a wildcard for Vercel
-preview URLs. Add a specific preview origin when you need to test it.
+Set `MYSQL_URL` on the API service to `${{MySQL.MYSQL_URL}}`, replacing
+`MySQL` with your actual database service name. This is the private connection
+for Railway-to-Railway traffic. Keep the public URL in the local file unchanged.
+Railway supplies `PORT` automatically.
 
-Enable `MYSQL_SSL=true` only for an endpoint configured to support TLS. A custom
-CA can be provided with `MYSQL_SSL_CA_FILE`. Certificate verification is never
-disabled. The template's `false` value does not claim that public connections
-are encrypted. Keep production DB traffic on Railway's private network.
+Generate a public domain for the API. Both `/readyz` and `/api/content` must
+return JSON, not your frontend's HTML. The pre-deploy step skips previously
+applied migrations and verifies their checksums.
 
-For production, migrations need a schema-management DB user. The API can use a
-separate user with only SELECT access to `portfolio_settings`,
-`portfolio_projects`, and `portfolio_experience`. If you use that arrangement,
-run migrations separately with the migration user's credentials rather than
-running a pre-deploy command under the API's restricted credentials.
+For a restricted production API user, grant SELECT on `portfolio_settings`,
+`portfolio_projects`, `portfolio_experience`, and `portfolio_assets`.
+Run migrations separately with a schema-management user instead of using the
+restricted API credentials in the pre-deploy command.
 
-## Tables and migration SQL
+TLS is enabled with `MYSQL_SSL=true` only for an endpoint that supports it.
+Use `MYSQL_SSL_CA_FILE` for a custom CA. Certificate verification is never
+disabled. Keep production database traffic on Railway's private network.
 
-- `database/migrations/001_schema.sql` creates three additive InnoDB tables.
-- `database/migrations/002_initial_content.sql` seeds the current portfolio,
-  including Icypop, with its original ordering and nested case studies.
-- `database/migrations/003_update_icypop_store.sql` applies the revised Icypop
-  copy, tags, and case-study sections without rewriting the initial migration.
-- The runner creates `portfolio_schema_migrations` to record applied versions
-  and checksums. A named database lock prevents concurrent migration runners.
+## Deploy the frontend to Vercel
 
-Projects and experience have stable primary keys and explicit order columns.
-JSON columns retain the existing nested content shape without creating a table
-for every paragraph, tag, and case-study section. This is deliberately a content
-store, not a full CMS. Unused writing, resources, and snippets are preserved as
-settings so migration does not silently discard them.
+Set this public build variable in Vercel and redeploy:
 
-`npm run db:migrate` applies pending files in filename order. Already-applied
-migrations are skipped. Changing an applied file fails its checksum check.
-Add a new numbered migration for future changes. Commit the SQL files as UTF-8
-and keep line endings consistent. CRLF and LF are normalized for checksums.
+```env
+VITE_CONTENT_API_URL=https://your-api.up.railway.app
+```
 
-The schema does not drop or delete anything. The initial seed leaves existing
-rows untouched on duplicate keys. Back up an existing database and inspect any
-existing `portfolio_*` tables before first use. MySQL DDL implicitly commits,
-so schema changes are not fully transactional. The seed and its migration record
-are transactional when applied by the runner.
+The loader accepts either the API origin or its full `/api/content` URL.
+An empty value uses same-origin `/api/content`, which is useful behind a proxy.
+The existing Vercel SPA rewrite does not create that proxy, so set the variable
+for this deployment. Updating a Vite variable requires a new frontend build.
 
-You can also execute `001_schema.sql`, then `002_initial_content.sql`, using a
-MySQL client against the selected database. No CREATE DATABASE privilege is
-needed. Prefer the runner so migrations are tracked. Do not import untrusted SQL.
-Seed JSON uses hexadecimal UTF-8 literals to preserve Unicode and backslashes
-independently of client SQL modes.
+The frontend validates the API version, content shape, project references, and
+URLs before rendering. It retries temporary failures once, bounds request time,
+cancels abandoned requests, and offers an accessible retry state on failure.
+It does not silently replace failed database reads with hardcoded portfolio text.
 
-## Files and frontend cutover
+## Cloudflare R2 public assets
 
-Cloudflare R2 is the planned storage provider for future uploaded assets. No
-upload integration, bucket provisioning, or file transfer is enabled yet.
-Existing local files remain in use until storage and frontend changes are ready.
+Fill these values in the ignored local `server/.env`:
 
-Résumé PDFs, covers, SVGs, and other assets stay in the repository. The seed stores
-portable references such as `asset:src/assets/files/resume.pdf`. These are asset
-identifiers, not public URLs. Do not replace them with Vite's hashed build URLs,
-which change between deployments. A frontend asset registry must resolve these
-identifiers during the later cutover.
+```env
+R2_BUCKET=your-bucket-name
+R2_ENDPOINT=https://your-account.r2.cloudflarestorage.com
+R2_ACCESS_KEY_ID=your-access-key-id
+R2_SECRET_ACCESS_KEY=your-secret-access-key
+R2_PUBLIC_BASE_URL=https://your-public-asset-domain
+```
 
-Before removing the local content source, wire a frontend loader to
-`GET /api/content`, resolve asset references, add loading/retry behavior, and
-verify both deployment domains. That cutover intentionally waits for a working
-database. Do not point the existing frontend at this endpoint without its adapter.
+The R2 S3 endpoint may include a matching bucket suffix copied from the
+dashboard. The command normalizes that suffix. The delivery URL must be the
+bucket's public development URL or a custom domain, not its authenticated S3
+endpoint. Only public portfolio files belong in this bucket.
 
-`npm run db:export-seed` exports the current JS content to an ignored local SQL
-preview. It does not contact MySQL or modify an applied migration. To generate a
-new file, run `npm run db:export-seed -- --output path/to/new-file.sql`. Explicit
-output files are created exclusively and are never silently overwritten.
+Use a bucket-scoped Object Read & Write token. Do not grant account-wide bucket
+administration. Write credentials are needed only by the local upload command;
+the public API reads already-verified URLs from MySQL.
 
-For a single project update, use
-`npm run db:export-seed -- --project icypop-store --output path/to/new-migration.sql`.
-This updates only that project's summary, case study, and stack. It preserves
-the row's existing sort positions and does not touch other projects.
+```bash
+npm run assets:check
+npm run assets:sync
+npm run assets:sync -- --apply
+```
 
-## API and tests
+The first command checks access. The second previews the plan without changing
+R2 or MySQL. The third uploads and publishes the approved assets.
+
+Files are discovered from existing `asset:src/assets/...` references in the
+database. The upload allowlist includes project PNG/WebP/JPEG/AVIF covers and
+`src/assets/files/resume.pdf` only. It rejects arbitrary paths, private files,
+and paths resolving outside the repository.
+
+Each object uses `portfolio/<sha256>/<filename>`. Matching objects are reused,
+and unexpected hash conflicts fail rather than overwrite. Uploaded bytes, MIME
+type, and public delivery are verified before any manifest is published. The
+whole set of verified references is recorded in one database transaction.
+Failures leave the old manifest in place. Objects already uploaded during a
+failed run remain available for a safe retry. No delete command is provided.
+
+Asset URLs use content-addressed keys with immutable caching. Replacing a local
+file creates a new object and URL. The old R2 object and local original remain
+untouched. To switch delivery domains, update `R2_PUBLIC_BASE_URL` and rerun
+the sync. Existing objects are reused and the new public URLs are verified.
+
+`r2.dev` is for development. Configure a custom domain, such as
+`assets.irabor.com.ng`, for production. Keep private attachments in a separate
+private bucket. No public upload endpoint or admin UI is included.
+
+The API resolves portable content references using `portfolio_assets`.
+Unmapped references can use the frontend's local bundled registry during a
+staged cutover. Known original WebP covers, the two portfolio PNGs, Icypop PNG,
+and the resume are included as fallbacks. Add new fallback PNGs explicitly if
+needed. Ordinary UI SVGs and fonts remain bundled with the frontend.
+
+## Migrations and future content
+
+| File | Purpose |
+| --- | --- |
+| `001_schema.sql` | Add settings, projects, and experience tables |
+| `002_initial_content.sql` | Preserve the original full content snapshot |
+| `003_update_icypop_store.sql` | Apply the revised Icypop case study |
+| `004_asset_storage.sql` | Add the verified public asset manifest |
+
+The runner creates `portfolio_schema_migrations` with version checksums and
+uses a named database lock. Already-applied files must not be edited. Add a new
+numbered migration for future changes. LF and CRLF are normalized for checksums.
+Back up an existing database before applying changes.
+
+MySQL DDL implicitly commits. Schema files are additive and safe to rerun.
+Seed data and its version record are transactional under the runner. The initial
+seed leaves existing rows unchanged on duplicate keys. Runtime API connections
+disable multiple SQL statements. Only checked-in migration files enable them.
+
+`src/content/siteContent.js` is now a data adapter with lookup helpers.
+Do not put new text back into it. Use the payload template to prepare factual
+content and generate a reviewed SQL migration for the corresponding database rows.
+
+`npm run db:export-seed` exports a fresh database snapshot to an ignored local
+SQL preview. It does not contact R2 or rewrite an applied migration. Use
+`--output path/to/new-file.sql` for a new, exclusively created output file.
+Use `--project icypop-store` for a single-project update snapshot.
+Seed JSON is encoded as UTF-8 hex literals to preserve Unicode, quotes, and
+backslashes regardless of the MySQL client's SQL mode.
+
+## Endpoints and verification
 
 | Endpoint | Purpose |
 | --- | --- |
-| `GET /healthz` | Process liveness, no database dependency |
-| `GET /readyz` | Database and seed readiness, returns 503 when unavailable |
-| `GET /api/content` | Public content as `{ schemaVersion: 1, content }` |
+| `GET /healthz` | Process liveness |
+| `GET /readyz` | Content and asset-table readiness |
+| `GET /api/content` | Public `{ schemaVersion: 1, content }` response |
 
-Responses include a 60-second cache lifetime and an ETag for content. There are
-no editing endpoints, admin credentials, or browser-accessible DB credentials.
-CORS limits browser access from other origins. It is not authentication, and
-public portfolio content remains public. Logs and error responses omit driver
-errors and connection URLs.
+The API is read-only, uses exact-origin CORS, and returns safe error messages.
+CORS is not authentication. Portfolio content and public asset URLs are public.
+Content responses use ETags and a 60-second cache lifetime.
 
-Run `npm run test:server`, `npm run lint`, and `npm run build` before deployment.
-Automated tests use fake database connections to check API behavior and migration
-safety. Actual MySQL verification requires `db:migrate` and `db:check` against
-your configured database.
+Run `npm run test:server`, `npm run lint`, and `npm run build` before
+deployment. Tests cover content loading, validation, retries, storage safety,
+migration behavior, and deployment configuration.
+
+Browser integration checks can use a local API against real MySQL and R2.
+Build with `VITE_CONTENT_API_URL=/api/content`, start the API, then run
+`scripts/verify-portfolio-ui.mjs` with `PORTFOLIO_QA_API_ORIGIN` set to
+that local API origin. Its local production server proxies content requests,
+while uploaded images and PDFs are served by real R2. The suite also simulates
+wrong-service HTML and temporary outages. No deployment is performed by QA.
 
 References: [Railway MySQL](https://docs.railway.com/databases/mysql),
-[private networking](https://docs.railway.com/networking/private-networking/how-it-works),
-[mysql2 connection pools](https://sidorares.github.io/node-mysql2/docs/examples/connections/create-pool).
+[Railway config](https://docs.railway.com/config-as-code/reference),
+[Cloudflare R2 SDK](https://developers.cloudflare.com/r2/examples/aws/aws-sdk-js-v3/),
+[public R2 buckets](https://developers.cloudflare.com/r2/buckets/public-buckets/),
+[Vite environment variables](https://vite.dev/guide/env-and-mode).
