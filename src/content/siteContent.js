@@ -1,6 +1,7 @@
 import { getContentDateSortValue } from "../core/dateFormatting.js";
 import excacoCoverImage from "../assets/images/projects/excaco-cover.webp";
 import lgscElectionCoverImage from "../assets/images/projects/lgscelection-cover.webp";
+import icypopStoreCoverImage from "../assets/images/projects/icypop-store-cover.png";
 import lugspaceCoverImage from "../assets/images/projects/lugspace-cover.webp";
 import payshipCoverImage from "../assets/images/projects/payship-cover.webp";
 import portfolioV1CoverImage from "../assets/images/projects/portfolio-v1-cover.png";
@@ -543,7 +544,58 @@ const primewaveCleaningProjectStack = [
   },
 ];
 
+const icypopStoreProjectStack = [
+  {
+    id: "react",
+    badge: "react",
+    badgeTone: "ice",
+    title: "react storefront",
+    description:
+      "Responsive storefront interfaces for browsing products, managing a cart, and completing account-aware shopping flows.",
+  },
+  {
+    id: "php",
+    badge: "php",
+    badgeTone: "purple",
+    title: "php service layer",
+    description:
+      "Custom application services for catalog, authentication, checkout, support, loyalty, and operational workflows.",
+  },
+  {
+    id: "mysql",
+    badge: "sql",
+    badgeTone: "neutral",
+    title: "mysql data model",
+    description:
+      "Persistent product, order, account, gift card, loyalty, and support data.",
+  },
+  {
+    id: "paystack",
+    badge: "pay",
+    badgeTone: "lime",
+    title: "paystack checkout",
+    description:
+      "Payment initialization, verification, and order-processing support for checkout.",
+  },
+  {
+    id: "cloudflare-r2",
+    badge: "r2",
+    badgeTone: "sky",
+    title: "cloudflare r2",
+    description:
+      "Separate object storage for catalog media and private support attachments.",
+  },
+  {
+    id: "support-operations",
+    badge: "ops",
+    badgeTone: "pink",
+    title: "support operations",
+    description:
+      "Customer support conversations and admin workflows designed for store operations.",
+  },
+];
 const projectStacks = {
+  "icypop-store": icypopStoreProjectStack,
   "atlanticstay-booking-platform": atlanticStayProjectStack,
   "excaco-real-estate-platform": excacoProjectStack,
   "lgsc-election-results-platform": lgscProjectStack,
@@ -713,6 +765,25 @@ export const projectPosts = [
       alt: "Travel booking platform backend",
     },
   },
+  {
+    slug: "icypop-store",
+    title: "Icypop Store",
+    category: "Case Studies",
+    date: "2026",
+    sortDate: "2026",
+    readTime: "",
+    excerpt:
+      "A beauty ecommerce platform for product discovery, secure checkout, loyalty rewards, customer accounts, and support.",
+    tags: ["React", "PHP", "MySQL", "Paystack", "Cloudflare R2"],
+    featured: true,
+    links: [
+      { label: "Visit Icypop Store", href: "https://icypopstore.com/" },
+    ],
+    image: {
+      src: icypopStoreCoverImage,
+      alt: "Icypop Store beauty ecommerce experience",
+    },
+  },
 ].sort(
   (left, right) =>
     Number(Boolean(right.featured)) - Number(Boolean(left.featured)) ||
@@ -724,6 +795,7 @@ export const projectPosts = [
 export const portfolioProjects = [
   "portfolio-v2",
   "portfolio-v1",
+  "icypop-store",
   "primewave-cleaning-services",
   "lgsc-election-results-platform",
   "payship-fintech-platform",
@@ -784,6 +856,83 @@ export const projectEntries = {
       { id: "overview", heading: "Overview", paragraphs: ["Version two organizes my portfolio around About, Experience, and Projects. Current-year projects appear on the homepage, while earlier work lives in the project archive."] },
       { id: "implementation", heading: "Implementation", paragraphs: ["React components, responsive CSS, and Framer Motion support the interface. The design includes light and dark themes, reduced-motion behavior, keyboard-accessible contact links, and solid sticky headers. Version two is published on Vercel; version one is available as a GitHub Pages archive."] },
     ],
+  },
+  "icypop-store": {
+    slug: "icypop-store",
+    eyebrow: "case study",
+    title: "Icypop Store",
+    lede:
+      "Icypop Store brings beauty shopping, payments, member rewards, order management, and customer support into one connected storefront.",
+    meta: ["Product Design", "Frontend Engineering", "PHP Commerce Platform", "Live"],
+    tags: ["React", "PHP", "MySQL", "Paystack", "Cloudflare R2"],
+    coverImage: {
+      src: icypopStoreCoverImage,
+      alt: "Icypop Store beauty ecommerce experience",
+    },
+    links: [
+      { label: "Visit Icypop Store", href: "https://icypopstore.com/" },
+    ],
+    screenshots: [],
+    evidence: [
+      {
+        label: "Storefront",
+        value: "Responsive ecommerce",
+        detail:
+          "Supports product browsing, cart management, account access, and checkout flows.",
+      },
+      {
+        label: "Operations",
+        value: "Admin workspace",
+        detail:
+          "Includes catalog, orders, customer, loyalty, support, marketing, and shipping workflows.",
+      },
+    ],
+    stack: icypopStoreProjectStack,
+    toc: [
+      { id: "overview", label: "Overview" },
+      { id: "challenge", label: "The Challenge" },
+      { id: "role", label: "My Role" },
+      { id: "outcome", label: "Outcome" },
+    ],
+    sections: [
+      {
+        id: "overview",
+        heading: "Project Overview",
+        paragraphs: [
+          "Icypop Store is a responsive beauty ecommerce platform built for browsing makeup and skincare products, selecting product shades, managing a bag, and completing checkout.",
+          "The storefront also supports customer accounts, loyalty points, gift cards, order history, and a guided help experience.",
+        ],
+      },
+      {
+        id: "challenge",
+        heading: "The Challenge",
+        paragraphs: [
+          "The store needed to feel editorial and product-led while still handling real commerce workflows such as checkout, account access, rewards, support, and internal operations.",
+        ],
+      },
+      {
+        id: "role",
+        heading: "My Role",
+        paragraphs: [
+          "I designed and implemented the customer storefront and connected it to the PHP commerce backend and operational tooling.",
+        ],
+        list: [
+          "Responsive product discovery and detail flows",
+          "Cart and Paystack payment integration",
+          "Membership, loyalty, and gift-card experiences",
+          "Customer support chat and admin operations",
+          "Cloudflare R2 product asset storage",
+        ],
+      },
+      {
+        id: "outcome",
+        heading: "Outcome",
+        paragraphs: [
+          "The result is a live commerce foundation that supports the customer journey from product discovery through payment, account activity, rewards, and help.",
+        ],
+      },
+    ],
+    related: [],
   },
   "primewave-cleaning-services": {
     slug: "primewave-cleaning-services",
