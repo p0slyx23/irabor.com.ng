@@ -6,6 +6,14 @@ import { join } from 'node:path'
 import { promisify } from 'node:util'
 import test from 'node:test'
 
+test('direct npm install does not opt into unprovisioned Corepack runtime layers', async () => {
+  const pkg = JSON.parse(await readFile(new URL('../../package.json', import.meta.url), 'utf8'))
+  // Railpack 0.43 adds /opt/corepack to runtime layers when packageManager is
+  // present for npm. Our explicit install commands do not provision Corepack.
+  assert.equal(pkg.packageManager, undefined,
+    'Direct npm install must not request /opt/corepack through packageManager metadata.')
+})
+
 test('the custom install stages both manifests before real npm ci reads them', async (t) => {
   const config = JSON.parse(await readFile(new URL('../../railpack.json', import.meta.url), 'utf8'))
   const directory = await mkdtemp(join(tmpdir(), 'irabor-install-regression-'))
@@ -51,7 +59,6 @@ test('Railway runs the read-only API rather than the Vite frontend', async () =>
   assert.equal(pack.deploy.startCommand, config.deploy.startCommand)
   const pkg = JSON.parse(await readFile(new URL('../../package.json', import.meta.url), 'utf8'))
   assert.equal(pkg.scripts['api:build'], 'node server/build.mjs')
-  assert.equal(pkg.packageManager, 'npm@11.6.2')
   assert.equal(config.deploy.startCommand, 'npm run api:start')
   assert.deepEqual(config.deploy.preDeployCommand, ['npm run db:migrate'])
   assert.equal(config.deploy.healthcheckPath, '/readyz')

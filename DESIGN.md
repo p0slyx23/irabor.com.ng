@@ -216,13 +216,19 @@ Profile project thumbnails have small corners (4px), their links have a modest r
 
 ### Content loading and recovery
 
-Database content loads before the main portfolio mounts. Loading and retry states
-use the existing background, body face, focus treatment, and secondary button.
-Their status heading uses a compact 24–32px scale, with 16px supporting copy.
-The layout stays open and readable on mobile and desktop. A polite live region
-announces changes, failed requests offer a real retry action, and successful
-keyboard retries return focus to the main content. No decorative progress or
-spinner is shown.
+Database content loads before the main portfolio mounts. A full-viewport,
+theme-aware loading screen centers the existing 96px brandmark, a compact
+24–32px status heading, and 16px supporting copy. Three accent dots indicate
+indeterminate activity without inventing percentages. The logo follows the
+mouse by at most 6px and replays a small 600ms rotation on tap or Enter. A
+44px pause/resume control stops visual motion without cancelling the request.
+Reduced-motion preferences remove the effects and decorative controls; hidden
+tabs also pause them. After six seconds, the status explains the longer wait.
+There is no artificial minimum duration: real content replaces the loader as
+soon as it is ready. A polite live status sits outside the busy main region.
+Failures keep the same fullscreen composition with a static mark and the
+existing retry button. Successful retries or loader keyboard interactions
+return focus to the main content, without disrupting direct hash navigation.
 
 ### Navigation
 
