@@ -1,0 +1,17 @@
+# Railpack's API image must not contain local secrets or frontend artifacts.
+**/node_modules
+**/.env
+**/.env.*
+.git
+.github
+.vscode
+.idea
+.impeccable
+dist
+dist-ssr
+src
+public
+scripts
+server/tests
+server/database/content-export.local.sql
+*.log

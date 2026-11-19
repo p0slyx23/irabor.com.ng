@@ -12,10 +12,21 @@ Do not present Joseph Ehis Irabor's work history, writing, or project outcomes a
 
 ```bash
 npm install
+```
+
+Create `server/.env` from `server/.env.example` if it does not already exist,
+then configure MySQL using the [server setup guide](./server/README.md).
+Keep existing credentials; do not replace a working env file. For the local
+API use `HOST=127.0.0.1` and `PORT=3001`.
+
+```bash
+npm run db:migrate
+npm run db:check
 npm run api:dev
 ```
 
-In a second terminal, start the frontend.
+Keep that API terminal open. Do not also run `api:start` on the same port.
+In a second terminal, start the frontend:
 
 ```bash
 npm run dev
@@ -48,8 +59,11 @@ After replacing a file, run `npm run assets:sync` to preview the plan, then
 
 ## Portfolio versions and hosting
 
-- `main` is the primary repository branch.
-- `v2` contains the current portfolio, hosted on [Vercel](https://irabor.com.ng/).
+- `main` is the production deployment branch. Railway deploys the API from it.
+- `v2` is the working branch for the current portfolio. Push changes there, then
+  merge a pull request into `main` to release them. Pushing to `v2` alone does
+  not update a Railway service watching `main`.
+- The current frontend is hosted on [Vercel](https://irabor.com.ng/).
 - `v1` preserves the earlier portfolio as a [live GitHub Pages archive](https://p0slyx23.github.io/irabor.com.ng/).
 
 V1 has its own `npm run build:github-pages` command. Commit its generated `docs` directory when updating that archive. GitHub Pages publishes `v1` from `/docs`, using `/irabor.com.ng/` as the base path and a `404.html` fallback for direct case-study links.
@@ -64,6 +78,7 @@ The homepage shows every project from the current calendar year. `/archive` show
 | `npm run build` | Create a production build. |
 | `npm run lint` | Run ESLint. |
 | `npm run api:dev` | Start the local read-only content API. |
+| `npm run api:build` | Validate the API without Vite, credentials, or a database connection. |
 | `npm run api:start` | Start the production content API. |
 | `npm run db:migrate` | Apply the MySQL schema and initial portfolio seed. |
 | `npm run db:check` | Verify MySQL connectivity and migrated content. |

@@ -19,20 +19,36 @@ Run commands from the repository root.
 7. Leave `VITE_CONTENT_API_URL` blank in root `.env.local` to use Vite's local
    `/api` proxy to port 3001. Set it to an API origin to test a deployed API.
 
+Run only one API process: `api:dev` and `api:start` are alternatives, not two
+services to start together. Keep its terminal open; stop it with **Ctrl+C**
+before restarting. If startup reports `EADDRINUSE`, another process owns the
+port. Reuse the running API or stop it in its original terminal. Do not kill
+all Node processes or change ports at random. Changing the API port also
+requires updating the target in `vite.config.js`.
+
+Use `HOST=127.0.0.1` and `PORT=3001` locally. These are the API's listen address
+and port, **not** the MySQL host/port inside `MYSQL_URL`. Shell variables take
+precedence over the local env file; restart a terminal with stale overrides.
+
 The browser never receives MySQL or R2 credentials. Never use a `VITE_` prefix
 for secrets. Local environment files are ignored by Git. Keep their values out
 of chat, screenshots, logs, and commits.
 
 ## Deploy the API to Railway
 
-Add a GitHub-backed service from branch `v2` in the same Railway project and
+Use a GitHub-backed service from branch `main` in the same Railway project and
 environment as MySQL. Keep the root directory at the repository root.
+
+`v2` is the working branch. Commit/push fixes there, then merge a pull request
+from `v2` into `main`. Railway deploys that merge commit from `main`; it does
+not follow a push to `v2`. Do not change the service's watched branch to `v2`.
 
 The checked-in `railway.json` configures:
 
 | Setting | Value |
 | --- | --- |
-| Build | `npm ci --omit=dev` |
+| Install (`railpack.json`) | `npm ci --omit=dev`, once, using the lockfile |
+| Build (`railway.json`) | `npm run api:build` |
 | Pre-deploy | `npm run db:migrate` |
 | Start | `npm run api:start` |
 | Healthcheck | `/readyz` |
@@ -41,6 +57,17 @@ The checked-in `railway.json` configures:
 Set `RAILPACK_NODE_VERSION=24` and `CORS_ORIGINS=https://irabor.com.ng` on
 the API service. Add exact local or preview origins only when needed.
 Origins have a scheme and optional port, with no path, trailing slash, or wildcard.
+Use `HOST=0.0.0.0` so Railway can reach the API; do not copy the local
+`HOST=127.0.0.1`. Let Railway inject `PORT` instead of setting it to 3001 or 3306.
+
+The repository pins npm to the tested version in `packageManager`.
+Railpack installs production dependencies in its install phase; the build
+validates API modules and migration files without connecting to MySQL. It
+does not run Vite or perform a second install over the build cache. The
+`.dockerignore` keeps local env files, frontend sources, and review artifacts
+out of the API image. Vercel still uses `npm run build` for the React frontend.
+Remove stale custom build/start dashboard overrides if they conflict with
+the checked-in configuration. Check the new deployment's resolved configuration.
 
 Set `MYSQL_URL` on the API service to `${{MySQL.MYSQL_URL}}`, replacing
 `MySQL` with your actual database service name. This is the private connection
@@ -50,6 +77,12 @@ Railway supplies `PORT` automatically.
 Generate a public domain for the API. Both `/readyz` and `/api/content` must
 return JSON, not your frontend's HTML. The pre-deploy step skips previously
 applied migrations and verifies their checksums.
+
+An install warning or vulnerability summary is not, by itself, a failed build.
+If image creation fails, expand the failed Build Logs step and find its first
+fatal error. A local `npm run build` checks Vite, not Railway's API image.
+The successful deployment must show JSON at both health/content URLs before
+you point the frontend at it.
 
 For a restricted production API user, grant SELECT on `portfolio_settings`,
 `portfolio_projects`, `portfolio_experience`, and `portfolio_assets`.
