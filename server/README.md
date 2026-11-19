@@ -107,7 +107,12 @@ disabled. Keep production database traffic on Railway's private network.
 
 ## Deploy the frontend to Vercel
 
-Set this public build variable in Vercel and redeploy:
+The checked-in `vercel.json` forwards `/api/content` to this portfolio's Railway
+API **before** the SPA catch-all. Leave `VITE_CONTENT_API_URL` empty to use that
+same-origin route, then deploy the updated configuration to Vercel. Forks must
+replace the rewrite destination with their own service.
+
+Alternatively, set this public build variable in Vercel and redeploy:
 
 ```env
 VITE_CONTENT_API_URL=https://your-api.up.railway.app
@@ -115,8 +120,9 @@ VITE_CONTENT_API_URL=https://your-api.up.railway.app
 
 The loader accepts either the API origin or its full `/api/content` URL.
 An empty value uses same-origin `/api/content`, which is useful behind a proxy.
-The existing Vercel SPA rewrite does not create that proxy, so set the variable
-for this deployment. Updating a Vite variable requires a new frontend build.
+Never place the content rewrite after the SPA fallback: it would return HTML
+instead of JSON and the loader would correctly reject it. Updating a Vite
+variable requires a new frontend build; a local `.env.local` is not deployed.
 
 The frontend validates the API version, content shape, project references, and
 URLs before rendering. It retries temporary failures once, bounds request time,

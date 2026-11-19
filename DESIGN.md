@@ -71,6 +71,22 @@ typography:
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "-0.02em"
+  recovery-title:
+    fontFamily: "Inter, Manrope, sans-serif"
+    fontSize: "clamp(2rem, 5vw, 3rem)"
+    fontWeight: 650
+    lineHeight: 1.12
+    letterSpacing: "-0.04em"
+  recovery-body:
+    fontFamily: "Inter, Manrope, sans-serif"
+    fontSize: "1.0625rem"
+    fontWeight: 400
+    lineHeight: 1.8
+  thinking-status:
+    fontFamily: "Manrope, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 500
+    lineHeight: 1.5
 rounded:
   "4": "4px"
   "8": "8px"
@@ -217,18 +233,38 @@ Profile project thumbnails have small corners (4px), their links have a modest r
 ### Content loading and recovery
 
 Database content loads before the main portfolio mounts. A full-viewport,
-theme-aware loading screen centers the existing 96px brandmark, a compact
-24–32px status heading, and 16px supporting copy. Three accent dots indicate
-indeterminate activity without inventing percentages. The logo follows the
-mouse by at most 6px and replays a small 600ms rotation on tap or Enter. A
-44px pause/resume control stops visual motion without cancelling the request.
+theme-aware loading screen centers the existing 96px brandmark independently
+of a bottom-aligned thinking-status line. The logo bounces by 10px over a smooth
+1600ms cycle. The supplied Thinking states remix retains its 150ms ease-in-out
+swap, 8px travel, 2px blur, 50ms gap, 2000ms hold, and 2000ms linear shimmer.
+Its stage variables map to the existing semantic palette. Status copy describes
+connection/waiting, not fictional AI tasks or completed progress. There is no
+separate pause button; tapping the logo still stops visual motion without
+cancelling the request. Bottom text wraps at enlarged font sizes without moving the logo.
 Reduced-motion preferences remove the effects and decorative controls; hidden
 tabs also pause them. After six seconds, the status explains the longer wait.
 There is no artificial minimum duration: real content replaces the loader as
 soon as it is ready. A polite live status sits outside the busy main region.
-Failures keep the same fullscreen composition with a static mark and the
-existing retry button. Successful retries or loader keyboard interactions
+Failures use the recovery composition below. Successful retries or loader keyboard interactions
 return focus to the main content, without disrupting direct hash navigation.
+
+### Recovery screens
+
+Content failures, missing pages, missing projects, and unexpected rendering
+errors share an open, cardless layout. A small brand signature precedes a
+32–48px Inter heading, readable explanatory copy, and a primary recovery action.
+The existing accent and offset button shadow remain; no red warning treatment,
+decorative illustration, or technical exception details are shown.
+
+Service failures offer a deliberate retry and a bundled résumé PDF independent
+of the content API and R2. Offline and timeout copy explain the relevant next
+step without blaming the visitor or promising that a PDF works offline.
+Missing pages point to recent work and the archive. Unexpected rendering errors
+offer a full reload and the résumé. Headings receive focus when a recovery
+screen appears; connection changes are announced without stealing focus.
+Actions wrap on small screens, retain 48px targets, and use directional arrows
+without underlines. Both themes share the same geometry. Reduced motion removes
+arrow transitions, and error routes omit the normal footer and route animation.
 
 ### Navigation
 

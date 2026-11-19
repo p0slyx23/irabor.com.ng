@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/content",
+      "destination": "https://iraborcomng-production.up.railway.app/api/content"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

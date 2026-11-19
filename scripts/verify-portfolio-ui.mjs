@@ -6,11 +6,14 @@ import { dirname, extname, join, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import { getContentYear } from '../src/core/dateFormatting.js'
+import { createFixture } from '../server/tests/fixtures.mjs'
+import { portableAssets } from './export-content-seed.mjs'
 
 // Test the actual production bundle, never a report or a design prototype.
 const baseline = process.argv.includes('--baseline')
 const checksOnly = process.argv.includes('--checks-only')
-const loadingOnly = process.argv.includes('--loading-only')
+const loadingOnly = process.argv.includes('--loading-only') || process.argv.includes('--thinking-only')
+const errorsOnly = process.argv.includes('--errors-only')
 const fullPage = process.argv.includes('--full-page')
 const v1Archive = process.argv.includes('--v1-archive')
 const basePath = v1Archive ? '/irabor.com.ng' : ''
@@ -25,6 +28,11 @@ const releaseHeldRequests = () => { for (const release of heldRequests) release(
 let expectedCurrentCount = 5
 let expectedArchiveCount = 5
 let capturedApiPayload
+if (errorsOnly || (loadingOnly && !apiOrigin)) {
+  const content = portableAssets(createFixture())
+  content.projectEntries['first-project'].toc = [{ id: 'overview', label: 'Overview' }]
+  capturedApiPayload = JSON.stringify({ schemaVersion: 1, content })
+}
 if (apiOrigin && !v1Archive) {
   const response = await fetch(new URL('/api/content', apiOrigin), { signal: AbortSignal.timeout(20000) })
   if (!response.ok) throw new Error('The local content API must be ready before browser QA.')
@@ -47,7 +55,7 @@ const mime = {
 const server = createServer(async (req, res) => {
   try {
     const requested = decodeURIComponent(new URL(req.url, 'http://localhost').pathname)
-    if (requested === '/api/content' && apiOrigin) {
+    if (requested === '/api/content' && (apiOrigin || errorsOnly || loadingOnly)) {
       apiRequests++
       if (apiMode === 'html') {
         res.writeHead(200, { 'Content-Type': 'text/html' })
@@ -57,6 +65,14 @@ const server = createServer(async (req, res) => {
       if (apiMode === 'unavailable') {
         res.writeHead(503, { 'Content-Type': 'application/json' })
         res.end('{"error":"Test outage"}')
+        return
+      }
+      if (apiMode === 'render-error') {
+        const payload = JSON.parse(capturedApiPayload)
+        // Intentionally invalid optional data, confined to this test response.
+        payload.content.projectEntries['first-project'].evidence = {}
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify(payload))
         return
       }
       if (apiMode === 'slow') await new Promise(resolveDelay => setTimeout(resolveDelay, 1200))
@@ -258,7 +274,76 @@ try {
     await cdp('Emulation.setEmulatedMedia',{features:[]})
   }
   await theme('dark')
-  if (v1Archive) {
+  if (errorsOnly) {
+    for (const desired of ['light', 'dark']) {
+      await theme(desired)
+      for (const width of [1440, 390]) {
+        await size(width)
+        apiMode = 'html'
+        await cdp('Page.navigate', { url: origin + '/' })
+        await waitFor("!!document.querySelector('.recovery__actions button')")
+        await evaluate('document.fonts.ready')
+        await check(`Service recovery has safe copy and focused heading ${desired}/${width}`, "document.activeElement.id==='recovery-title' && document.querySelector('h1').textContent==='Couldn’t load my work.' && !/API|SQL|configuration|500/.test(document.querySelector('.recovery').textContent)")
+        await check(`Recovery targets are accessible ${desired}/${width}`, "[...document.querySelector('.recovery__actions').children].every(el=>el.getBoundingClientRect().height>=48)")
+        await noOverflow(`Recovery fits ${desired}/${width}`)
+        await check(`Résumé is bundled and available during API outage ${desired}/${width}`, "(async()=>{const a=document.querySelector('.recovery__link');const response=await fetch(a.href);const bytes=new Uint8Array(await response.arrayBuffer());return a.target==='_blank' && new URL(a.href).origin===location.origin && response.ok && String.fromCharCode(...bytes.slice(0,4))==='%PDF'})()")
+        await screenshot(`recovery-service-${desired}-${width}.png`)
+        apiMode = 'ready'
+        await evaluate("document.querySelector('.recovery__actions button').click()")
+        await settle()
+        await check(`Retry restores portfolio and focus ${desired}/${width}`, "!!document.querySelector('.profile-layout') && document.activeElement.id==='main-content'")
+        await navigate('/missing-page')
+        await check(`404 has purposeful recovery and no unrelated footer ${desired}/${width}`, "!!document.querySelector('.recovery') && !document.querySelector('.site-footer') && document.title.startsWith('404') && document.activeElement.id==='recovery-title'")
+        await noOverflow(`404 fits ${desired}/${width}`)
+        await screenshot(`recovery-404-${desired}-${width}.png`)
+        await evaluate("document.querySelector('.recovery__link').click()")
+        await settle()
+        await check(`404 archive action navigates ${desired}/${width}`, "location.pathname==='/archive' && !!document.querySelector('.project-archive')")
+        await navigate('/projects/missing-project')
+        await check(`Missing project has specific copy ${desired}/${width}`, "document.querySelector('h1').textContent==='Project not found.' && document.title.startsWith('Project not found') && !document.querySelector('.site-footer')")
+        await evaluate("document.querySelector('.recovery__actions .button').click()")
+        await settle()
+        await check(`Missing project returns to work ${desired}/${width}`, "location.hash==='#projects' && !!document.querySelector('#projects')")
+      }
+    }
+    await size(320)
+    apiMode = 'unavailable'
+    const requestsBefore = apiRequests
+    await cdp('Page.navigate', { url: origin + '/' })
+    await waitFor("!!document.querySelector('.recovery__actions button')")
+    await check('Service retries remain bounded', `${apiRequests - requestsBefore}===2`)
+    await noOverflow('Recovery fits smallest supported viewport')
+    await cdp('Network.emulateNetworkConditions', { offline: true, latency: 0, downloadThroughput: -1, uploadThroughput: -1 })
+    await waitFor("document.querySelector('h1').textContent==='You’re offline.'")
+    await check('Offline guidance is honest and reactive', "document.querySelector('.recovery__copy p').textContent.includes('PDF may need a connection') && document.querySelector('[role=status]').textContent.includes('offline')")
+    await cdp('Network.emulateNetworkConditions', { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 })
+    await waitFor("document.querySelector('h1').textContent==='Couldn’t load my work.'")
+    await check('Reconnection does not steal focus or automatically reload', "document.activeElement.id==='recovery-title' && !!document.querySelector('.recovery')")
+    await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] })
+    await check('Recovery respects reduced motion', "getComputedStyle(document.querySelector('.recovery__link svg')).transitionDuration==='0s'")
+    await evaluate("document.documentElement.style.fontSize='200%'")
+    await noOverflow('Recovery reflows at doubled text size')
+    await evaluate("document.documentElement.style.fontSize='' ")
+    await cdp('Emulation.setEmulatedMedia', { features: [] })
+    await check('No unexpected runtime errors before intentional crash', `${runtimeErrors.length}===0 && ${consoleErrors.length}===0`)
+    const expectedErrorStart = { runtime: runtimeErrors.length, console: consoleErrors.length }
+    apiMode = 'render-error'
+    await size(390)
+    await cdp('Page.navigate', { url: origin + '/projects/first-project' })
+    await waitFor("document.querySelector('h1')?.textContent==='Something went off track.'")
+    await check('Render crash recovers without exposing exception details', "document.querySelector('.recovery__actions button').textContent==='Reload page' && !/filter|TypeError|stack|evidence/.test(document.querySelector('.recovery').textContent) && document.activeElement.id==='recovery-title'")
+    await screenshot('recovery-render-crash-mobile.png')
+    checks.push({ name: 'Intentional render crash was caught by boundary', passed: runtimeErrors.length + consoleErrors.length > expectedErrorStart.runtime + expectedErrorStart.console })
+    // React reports this deliberately injected exception. Keep it distinct from regressions.
+    const intentionalCrashReports = { runtime: runtimeErrors.splice(expectedErrorStart.runtime), console: consoleErrors.splice(expectedErrorStart.console) }
+    apiMode = 'ready'
+    await evaluate("document.querySelector('.recovery__actions button').click()")
+    await settle()
+    await waitFor("!!document.querySelector('.article-layout')")
+    await check('Reload recovers the original project', "!!document.querySelector('.article-layout') && !document.querySelector('.recovery')")
+    await check('No unexpected runtime errors after recovery', `${runtimeErrors.length}===0 && ${consoleErrors.length}===0`)
+    console.log(JSON.stringify({ checks, intentionalCrashReportCount: intentionalCrashReports.runtime.length + intentionalCrashReports.console.length }, null, 2))
+  } else if (v1Archive) {
     await evaluate("Promise.all([...document.images].map(img=>{img.loading='eager';return img.decode().catch(()=>{})}))")
     await check('V1 renders under the GitHub Pages base path', "location.pathname==='/irabor.com.ng/' && !!document.querySelector('#main-content h1')")
     await check('V1 assets load under the archive base path', "[...document.images].filter(img=>img.currentSrc).every(img=>new URL(img.currentSrc).pathname.startsWith('/irabor.com.ng/') && img.complete && img.naturalWidth>0)")
@@ -467,9 +552,9 @@ try {
     await screenshot('portfolio-v2-light.png')
     await check('V2 cover capture uses the light theme', "document.documentElement.dataset.theme==='light' && getComputedStyle(document.body).backgroundColor==='rgb(255, 255, 255)'")
     }
-    if (apiOrigin) {
+    if (apiOrigin || loadingOnly) {
       await theme('light')
-      await check('Project images and résumé use verified R2 objects', "[...document.querySelectorAll('.project-card img')].every(img=>img.src.includes('/portfolio/')) && document.querySelector('a[href*=\"resume.pdf\"]').href.includes('/portfolio/')")
+      if (apiOrigin) await check('Project images and résumé use verified R2 objects', "[...document.querySelectorAll('.project-card img')].every(img=>img.src.includes('/portfolio/')) && document.querySelector('a[href*=\"resume.pdf\"]').href.includes('/portfolio/')")
       for (const width of [1440, 390]) {
         await size(width)
         apiMode = 'html'
@@ -484,42 +569,49 @@ try {
         await check(`Loading is announced without fake progress at ${width}`, "!!document.querySelector('[role=\"status\"][aria-live=\"polite\"]') && !document.querySelector('[aria-valuenow]')")
         await check(`Loader fills the viewport at ${width}`, "(() => {const r=document.querySelector('.content-gate').getBoundingClientRect();return r.top===0 && r.width===innerWidth && r.height>=innerHeight-1})()")
         await noOverflow(`Fullscreen loader does not overflow at ${width}`)
-        await evaluate("window.qaLoadingMark=document.querySelector('.content-loader__mark');document.querySelector('.content-loader__play').focus()")
+        await check(`No separate pause button at ${width}`, "!document.querySelector('.content-loader__pause') && document.querySelectorAll('.content-loader button').length===1 && document.querySelector('.content-loader__controls').textContent.indexOf('Pause animation')===-1")
+        await check(`Logo stays centered and thinking status stays at bottom at ${width}`, "(() => {const logo=document.querySelector('.content-loader__play').getBoundingClientRect();const status=document.querySelector('.content-loader__controls').getBoundingClientRect();return Math.abs(logo.x+logo.width/2-innerWidth/2)<1 && Math.abs(logo.y+logo.height/2-innerHeight/2)<1 && status.top>innerHeight*0.75 && Math.abs(innerHeight-status.bottom-24)<2})()")
+        await check(`Thinking shimmer preserves supplied timing at ${width}`, "(() => {const s=getComputedStyle(document.querySelector('.thinking-status__text[data-text]'),'::before');return s.animationDuration==='2s' && s.animationTimingFunction==='linear' && s.backgroundSize==='400% 100%'})()")
+        await evaluate("document.querySelector('.content-loader__play').focus()")
         await key('Enter', 'Enter', 13)
-        await check(`Logo responds to keyboard activation at ${width}`, "!window.qaLoadingMark.isConnected")
-        await evaluate("document.querySelector('.content-loader__pause').focus()")
+        await check(`Logo responds to keyboard activation at ${width}`, "document.querySelector('.content-loader').dataset.motion==='paused'")
         await key('Enter', 'Enter', 13)
-        await check(`Animation can pause without cancelling loading at ${width}`, "document.querySelector('.content-loader').dataset.motion==='paused' && document.querySelector('.content-loader__pause').getAttribute('aria-pressed')==='true' && [...document.querySelectorAll('.content-loader__activity span')].every(el=>getComputedStyle(el).animationName==='none') && document.querySelector('.content-gate').getAttribute('aria-busy')==='true'")
+        await evaluate("document.querySelector('.content-loader__play').focus()")
         await key('Enter', 'Enter', 13)
-        await check(`Animation resumes at ${width}`, "document.querySelector('.content-loader').dataset.motion==='playing' && document.querySelector('.content-loader__pause').getAttribute('aria-pressed')==='false'")
+        await check(`Animation can pause without cancelling loading at ${width}`, "document.querySelector('.content-loader').dataset.motion==='paused' && document.querySelector('.content-loader__play').getAttribute('aria-pressed')==='true' && getComputedStyle(document.querySelector('.content-loader__mark')).animationPlayState==='paused' && getComputedStyle(document.querySelector('.thinking-status__text[data-text]'),'::before').animationPlayState==='paused' && document.querySelector('.content-gate').getAttribute('aria-busy')==='true'")
+        await key('Enter', 'Enter', 13)
+        await check(`Animation resumes at ${width}`, "document.querySelector('.content-loader').dataset.motion==='playing' && document.querySelector('.content-loader__play').getAttribute('aria-pressed')==='false'")
         await screenshot(`content-loading-${width}.png`)
         if (width === 1440) {
-          await evaluate("Promise.all([...document.querySelectorAll('.content-loader__mark, .content-loader__activity span')].flatMap(el=>el.getAnimations()).map(async animation=>{animation.updatePlaybackRate(0.1);await animation.ready}))")
-          await check('Loader motion can be inspected at ten percent speed', "[...document.querySelectorAll('.content-loader__mark, .content-loader__activity span')].flatMap(el=>el.getAnimations()).every(animation=>animation.playbackRate===0.1)")
+          await waitFor("!!document.querySelector('.thinking-status__text--enter')")
+          await check('Thinking text cycles with the supplied swap timing', "(() => {const s=getComputedStyle(document.querySelector('.thinking-status__text--enter'));const a=document.querySelector('.thinking-status__text--enter').getAnimations().find(a=>a.animationName==='thinking-enter');const frames=a.effect.getKeyframes();return s.animationDuration==='0.15s' && s.animationDelay==='0.05s' && s.animationTimingFunction==='ease-in-out' && frames[0].transform==='translateY(8px)' && frames[0].filter==='blur(2px)'})()")
+          await evaluate("Promise.all([...document.querySelectorAll('.content-loader__mark, .thinking-status__text')].flatMap(el=>el.getAnimations()).map(async animation=>{animation.updatePlaybackRate(0.1);await animation.ready}))")
+          await check('Loader motion can be inspected at ten percent speed', "[...document.querySelectorAll('.content-loader__mark, .thinking-status__text')].flatMap(el=>el.getAnimations()).every(animation=>animation.playbackRate===0.1)")
           await screenshot('content-loading-motion-10pct.png')
-          const bounds = await evaluate("(() => {const r=document.querySelector('.content-loader__play').getBoundingClientRect();return {x:r.right-12,y:r.bottom-12}})()")
-          await cdp('Input.dispatchMouseEvent', { type: 'mouseMoved', ...bounds })
-          await check('Logo follows the pointer within a small bounded range', "(() => {const x=parseFloat(document.querySelector('.content-loader__follow').style.getPropertyValue('--loading-x'));return x>0 && x<=6})()")
           await evaluate("document.documentElement.dataset.theme='dark'")
           await check('Fullscreen loader follows dark theme and uses the white logo', "getComputedStyle(document.querySelector('.content-gate')).backgroundColor==='rgb(8, 7, 20)' && getComputedStyle(document.querySelector('.content-loader .brand-mark__image--dark')).display!=='none' && getComputedStyle(document.querySelector('.content-loader .brand-mark__image--light')).display==='none'")
           await screenshot('content-loading-dark.png')
           await evaluate("document.documentElement.dataset.theme='light'")
         } else {
-          const touch = await evaluate("(() => {window.qaLoadingMark=document.querySelector('.content-loader__mark');const r=document.querySelector('.content-loader__play').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()")
+          const touch = await evaluate("(() => {const r=document.querySelector('.content-loader__play').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()")
           await cdp('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [touch] })
           await cdp('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
-          await check('The loading mark responds to a touch tap', "!window.qaLoadingMark.isConnected")
+          await check('The loading mark responds to a touch tap', "document.querySelector('.content-loader').dataset.motion==='paused'")
+          await evaluate("document.querySelector('.content-loader__play').click()")
           await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] })
           await waitFor("document.querySelector('.content-loader').dataset.motion==='paused'")
-          await check('Reduced motion keeps loading feedback but removes animation controls', "document.querySelector('.content-loader__play').disabled && !document.querySelector('.content-loader__pause') && [...document.querySelectorAll('.content-loader__activity span')].every(el=>getComputedStyle(el).animationName==='none')")
+          await check('Reduced motion keeps loading feedback but removes animation controls', "document.querySelector('.content-loader__play').disabled && !document.querySelector('.content-loader__pause') && getComputedStyle(document.querySelector('.content-loader__mark')).animationName==='none' && getComputedStyle(document.querySelector('.thinking-status__text[data-text]'),'::before').display==='none'")
           await screenshot('content-loading-reduced-motion.png')
+          await evaluate("document.documentElement.style.fontSize='200%'")
+          await noOverflow('Thinking text reflows at double text size')
+          await evaluate("document.documentElement.style.fontSize='' ")
           await cdp('Emulation.setEmulatedMedia', { features: [] })
         }
         apiMode = 'ready'
         releaseHeldRequests()
         await settle()
         await waitFor("!!document.querySelector('.profile-layout')")
-        await check(`Retry restores real database content at ${width}`, "document.querySelector('#profile-name').textContent.includes('Irabor') && !document.querySelector('.content-gate')")
+        await check(`Retry restores portfolio content at ${width}`, "document.querySelector('#profile-name').textContent.includes('Irabor') && !document.querySelector('.content-gate')")
       }
       const requestStart = apiRequests
       apiMode = 'unavailable'
@@ -534,8 +626,8 @@ try {
       await check('Recovery returns keyboard focus to main content', "document.activeElement.id==='main-content'")
       apiMode = 'held'
       await cdp('Page.navigate', { url: origin + '/' })
-      await waitFor("!!document.querySelector('.content-loader__pause')")
-      await evaluate("document.querySelector('.content-loader__pause').focus()")
+      await waitFor("!!document.querySelector('.content-loader__play')")
+      await evaluate("document.querySelector('.content-loader__play').focus()")
       apiMode = 'ready'
       releaseHeldRequests()
       await settle()
@@ -543,7 +635,7 @@ try {
       apiMode = 'held'
       await cdp('Page.navigate', { url: origin + '/' })
       await waitFor("!!document.querySelector('.content-loader')")
-      await waitFor("document.querySelector('.content-gate__copy p').textContent.includes('taking a little longer')")
+      await waitFor("document.querySelector('.thinking-status__text[data-text]')?.textContent.includes('Still connecting')")
       await check('A slow connection has an honest status update', "document.querySelector('[role=\"status\"]').textContent.includes('Still connecting') && !document.querySelector('[aria-valuenow]')")
       apiMode = 'ready'
       releaseHeldRequests()
@@ -561,11 +653,11 @@ try {
 } finally {
   releaseHeldRequests()
   const report = {
-    mode: v1Archive ? 'v1-archive' : baseline ? 'baseline' : loadingOnly ? 'loading' : 'after', checkedAt: new Date().toISOString(), fullPage,
+    mode: errorsOnly ? 'errors' : v1Archive ? 'v1-archive' : baseline ? 'baseline' : loadingOnly ? 'loading' : 'after', checkedAt: new Date().toISOString(), fullPage,
     checks, runtimeErrors, consoleErrors, failure: failure?.message || null, failureDiagnostics,
-    scope: `${process.env.PORTFOLIO_QA_ORIGIN ? 'Live-site' : 'Local production-bundle'} Chrome checks${apiOrigin ? ' against the local API with real MySQL/R2 content, plus simulated service outages' : ''}. Physical devices and assistive technology require separate verification.`,
+    scope: `${process.env.PORTFOLIO_QA_ORIGIN ? 'Live-site' : 'Local production-bundle'} Chrome checks${errorsOnly || (loadingOnly && !apiOrigin) ? ' with isolated fixture content and simulated failures' : apiOrigin ? ' against the local API with real MySQL/R2 content, plus simulated service outages' : ''}. Physical devices and assistive technology require separate verification.`,
   }
-  await writeFile(join(output, v1Archive ? 'v1-checks.json' : baseline ? 'baseline-checks.json' : loadingOnly ? 'loading-checks.json' : 'ui-checks.json'), JSON.stringify(report, null, 2))
+  await writeFile(join(output, errorsOnly ? 'error-checks.json' : v1Archive ? 'v1-checks.json' : baseline ? 'baseline-checks.json' : loadingOnly ? 'loading-checks.json' : 'ui-checks.json'), JSON.stringify(report, null, 2))
   socket?.close()
   chrome.kill()
   await new Promise(resolveClosed => server.close(resolveClosed))

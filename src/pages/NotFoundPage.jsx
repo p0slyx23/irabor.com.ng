@@ -1,23 +1,14 @@
 import { Button } from '../components/atoms/Button.jsx'
-import { WindowIllustration } from '../components/molecules/WindowIllustration.jsx'
+import { RecoveryLink, RecoveryState } from '../components/molecules/RecoveryState.jsx'
+import { missingPageRecovery, missingProjectRecovery } from '../core/recovery.mjs'
 
-export function NotFoundPage() {
+export function NotFoundPage({ kind = 'page' }) {
   return (
-    <div className="page-shell not-found-page">
-      <section className="not-found">
-        <WindowIllustration />
-
-        <div className="not-found__content">
-          <h1>This page don waka.</h1>
-          <p>The link may have changed. Head back home to find my work.</p>
-
-          <div className="button-group">
-            <Button href="/" variant="primary">
-              Back to home
-            </Button>
-          </div>
-        </div>
-      </section>
+    <div className="recovery-screen recovery-screen--page">
+      <RecoveryState {...(kind === 'project' ? missingProjectRecovery : missingPageRecovery)}>
+        <Button href="/#projects">Explore my work</Button>
+        <RecoveryLink href="/archive">Project archive</RecoveryLink>
+      </RecoveryState>
     </div>
   )
 }
