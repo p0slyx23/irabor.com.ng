@@ -43,12 +43,12 @@ environment as MySQL. Keep the root directory at the repository root.
 from `v2` into `main`. Railway deploys that merge commit from `main`; it does
 not follow a push to `v2`. Do not change the service's watched branch to `v2`.
 
-The checked-in `railway.json` configures:
+The checked-in `railway.json` and `railpack.json` configure:
 
 | Setting | Value |
 | --- | --- |
-| Install (`railpack.json`) | `npm ci --omit=dev`, once, using the lockfile |
-| Build (`railway.json`) | `npm run api:build` |
+| Install (`railpack.json`) | Copy both package manifests, then `npm ci --omit=dev` |
+| Build (both config files) | `npm run api:build` |
 | Pre-deploy | `npm run db:migrate` |
 | Start | `npm run api:start` |
 | Healthcheck | `/readyz` |
@@ -60,7 +60,8 @@ Origins have a scheme and optional port, with no path, trailing slash, or wildca
 Use `HOST=0.0.0.0` so Railway can reach the API; do not copy the local
 `HOST=127.0.0.1`. Let Railway inject `PORT` instead of setting it to 3001 or 3306.
 
-The repository pins npm to the tested version in `packageManager`.
+`packageManager` records the tested npm version; check the actual npm version
+in the deployment logs rather than assuming that field changes the bundled CLI.
 Railpack installs production dependencies in its install phase; the build
 validates API modules and migration files without connecting to MySQL. It
 does not run Vite or perform a second install over the build cache. The
@@ -68,6 +69,16 @@ does not run Vite or perform a second install over the build cache. The
 out of the API image. Vercel still uses `npm run build` for the React frontend.
 Remove stale custom build/start dashboard overrides if they conflict with
 the checked-in configuration. Check the new deployment's resolved configuration.
+
+Railpack command arrays **replace** generated commands unless extended with
+`...`. This repository's install override therefore explicitly copies
+`package.json` and `package-lock.json` before running `npm ci`; do not remove
+those copy commands. A clean install layer does not start with repository files.
+The API build and start commands are also explicit in `railpack.json`, so
+Railpack detects a Node API instead of choosing Vite's static Caddy runtime.
+Set `RAILPACK_NO_SPA=1` and remove a stale `RAILPACK_SPA_OUTPUT_DIR` variable if
+the API service was previously configured as a static frontend. Do not change
+the MySQL service or the Vercel frontend to apply this API-only setting.
 
 Set `MYSQL_URL` on the API service to `${{MySQL.MYSQL_URL}}`, replacing
 `MySQL` with your actual database service name. This is the private connection
