@@ -1,17 +1,21 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import App from '../App.jsx'
 import { Button } from '../components/atoms/Button.jsx'
-import { BrandMarkIcon } from '../components/atoms/Icons.jsx'
+import { RecoveryLink, RecoveryState } from '../components/molecules/RecoveryState.jsx'
 import { ContentLoading } from './ContentLoading.jsx'
 import { bundledAssets } from '../content/assets.js'
 import { installPortfolioContent } from '../content/siteContent.js'
 import { loadPortfolioContent } from '../core/loadPortfolioContent.mjs'
+import { getContentRecovery } from '../core/recovery.mjs'
+import { useOnlineStatus } from '../core/useOnlineStatus.js'
+import resumeUrl from '../assets/files/resume.pdf'
 
 export function ContentGate() {
   const [attempt, setAttempt] = useState(0)
   const [state, setState] = useState({ status: 'loading' })
   const retried = useRef(false)
   const usedLoader = useRef(false)
+  const online = useOnlineStatus()
 
   useEffect(() => {
     const controller = new AbortController()
@@ -38,25 +42,17 @@ export function ContentGate() {
 
   if (state.status === 'ready') return <App />
   if (state.status === 'loading') return <ContentLoading onInteract={() => { usedLoader.current = true }} />
-  const offline = typeof navigator !== 'undefined' && navigator.onLine === false
-  const message = offline
-    ? 'You appear to be offline. Reconnect, then try again.'
-    : state.code === 'configuration' || state.code === 'invalid-content'
-      ? 'The portfolio content service is not responding correctly. Please try again shortly.'
-      : 'The portfolio could not load over this connection. Please try again.'
-
   return (
-    <main aria-busy="false" className="content-gate" data-state="error" id="main-content" tabIndex={-1}>
-      <div className="content-gate__inner">
-        <BrandMarkIcon className="content-loader__mark content-loader__mark--static" />
-        <div aria-atomic="true" aria-live="polite" className="content-gate__copy">
-          <h1>Content couldn’t load</h1>
-          <p>{message}</p>
-        </div>
-        <Button onClick={() => { retried.current = true; setState({ status: 'loading' }); setAttempt((value) => value + 1) }} variant="secondary">
+    <main aria-busy="false" className="content-gate recovery-screen" data-state="error" id="main-content" tabIndex={-1}>
+      <RecoveryState {...getContentRecovery(state.code, online)} note="The résumé opens as a PDF in a new tab.">
+        <Button onClick={() => { retried.current = true; setState({ status: 'loading' }); setAttempt((value) => value + 1) }}>
           Try again
         </Button>
-      </div>
+        <RecoveryLink href={resumeUrl} external>View résumé</RecoveryLink>
+      </RecoveryState>
+      <p aria-live="polite" className="sr-only" role="status">
+        {online ? 'You are online. You can try again.' : 'You are offline. Reconnect before trying again.'}
+      </p>
     </main>
   )
 }

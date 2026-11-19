@@ -49,8 +49,10 @@ new content, then apply reviewed SQL migrations to the database.
 [Server setup](./server/README.md) covers MySQL, migrations, Cloudflare R2, and
 deployment. Keep all database and R2 credentials in the ignored `server/.env`.
 For local development, leave `VITE_CONTENT_API_URL` empty in `.env.local` so Vite
-proxies `/api` to the API on port 3001. On Vercel, set `VITE_CONTENT_API_URL` to
-your own Railway API origin and redeploy. Forks must use their own API and data.
+proxies `/api` to the API on port 3001. On Vercel, the specific `/api/content`
+rewrite forwards to Railway before the SPA fallback, so the variable can stay
+empty. Forks must change that destination to their own API and data. A public
+`VITE_CONTENT_API_URL` can optionally override the proxy; rebuild after changes.
 
 Public covers and the resume are served from verified Cloudflare R2 objects.
 Local originals remain under `src/assets/` and provide bundled image fallbacks.

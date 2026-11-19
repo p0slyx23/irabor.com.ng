@@ -35,7 +35,7 @@ export function ArticlePage() {
     : getBlogPostBySlug(getBlogSlugFromPath(currentPath))
 
   if (!article) {
-    return <NotFoundPage />
+    return <NotFoundPage kind={isProjectRoute ? 'project' : 'page'} />
   }
 
   const relatedEntries = (article.related ?? [])

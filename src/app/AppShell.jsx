@@ -33,9 +33,12 @@ export default function AppShell() {
   // Restore theme, themePreference, and toggleTheme here when re-enabling SiteHeader.
   const currentRoute = getCurrentRoute(currentPath)
   const PageComponent = currentRoute.component
+  const missingProject = currentRoute.id === 'project-article' && !getProjectBySlug(getProjectSlugFromPath(currentPath))
+  const isErrorPage = currentRoute.id === 'not-found' || missingProject
+  const displayRoute = isErrorPage ? 'not-found' : currentRoute.id
   const pageTitle = (() => {
     if (currentRoute.id === 'project-article') {
-      return getProjectBySlug(getProjectSlugFromPath(currentPath))?.title ?? currentRoute.title
+      return getProjectBySlug(getProjectSlugFromPath(currentPath))?.title ?? 'Project not found'
     }
 
     return currentRoute.title
@@ -55,7 +58,7 @@ export default function AppShell() {
   }, [currentPath, currentRoute.redirect])
 
   return (
-    <div className="site-shell" data-route={currentRoute.id}>
+    <div className="site-shell" data-route={displayRoute}>
       {/* <StatusBar theme={theme} /> */}
 
       <a className="skip-link" href="#main-content">
@@ -65,10 +68,10 @@ export default function AppShell() {
       <p aria-live="polite" className="sr-only" role="status">
         {announcement}
       </p>
-      <SocialRail className="social-rail--floating" />
+      {!isErrorPage ? <SocialRail className="social-rail--floating" /> : null}
 
       <div className="site-canvas">
-        <div className="site-screen" data-route={currentRoute.id}>
+        <div className="site-screen" data-route={displayRoute}>
           {/* <SiteHeader
             currentPath={currentPath}
             navigation={siteNavigation}
@@ -86,7 +89,7 @@ export default function AppShell() {
             </main>
           </div>
 
-          {currentRoute.id !== 'home' && currentRoute.id !== 'project-archive' ? <SiteFooter /> : null}
+          {!isErrorPage && currentRoute.id !== 'home' && currentRoute.id !== 'project-archive' ? <SiteFooter /> : null}
         </div>
       </div>
     </div>

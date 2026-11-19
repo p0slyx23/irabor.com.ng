@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles/index.css'
 import { ContentGate } from './app/ContentGate.jsx'
+import { PortfolioErrorBoundary } from './app/PortfolioErrorBoundary.jsx'
 import { applyTheme, getInitialThemeState } from './core/theme.js'
 
 const { theme, themePreference } = getInitialThemeState()
@@ -10,7 +11,9 @@ applyTheme(theme, themePreference)
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ContentGate />
+    <PortfolioErrorBoundary>
+      <ContentGate />
+    </PortfolioErrorBoundary>
   </StrictMode>,
 )
 
