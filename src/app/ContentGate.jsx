@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import App from '../App.jsx'
 import { Button } from '../components/atoms/Button.jsx'
+import { BrandMarkIcon } from '../components/atoms/Icons.jsx'
+import { ContentLoading } from './ContentLoading.jsx'
 import { bundledAssets } from '../content/assets.js'
 import { installPortfolioContent } from '../content/siteContent.js'
 import { loadPortfolioContent } from '../core/loadPortfolioContent.mjs'
@@ -9,6 +11,7 @@ export function ContentGate() {
   const [attempt, setAttempt] = useState(0)
   const [state, setState] = useState({ status: 'loading' })
   const retried = useRef(false)
+  const usedLoader = useRef(false)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -17,9 +20,6 @@ export function ContentGate() {
         if (controller.signal.aborted) return
         installPortfolioContent(content)
         setState({ status: 'ready' })
-        if (retried.current && !window.location.hash) {
-          requestAnimationFrame(() => document.getElementById('main-content')?.focus({ preventScroll: true }))
-        }
       })
       .catch((error) => {
         if (!controller.signal.aborted) setState({ status: 'error', code: error.code })
@@ -27,7 +27,17 @@ export function ContentGate() {
     return () => controller.abort()
   }, [attempt])
 
+  useLayoutEffect(() => {
+    // Focus only after React has replaced the loading main with the real page.
+    // Scheduling a frame in the fetch callback can target the soon-removed node
+    // when a fast response resolves before React commits the ready state.
+    if (state.status === 'ready' && (retried.current || usedLoader.current) && !window.location.hash) {
+      document.getElementById('main-content')?.focus({ preventScroll: true })
+    }
+  }, [state.status])
+
   if (state.status === 'ready') return <App />
+  if (state.status === 'loading') return <ContentLoading onInteract={() => { usedLoader.current = true }} />
   const offline = typeof navigator !== 'undefined' && navigator.onLine === false
   const message = offline
     ? 'You appear to be offline. Reconnect, then try again.'
@@ -36,16 +46,17 @@ export function ContentGate() {
       : 'The portfolio could not load over this connection. Please try again.'
 
   return (
-    <main aria-busy={state.status === 'loading'} className="content-gate" id="main-content" tabIndex={-1}>
-      <div aria-atomic="true" aria-live="polite" className="content-gate__copy">
-        <h1>{state.status === 'loading' ? 'Loading portfolio' : 'Content couldn’t load'}</h1>
-        <p>{state.status === 'loading' ? 'Getting the latest experience and projects.' : message}</p>
-      </div>
-      {state.status === 'error' ? (
+    <main aria-busy="false" className="content-gate" data-state="error" id="main-content" tabIndex={-1}>
+      <div className="content-gate__inner">
+        <BrandMarkIcon className="content-loader__mark content-loader__mark--static" />
+        <div aria-atomic="true" aria-live="polite" className="content-gate__copy">
+          <h1>Content couldn’t load</h1>
+          <p>{message}</p>
+        </div>
         <Button onClick={() => { retried.current = true; setState({ status: 'loading' }); setAttempt((value) => value + 1) }} variant="secondary">
           Try again
         </Button>
-      ) : null}
+      </div>
     </main>
   )
 }

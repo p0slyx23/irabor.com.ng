@@ -10,6 +10,7 @@ import { getContentYear } from '../src/core/dateFormatting.js'
 // Test the actual production bundle, never a report or a design prototype.
 const baseline = process.argv.includes('--baseline')
 const checksOnly = process.argv.includes('--checks-only')
+const loadingOnly = process.argv.includes('--loading-only')
 const fullPage = process.argv.includes('--full-page')
 const v1Archive = process.argv.includes('--v1-archive')
 const basePath = v1Archive ? '/irabor.com.ng' : ''
@@ -19,12 +20,17 @@ const output = join(root, '.impeccable', 'review')
 const apiOrigin = process.env.PORTFOLIO_QA_API_ORIGIN
 let apiMode = 'ready'
 let apiRequests = 0
+const heldRequests = new Set()
+const releaseHeldRequests = () => { for (const release of heldRequests) release(); heldRequests.clear() }
 let expectedCurrentCount = 5
 let expectedArchiveCount = 5
+let capturedApiPayload
 if (apiOrigin && !v1Archive) {
   const response = await fetch(new URL('/api/content', apiOrigin), { signal: AbortSignal.timeout(20000) })
   if (!response.ok) throw new Error('The local content API must be ready before browser QA.')
-  const { content } = await response.json()
+  const payload = await response.json()
+  const { content } = payload
+  if (loadingOnly) capturedApiPayload = JSON.stringify(payload)
   const year = new Date().getFullYear()
   expectedCurrentCount = content.portfolioProjects.filter(project => getContentYear(project.sortDate || project.date) === year).length
   expectedArchiveCount = content.projectPosts.filter(project => getContentYear(project.sortDate || project.date) < year).length
@@ -54,6 +60,14 @@ const server = createServer(async (req, res) => {
         return
       }
       if (apiMode === 'slow') await new Promise(resolveDelay => setTimeout(resolveDelay, 1200))
+      if (apiMode === 'held') await new Promise(release => heldRequests.add(release))
+      // Focused loading checks use one real, validated payload captured above.
+      // Isolate UI timing from extra remote database reads during each scenario.
+      if (capturedApiPayload) {
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' })
+        res.end(capturedApiPayload)
+        return
+      }
       const response = await fetch(new URL('/api/content', apiOrigin), { signal: AbortSignal.timeout(20000) })
       res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'application/json', 'Cache-Control': 'no-store' })
       res.end(Buffer.from(await response.arrayBuffer()))
@@ -272,6 +286,7 @@ try {
     await screenshot('before-mobile.png')
     console.log(`Baseline captures: ${join(output, 'before-desktop.png')} and before-mobile.png`)
   } else {
+    if (!loadingOnly) {
     await check('Floating navigation is commented out', "!document.querySelector('.site-header') && !document.querySelector('.site-mobile-nav')")
     await check('Status gradient is commented out', "!document.querySelector('.status-bar')")
     await check('Safe-area spacing is zero', "parseFloat(getComputedStyle(document.querySelector('.site-shell')).getPropertyValue('--safe-area-top'))===0")
@@ -451,21 +466,57 @@ try {
     await evaluate("document.activeElement?.blur();Promise.all([...document.images].map(img=>{img.loading='eager';return img.decode().catch(()=>{})}))")
     await screenshot('portfolio-v2-light.png')
     await check('V2 cover capture uses the light theme', "document.documentElement.dataset.theme==='light' && getComputedStyle(document.body).backgroundColor==='rgb(255, 255, 255)'")
+    }
     if (apiOrigin) {
+      await theme('light')
       await check('Project images and résumé use verified R2 objects', "[...document.querySelectorAll('.project-card img')].every(img=>img.src.includes('/portfolio/')) && document.querySelector('a[href*=\"resume.pdf\"]').href.includes('/portfolio/')")
       for (const width of [1440, 390]) {
         await size(width)
         apiMode = 'html'
         await cdp('Page.navigate', { url: origin + '/' })
-        await waitFor("!!document.querySelector('.content-gate button')")
+        await waitFor("!!document.querySelector('.content-gate[data-state=\"error\"] button')")
         await check(`Wrong API service offers recovery at ${width}`, "document.querySelector('.content-gate').getAttribute('aria-busy')==='false' && document.querySelector('.content-gate button').textContent.trim()==='Try again'")
         await noOverflow(`Content error does not overflow at ${width}`)
         await screenshot(`content-error-${width}.png`)
-        apiMode = 'slow'
+        apiMode = 'held'
         await evaluate("document.querySelector('.content-gate button').click()")
         await waitFor("document.querySelector('.content-gate')?.getAttribute('aria-busy')==='true'")
-        await check(`Loading is announced without fake progress at ${width}`, "!!document.querySelector('.content-gate [aria-live=\"polite\"]') && !document.querySelector('.content-gate button')")
+        await check(`Loading is announced without fake progress at ${width}`, "!!document.querySelector('[role=\"status\"][aria-live=\"polite\"]') && !document.querySelector('[aria-valuenow]')")
+        await check(`Loader fills the viewport at ${width}`, "(() => {const r=document.querySelector('.content-gate').getBoundingClientRect();return r.top===0 && r.width===innerWidth && r.height>=innerHeight-1})()")
+        await noOverflow(`Fullscreen loader does not overflow at ${width}`)
+        await evaluate("window.qaLoadingMark=document.querySelector('.content-loader__mark');document.querySelector('.content-loader__play').focus()")
+        await key('Enter', 'Enter', 13)
+        await check(`Logo responds to keyboard activation at ${width}`, "!window.qaLoadingMark.isConnected")
+        await evaluate("document.querySelector('.content-loader__pause').focus()")
+        await key('Enter', 'Enter', 13)
+        await check(`Animation can pause without cancelling loading at ${width}`, "document.querySelector('.content-loader').dataset.motion==='paused' && document.querySelector('.content-loader__pause').getAttribute('aria-pressed')==='true' && [...document.querySelectorAll('.content-loader__activity span')].every(el=>getComputedStyle(el).animationName==='none') && document.querySelector('.content-gate').getAttribute('aria-busy')==='true'")
+        await key('Enter', 'Enter', 13)
+        await check(`Animation resumes at ${width}`, "document.querySelector('.content-loader').dataset.motion==='playing' && document.querySelector('.content-loader__pause').getAttribute('aria-pressed')==='false'")
         await screenshot(`content-loading-${width}.png`)
+        if (width === 1440) {
+          await evaluate("Promise.all([...document.querySelectorAll('.content-loader__mark, .content-loader__activity span')].flatMap(el=>el.getAnimations()).map(async animation=>{animation.updatePlaybackRate(0.1);await animation.ready}))")
+          await check('Loader motion can be inspected at ten percent speed', "[...document.querySelectorAll('.content-loader__mark, .content-loader__activity span')].flatMap(el=>el.getAnimations()).every(animation=>animation.playbackRate===0.1)")
+          await screenshot('content-loading-motion-10pct.png')
+          const bounds = await evaluate("(() => {const r=document.querySelector('.content-loader__play').getBoundingClientRect();return {x:r.right-12,y:r.bottom-12}})()")
+          await cdp('Input.dispatchMouseEvent', { type: 'mouseMoved', ...bounds })
+          await check('Logo follows the pointer within a small bounded range', "(() => {const x=parseFloat(document.querySelector('.content-loader__follow').style.getPropertyValue('--loading-x'));return x>0 && x<=6})()")
+          await evaluate("document.documentElement.dataset.theme='dark'")
+          await check('Fullscreen loader follows dark theme and uses the white logo', "getComputedStyle(document.querySelector('.content-gate')).backgroundColor==='rgb(8, 7, 20)' && getComputedStyle(document.querySelector('.content-loader .brand-mark__image--dark')).display!=='none' && getComputedStyle(document.querySelector('.content-loader .brand-mark__image--light')).display==='none'")
+          await screenshot('content-loading-dark.png')
+          await evaluate("document.documentElement.dataset.theme='light'")
+        } else {
+          const touch = await evaluate("(() => {window.qaLoadingMark=document.querySelector('.content-loader__mark');const r=document.querySelector('.content-loader__play').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()")
+          await cdp('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [touch] })
+          await cdp('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+          await check('The loading mark responds to a touch tap', "!window.qaLoadingMark.isConnected")
+          await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] })
+          await waitFor("document.querySelector('.content-loader').dataset.motion==='paused'")
+          await check('Reduced motion keeps loading feedback but removes animation controls', "document.querySelector('.content-loader__play').disabled && !document.querySelector('.content-loader__pause') && [...document.querySelectorAll('.content-loader__activity span')].every(el=>getComputedStyle(el).animationName==='none')")
+          await screenshot('content-loading-reduced-motion.png')
+          await cdp('Emulation.setEmulatedMedia', { features: [] })
+        }
+        apiMode = 'ready'
+        releaseHeldRequests()
         await settle()
         await waitFor("!!document.querySelector('.profile-layout')")
         await check(`Retry restores real database content at ${width}`, "document.querySelector('#profile-name').textContent.includes('Irabor') && !document.querySelector('.content-gate')")
@@ -473,7 +524,7 @@ try {
       const requestStart = apiRequests
       apiMode = 'unavailable'
       await cdp('Page.navigate', { url: origin + '/' })
-      await waitFor("!!document.querySelector('.content-gate button')")
+      await waitFor("!!document.querySelector('.content-gate[data-state=\"error\"] button')")
       checks.push({ name: 'Temporary outage retries are bounded', passed: apiRequests - requestStart === 2 })
       if (!checks.at(-1).passed) throw new Error('Unexpected retry count')
       apiMode = 'ready'
@@ -481,6 +532,22 @@ try {
       await settle()
       await waitFor("!!document.querySelector('.profile-layout')")
       await check('Recovery returns keyboard focus to main content', "document.activeElement.id==='main-content'")
+      apiMode = 'held'
+      await cdp('Page.navigate', { url: origin + '/' })
+      await waitFor("!!document.querySelector('.content-loader__pause')")
+      await evaluate("document.querySelector('.content-loader__pause').focus()")
+      apiMode = 'ready'
+      releaseHeldRequests()
+      await settle()
+      await check('Fresh-load interaction hands keyboard focus to the portfolio', "document.activeElement.id==='main-content' && !document.querySelector('.content-gate')")
+      apiMode = 'held'
+      await cdp('Page.navigate', { url: origin + '/' })
+      await waitFor("!!document.querySelector('.content-loader')")
+      await waitFor("document.querySelector('.content-gate__copy p').textContent.includes('taking a little longer')")
+      await check('A slow connection has an honest status update', "document.querySelector('[role=\"status\"]').textContent.includes('Still connecting') && !document.querySelector('[aria-valuenow]')")
+      apiMode = 'ready'
+      releaseHeldRequests()
+      await settle()
     }
     await check('No runtime errors', 'true')
     checks.at(-1).passed=runtimeErrors.length===0 && consoleErrors.length===0
@@ -492,12 +559,13 @@ try {
   failure = error
   console.error(error.stack || error.message)
 } finally {
+  releaseHeldRequests()
   const report = {
-    mode: v1Archive ? 'v1-archive' : baseline ? 'baseline' : 'after', checkedAt: new Date().toISOString(), fullPage,
+    mode: v1Archive ? 'v1-archive' : baseline ? 'baseline' : loadingOnly ? 'loading' : 'after', checkedAt: new Date().toISOString(), fullPage,
     checks, runtimeErrors, consoleErrors, failure: failure?.message || null, failureDiagnostics,
     scope: `${process.env.PORTFOLIO_QA_ORIGIN ? 'Live-site' : 'Local production-bundle'} Chrome checks${apiOrigin ? ' against the local API with real MySQL/R2 content, plus simulated service outages' : ''}. Physical devices and assistive technology require separate verification.`,
   }
-  await writeFile(join(output, v1Archive ? 'v1-checks.json' : baseline ? 'baseline-checks.json' : 'ui-checks.json'), JSON.stringify(report, null, 2))
+  await writeFile(join(output, v1Archive ? 'v1-checks.json' : baseline ? 'baseline-checks.json' : loadingOnly ? 'loading-checks.json' : 'ui-checks.json'), JSON.stringify(report, null, 2))
   socket?.close()
   chrome.kill()
   await new Promise(resolveClosed => server.close(resolveClosed))

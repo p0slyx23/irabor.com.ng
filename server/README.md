@@ -60,8 +60,9 @@ Origins have a scheme and optional port, with no path, trailing slash, or wildca
 Use `HOST=0.0.0.0` so Railway can reach the API; do not copy the local
 `HOST=127.0.0.1`. Let Railway inject `PORT` instead of setting it to 3001 or 3306.
 
-`packageManager` records the tested npm version; check the actual npm version
-in the deployment logs rather than assuming that field changes the bundled CLI.
+The API uses npm bundled with Node 24. Do not add a `packageManager` field for
+this direct npm install override: Railpack 0.43 treats it as a Corepack opt-in
+and tries to copy `/opt/corepack`, which this install step does not provision.
 Railpack installs production dependencies in its install phase; the build
 validates API modules and migration files without connecting to MySQL. It
 does not run Vite or perform a second install over the build cache. The
