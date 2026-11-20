@@ -56,7 +56,14 @@ test('temporary failures retry once, permanent errors do not, and HTML is never 
   calls = 0
   await assert.rejects(loadPortfolioContent({ fetchImpl: async () => { calls++; return new Response('frontend HTML', { headers: { 'content-type': 'text/html' } }) } }), (error) => error.code === 'configuration')
   assert.equal(calls, 1)
-  await assert.rejects(loadPortfolioContent({ fetchImpl: async () => new Response('', { status: 404 }) }), (error) => error.code === 'unavailable')
+  await assert.rejects(loadPortfolioContent({ fetchImpl: async () => new Response('', { status: 404 }) }), (error) => error.code === 'service-error')
+})
+
+test('only service-unavailable HTTP responses suggest a possible wake-up', async () => {
+  for (const status of [401, 403, 404, 429, 500, 502, 503, 504]) {
+    const expected = status === 503 ? 'unavailable' : status === 429 ? 'rate-limited' : 'service-error'
+    await assert.rejects(loadPortfolioContent({ attempts: 1, fetchImpl: async () => new Response('', { status }) }), error => error.code === expected)
+  }
 })
 
 test('malformed, unsafe, and unknown-asset content is rejected before the portfolio renders', async () => {

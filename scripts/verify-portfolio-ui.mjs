@@ -8,12 +8,15 @@ import sharp from 'sharp'
 import { getContentYear } from '../src/core/dateFormatting.js'
 import { createFixture } from '../server/tests/fixtures.mjs'
 import { portableAssets } from './export-content-seed.mjs'
+import { createEditorHandler } from '../server/lib/editor-api.mjs'
+import { contentRevision, EditorError, validateEditorContent } from '../server/lib/editor-content.mjs'
 
 // Test the actual production bundle, never a report or a design prototype.
 const baseline = process.argv.includes('--baseline')
 const checksOnly = process.argv.includes('--checks-only')
 const loadingOnly = process.argv.includes('--loading-only') || process.argv.includes('--thinking-only')
 const errorsOnly = process.argv.includes('--errors-only')
+const editorOnly = process.argv.includes('--editor-only')
 const fullPage = process.argv.includes('--full-page')
 const v1Archive = process.argv.includes('--v1-archive')
 const basePath = v1Archive ? '/irabor.com.ng' : ''
@@ -28,9 +31,13 @@ const releaseHeldRequests = () => { for (const release of heldRequests) release(
 let expectedCurrentCount = 5
 let expectedArchiveCount = 5
 let capturedApiPayload
-if (errorsOnly || (loadingOnly && !apiOrigin)) {
+if (errorsOnly || editorOnly || (loadingOnly && !apiOrigin)) {
   const content = portableAssets(createFixture())
   content.projectEntries['first-project'].toc = [{ id: 'overview', label: 'Overview' }]
+  if (editorOnly) {
+    content.projectStacks = {}
+    for (const detail of Object.values(content.projectEntries)) Object.assign(detail, { toc: [], meta: [], stack: [] })
+  }
   capturedApiPayload = JSON.stringify({ schemaVersion: 1, content })
 }
 if (apiOrigin && !v1Archive) {
@@ -52,10 +59,29 @@ const mime = {
   '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf',
   '.webmanifest': 'application/manifest+json',
 }
+let editorHandler, editorOrigin, viteServer, editorConflict = false
+let editorContent = editorOnly ? JSON.parse(capturedApiPayload).content : null
+const editorHistory = new Map()
+const editorRead = async () => ({ content: structuredClone(editorContent), revision: contentRevision(editorContent), assets: {}, undo: [...editorHistory.keys()].at(-1) ?? null })
+const editorStore = {
+  read: editorRead,
+  async save(content, revision) {
+    if (editorConflict || revision !== contentRevision(editorContent)) throw new EditorError(409, 'Content changed in another tab. Reload the latest content before saving again.')
+    validateEditorContent(content)
+    editorHistory.set(`00000000-0000-0000-0000-${String(editorHistory.size).padStart(12, '0')}`, structuredClone(editorContent))
+    editorContent = structuredClone(content)
+    return editorRead()
+  },
+  async restore(id, revision) { return this.save(editorHistory.get(id), revision) },
+}
 const server = createServer(async (req, res) => {
   try {
     const requested = decodeURIComponent(new URL(req.url, 'http://localhost').pathname)
-    if (requested === '/api/content' && (apiOrigin || errorsOnly || loadingOnly)) {
+    if (editorOnly && requested.startsWith('/api/editor/')) {
+      editorHandler ??= createEditorHandler({ store: editorStore, port: server.address().port, allowedOrigins: [editorOrigin] })
+      return editorHandler(req, res)
+    }
+    if (requested === '/api/content' && (apiOrigin || errorsOnly || loadingOnly || editorOnly)) {
       apiRequests++
       if (apiMode === 'html') {
         res.writeHead(200, { 'Content-Type': 'text/html' })
@@ -81,7 +107,7 @@ const server = createServer(async (req, res) => {
       // Isolate UI timing from extra remote database reads during each scenario.
       if (capturedApiPayload) {
         res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' })
-        res.end(capturedApiPayload)
+        res.end(editorOnly ? JSON.stringify({ schemaVersion: 1, content: editorContent }) : capturedApiPayload)
         return
       }
       const response = await fetch(new URL('/api/content', apiOrigin), { signal: AbortSignal.timeout(20000) })
@@ -103,7 +129,14 @@ const server = createServer(async (req, res) => {
   }
 })
 await new Promise(resolveListening => server.listen(0, '127.0.0.1', resolveListening))
-const origin = process.env.PORTFOLIO_QA_ORIGIN || `http://127.0.0.1:${server.address().port}`
+const staticOrigin = `http://127.0.0.1:${server.address().port}`
+if (editorOnly) {
+  const { createServer: createViteServer } = await import('vite')
+  viteServer = await createViteServer({ server: { host: '127.0.0.1', port: 0, strictPort: false, proxy: { '/api/editor': { target: staticOrigin, changeOrigin: true }, '/api': staticOrigin } } })
+  await viteServer.listen()
+  editorOrigin = `http://127.0.0.1:${viteServer.httpServer.address().port}`
+}
+const origin = process.env.PORTFOLIO_QA_ORIGIN || editorOrigin || staticOrigin
 const profile = await mkdtemp(join(tmpdir(), 'irabor-ui-qa-'))
 const chromePath = process.env.PORTFOLIO_QA_CHROME || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
 const chrome = spawn(chromePath, [
@@ -160,6 +193,7 @@ try {
   const { targetId } = await send('Target.createTarget', { url: 'about:blank' })
   const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true })
   const cdp = (method, params) => send(method, params, sessionId)
+  if (editorOnly) socket.addEventListener('message', event => { const message = JSON.parse(event.data); if (message.method === 'Page.javascriptDialogOpening') cdp('Page.handleJavaScriptDialog', { accept: true }).catch(() => {}) })
   await cdp('Page.enable')
   await cdp('Runtime.enable')
   await cdp('Network.enable')
@@ -274,7 +308,85 @@ try {
     await cdp('Emulation.setEmulatedMedia',{features:[]})
   }
   await theme('dark')
-  if (errorsOnly) {
+  if (editorOnly) {
+    await theme('light')
+    await check('Editor starts inactive on localhost', "document.querySelector('.local-editor-bar button').textContent==='Edit page' && !document.querySelector('.editor-slot')")
+    await evaluate("document.querySelector('.local-editor-bar button').click()")
+    await waitFor("!!document.querySelector('.editor-slot')")
+    await check('Local editor clearly identifies live database saves', "document.querySelector('.local-editor-bar').textContent.includes('live database') && document.querySelectorAll('.editor-slot').length>=5")
+    await screenshot('editor-desktop.png')
+    await evaluate("[...document.querySelectorAll('.editor-slot button')].find(el=>el.textContent==='Edit about').click()")
+    await waitFor("!!document.querySelector('.editor-sheet[open] textarea')")
+    await check('Editor sheet moves focus inside its modal', "document.querySelector('.editor-sheet').contains(document.activeElement) && document.body.style.overflow==='hidden'")
+    await screenshot('editor-sheet-desktop.png')
+    await size(390)
+    await noOverflow('Editor sheet fits mobile')
+    await screenshot('editor-sheet-mobile.png')
+    const fill = async (selector, value) => { await evaluate(`document.querySelector(${JSON.stringify(selector)}).focus();document.querySelector(${JSON.stringify(selector)}).select()`); await cdp('Input.insertText', { text: value }) }
+    const fillLabel = async (label, value, index = 0) => { await evaluate(`{const input=[...document.querySelectorAll('.editor-field')].filter(el=>el.querySelector('span').textContent===${JSON.stringify(label)})[${index}].querySelector('input,textarea');input.setAttribute('data-qa-input','true')}`); await fill('[data-qa-input]', value); await evaluate("document.querySelector('[data-qa-input]').removeAttribute('data-qa-input')") }
+    await fill('.editor-sheet textarea', 'Updated about from isolated browser QA.\n\nSecond paragraph.')
+    await evaluate("document.querySelector('.editor-save').click()")
+    await waitFor("!document.querySelector('.editor-sheet')")
+    await check('About changes save and refresh the actual page', "document.querySelector('.profile-about').textContent.includes('Updated about from isolated browser QA.') && document.querySelector('.local-editor-bar').textContent.includes('Saved to live content')")
+    await evaluate("[...document.querySelectorAll('.local-editor-bar button')].find(el=>el.textContent==='Social links').click()")
+    await waitFor("!!document.querySelector('.editor-sheet[open]')")
+    for (const [index, label] of ['First social', 'Second social'].entries()) {
+      await evaluate("[...document.querySelectorAll('.editor-sheet button')].find(el=>el.textContent==='Add link').click()")
+      await fillLabel('Label', label, index)
+      await fillLabel('Link', `https://example.com/social-${index}`, index)
+    }
+    await evaluate("[...document.querySelectorAll('.editor-sheet button')].find(el=>el.textContent==='Move link down').click()")
+    await check('Social reorder controls update draft order and disable boundary moves', "document.querySelector('.editor-repeat input').value==='Second social' && [...document.querySelectorAll('.editor-sheet button')].find(el=>el.textContent==='Move link up').disabled")
+    await screenshot('editor-socials-mobile.png')
+    await evaluate("document.querySelector('.editor-save').click()")
+    await waitFor("!document.querySelector('.editor-sheet')")
+    await check('Social order persists through saving', `${JSON.stringify(editorContent.socialLinks.map(link=>link.label))}[0]==='Second social'`)
+    await evaluate("[...document.querySelectorAll('.editor-slot button')].find(el=>el.textContent==='Add experience').click()")
+    await waitFor("!!document.querySelector('.editor-sheet[open]')")
+    for (const [label, value] of [['Role title (use → between previous roles)', 'Test Engineer'], ['Company', 'QA Fixture'], ['Period', '2026 — Present'], ['Technologies — comma separated', 'React, TypeScript']]) await fillLabel(label, value)
+    await evaluate("document.querySelector('.editor-save').click()")
+    await waitFor("!document.querySelector('.editor-sheet')")
+    await check('Experience creation and comma-separated technologies save', "[...document.querySelectorAll('.experience-entry')].some(el=>el.textContent.includes('QA Fixture') && el.textContent.includes('TypeScript'))")
+    const addedRoleId = editorContent.experienceSection.entries[0].id
+    await evaluate("[...document.querySelectorAll('.editor-slot button')].find(el=>el.textContent==='Edit experience').click()")
+    await waitFor("!!document.querySelector('.editor-sheet[open]')")
+    await evaluate("[...document.querySelectorAll('.editor-sheet button')].find(el=>el.textContent==='Delete experience').click()")
+    await waitFor("!document.querySelector('.editor-sheet')")
+    await check('Confirmed deletion removes only the selected entry', `${JSON.stringify(editorContent.experienceSection.entries.some(entry=>entry.id===addedRoleId))}===false && document.querySelectorAll('.experience-entry').length===1`)
+    await evaluate("[...document.querySelectorAll('.local-editor-bar button')].find(el=>el.textContent==='Undo last save').click()")
+    await waitFor("document.querySelectorAll('.experience-entry').length===2")
+    await check('Undo restores the deleted entry', "document.querySelector('.experience-list').textContent.includes('QA Fixture')")
+    await evaluate("[...document.querySelectorAll('.editor-slot button')].find(el=>el.textContent==='Add project').click()")
+    await waitFor("!!document.querySelector('.editor-sheet[open]')")
+    await fillLabel('Project title', 'Browser QA project')
+    await fillLabel('Case-study introduction', 'A synthetic project used only in the isolated QA store.')
+    await fillLabel('Block heading', 'Overview')
+    await fillLabel('Paragraphs — blank line between paragraphs', 'A verified project block.')
+    await evaluate("document.querySelector('.editor-save').click()")
+    await waitFor("!document.querySelector('.editor-sheet')")
+    await check('Project creation reaches the homepage with a stable slug', "document.querySelector('.profile-project-list').textContent.includes('Browser QA project') && !!document.querySelector('a[href=\"/projects/browser-qa-project\"]')")
+    await evaluate("document.querySelector('a[href=\"/projects/browser-qa-project\"]').click()")
+    await settle()
+    await check('New project renders a working case study', "document.querySelector('.article-prose').textContent.includes('A verified project block.')")
+    await evaluate("[...document.querySelectorAll('.editor-slot button')].find(el=>el.textContent==='Edit project').click()")
+    await waitFor("!!document.querySelector('.editor-sheet[open]')")
+    editorConflict = true
+    await fillLabel('Project title', 'Must not overwrite a newer revision')
+    await evaluate("document.querySelector('.editor-save').click()")
+    await waitFor("document.querySelector('.editor-sheet__status').textContent.includes('another tab')")
+    await check('Conflict leaves the form and edits intact', "!!document.querySelector('.editor-sheet[open]') && document.querySelector('.editor-field input').value==='Must not overwrite a newer revision'")
+    editorConflict = false
+    await key('Escape', 'Escape', 27)
+    await waitFor("!document.querySelector('.editor-sheet')")
+    await evaluate("[...document.querySelectorAll('.local-editor-bar button')].find(el=>el.textContent==='Done editing').click()")
+    await check('Done editing removes all in-page controls', "!document.querySelector('.editor-slot')")
+    const productionFiles = (await readFile(join(dist, 'index.html'), 'utf8')).match(/src="([^"]+\.js)"/)
+    const productionJs = await readFile(join(dist, productionFiles[1].replace(/^\//,'')), 'utf8')
+    checks.push({ name: 'Production bundle excludes the local editor and write endpoints', passed: !productionJs.includes('Edit page') && !productionJs.includes('/api/editor/') && !productionJs.includes('Saving updates the live portfolio') })
+    if (!checks.at(-1).passed) throw new Error('Editor leaked into production bundle')
+    await check('Editor has no runtime or console errors', `${runtimeErrors.length}===0 && ${consoleErrors.length}===0`)
+    console.log(JSON.stringify({ checks }, null, 2))
+  } else if (errorsOnly) {
     for (const desired of ['light', 'dark']) {
       await theme(desired)
       for (const width of [1440, 390]) {
@@ -286,6 +398,8 @@ try {
         await check(`Service recovery has safe copy and focused heading ${desired}/${width}`, "document.activeElement.id==='recovery-title' && document.querySelector('h1').textContent==='Couldn’t load my work.' && !/API|SQL|configuration|500/.test(document.querySelector('.recovery').textContent)")
         await check(`Recovery targets are accessible ${desired}/${width}`, "[...document.querySelector('.recovery__actions').children].every(el=>el.getBoundingClientRect().height>=48)")
         await noOverflow(`Recovery fits ${desired}/${width}`)
+        await check(`Recovery identity and button contrast ${desired}/${width}`, "!document.querySelector('.recovery__identity span:not(.recovery__mark)') && getComputedStyle(document.querySelector('.recovery__actions .button')).backgroundColor!==getComputedStyle(document.querySelector('.recovery__actions .button')).boxShadow.match(/rgba?\\([^)]*\\)/)?.[0]")
+        if (width === 390) await check(`Mobile recovery stays top aligned with bottom actions ${desired}`, "(() => {const logo=document.querySelector('.recovery__identity').getBoundingClientRect();const copy=document.querySelector('.recovery__copy').getBoundingClientRect();const footer=document.querySelector('.recovery__footer').getBoundingClientRect();return logo.top<40 && copy.top>logo.bottom && footer.top>innerHeight*0.65 && footer.bottom<=innerHeight-20})()")
         await check(`Résumé is bundled and available during API outage ${desired}/${width}`, "(async()=>{const a=document.querySelector('.recovery__link');const response=await fetch(a.href);const bytes=new Uint8Array(await response.arrayBuffer());return a.target==='_blank' && new URL(a.href).origin===location.origin && response.ok && String.fromCharCode(...bytes.slice(0,4))==='%PDF'})()")
         await screenshot(`recovery-service-${desired}-${width}.png`)
         apiMode = 'ready'
@@ -317,8 +431,24 @@ try {
     await waitFor("document.querySelector('h1').textContent==='You’re offline.'")
     await check('Offline guidance is honest and reactive', "document.querySelector('.recovery__copy p').textContent.includes('PDF may need a connection') && document.querySelector('[role=status]').textContent.includes('offline')")
     await cdp('Network.emulateNetworkConditions', { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 })
-    await waitFor("document.querySelector('h1').textContent==='Couldn’t load my work.'")
+    await waitFor("document.querySelector('h1').textContent==='Caught me snoozing?'")
     await check('Reconnection does not steal focus or automatically reload', "document.activeElement.id==='recovery-title' && !!document.querySelector('.recovery')")
+    await check('Wake action explains uncertainty instead of claiming confirmed sleep', "document.querySelector('.recovery').dataset.recovery==='wake' && document.querySelector('.recovery__actions button').textContent==='Wake portfolio' && document.querySelector('.recovery__copy p').textContent.includes('may')")
+    await evaluate("document.documentElement.dataset.theme='light'")
+    await size(390)
+    await check('Wake recovery omits the expandable explanation', "!document.querySelector('.recovery details')")
+    await noOverflow('Wake screen fits mobile')
+    await screenshot('recovery-wake-mobile.png')
+    await size(1440)
+    await evaluate("document.documentElement.dataset.theme='dark'")
+    await screenshot('recovery-wake-desktop.png')
+    apiMode = 'ready'
+    await evaluate("document.querySelector('.recovery__actions button').click()")
+    await settle()
+    await check('Wake button performs a real connection and recovers content', "!!document.querySelector('.profile-layout') && !document.querySelector('.recovery')")
+    apiMode = 'html'
+    await cdp('Page.navigate', { url: origin + '/' })
+    await waitFor("!!document.querySelector('.recovery__link')")
     await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] })
     await check('Recovery respects reduced motion', "getComputedStyle(document.querySelector('.recovery__link svg')).transitionDuration==='0s'")
     await evaluate("document.documentElement.style.fontSize='200%'")
@@ -570,7 +700,7 @@ try {
         await check(`Loader fills the viewport at ${width}`, "(() => {const r=document.querySelector('.content-gate').getBoundingClientRect();return r.top===0 && r.width===innerWidth && r.height>=innerHeight-1})()")
         await noOverflow(`Fullscreen loader does not overflow at ${width}`)
         await check(`No separate pause button at ${width}`, "!document.querySelector('.content-loader__pause') && document.querySelectorAll('.content-loader button').length===1 && document.querySelector('.content-loader__controls').textContent.indexOf('Pause animation')===-1")
-        await check(`Logo stays centered and thinking status stays at bottom at ${width}`, "(() => {const logo=document.querySelector('.content-loader__play').getBoundingClientRect();const status=document.querySelector('.content-loader__controls').getBoundingClientRect();return Math.abs(logo.x+logo.width/2-innerWidth/2)<1 && Math.abs(logo.y+logo.height/2-innerHeight/2)<1 && status.top>innerHeight*0.75 && Math.abs(innerHeight-status.bottom-24)<2})()")
+        await check(`Logo sits at thirty percent and thinking status stays at bottom at ${width}`, "(() => {const logo=document.querySelector('.content-loader__play').getBoundingClientRect();const status=document.querySelector('.content-loader__controls').getBoundingClientRect();return Math.abs(logo.x+logo.width/2-innerWidth/2)<1 && Math.abs(logo.y+logo.height/2-innerHeight*0.3)<1 && status.top>innerHeight*0.75 && Math.abs(innerHeight-status.bottom-24)<2})()")
         await check(`Thinking shimmer preserves supplied timing at ${width}`, "(() => {const s=getComputedStyle(document.querySelector('.thinking-status__text[data-text]'),'::before');return s.animationDuration==='2s' && s.animationTimingFunction==='linear' && s.backgroundSize==='400% 100%'})()")
         await evaluate("document.querySelector('.content-loader__play').focus()")
         await key('Enter', 'Enter', 13)
@@ -635,8 +765,10 @@ try {
       apiMode = 'held'
       await cdp('Page.navigate', { url: origin + '/' })
       await waitFor("!!document.querySelector('.content-loader')")
-      await waitFor("document.querySelector('.thinking-status__text[data-text]')?.textContent.includes('Still connecting')")
-      await check('A slow connection has an honest status update', "document.querySelector('[role=\"status\"]').textContent.includes('Still connecting') && !document.querySelector('[aria-valuenow]')")
+      await wait(6500)
+      await check('Thinking feedback continues during a slow connection', "!!document.querySelector('.thinking-status__text[data-text]') && !document.querySelector('[aria-valuenow]')")
+      await check('Loading omits duplicate slow-connection messages and explanation', "!document.querySelector('.content-loader details, .content-loader__slow') && !document.querySelector('.content-loader').textContent.includes('Still connecting')")
+      await screenshot('content-waking-mobile.png')
       apiMode = 'ready'
       releaseHeldRequests()
       await settle()
@@ -653,13 +785,14 @@ try {
 } finally {
   releaseHeldRequests()
   const report = {
-    mode: errorsOnly ? 'errors' : v1Archive ? 'v1-archive' : baseline ? 'baseline' : loadingOnly ? 'loading' : 'after', checkedAt: new Date().toISOString(), fullPage,
+    mode: editorOnly ? 'editor' : errorsOnly ? 'errors' : v1Archive ? 'v1-archive' : baseline ? 'baseline' : loadingOnly ? 'loading' : 'after', checkedAt: new Date().toISOString(), fullPage,
     checks, runtimeErrors, consoleErrors, failure: failure?.message || null, failureDiagnostics,
-    scope: `${process.env.PORTFOLIO_QA_ORIGIN ? 'Live-site' : 'Local production-bundle'} Chrome checks${errorsOnly || (loadingOnly && !apiOrigin) ? ' with isolated fixture content and simulated failures' : apiOrigin ? ' against the local API with real MySQL/R2 content, plus simulated service outages' : ''}. Physical devices and assistive technology require separate verification.`,
+    scope: `${editorOnly ? 'Local Vite development-source' : process.env.PORTFOLIO_QA_ORIGIN ? 'Live-site' : 'Local production-bundle'} Chrome checks${editorOnly || errorsOnly || (loadingOnly && !apiOrigin) ? ' with isolated fixture content and simulated failures (no live writes)' : apiOrigin ? ' against the local API with real MySQL/R2 content, plus simulated service outages' : ''}. Physical devices and assistive technology require separate verification.`,
   }
-  await writeFile(join(output, errorsOnly ? 'error-checks.json' : v1Archive ? 'v1-checks.json' : baseline ? 'baseline-checks.json' : loadingOnly ? 'loading-checks.json' : 'ui-checks.json'), JSON.stringify(report, null, 2))
+  await writeFile(join(output, editorOnly ? 'editor-checks.json' : errorsOnly ? 'error-checks.json' : v1Archive ? 'v1-checks.json' : baseline ? 'baseline-checks.json' : loadingOnly ? 'loading-checks.json' : 'ui-checks.json'), JSON.stringify(report, null, 2))
   socket?.close()
   chrome.kill()
+  await viteServer?.close()
   await new Promise(resolveClosed => server.close(resolveClosed))
   // The only deletion target is the unique temporary Chrome profile created above.
   const temporaryRoot = resolve(tmpdir()) + sep

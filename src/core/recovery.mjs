@@ -5,8 +5,18 @@ export function getContentRecovery(code, online = true) {
     message: 'Check your connection, then try again. My résumé link is still here, though the PDF may need a connection to open.',
   }
   if (code === 'timeout') return {
-    title: 'Taking longer than expected.',
-    message: 'The connection timed out before my work could load. Try again, or take a look at my résumé in the meantime.',
+    title: 'One more nudge?',
+    message: 'My work is taking a little longer to appear. It may need another nudge. Try again, or peek at my résumé while you wait.',
+    wake: true,
+  }
+  if (code === 'unavailable') return {
+    title: 'Caught me snoozing?',
+    message: 'My portfolio may be taking a little nap. Give it a nudge, or peek at my résumé while you wait.',
+    wake: true,
+  }
+  if (code === 'rate-limited') return {
+    title: 'Too many requests.',
+    message: 'Please wait a moment before trying again. You can view my résumé in the meantime.',
   }
   if (code === 'network') return {
     title: 'We couldn’t connect.',

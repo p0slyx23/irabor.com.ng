@@ -123,7 +123,8 @@ svg {
   --thinking-shimmer-duration: 2000ms;
   --thinking-ease: ease-in-out;
   display: grid;
-  grid-template-rows: minmax(124px, 1fr) 144px minmax(124px, 1fr);
+  grid-template-rows: minmax(48px, calc(30svh - 96px)) 144px minmax(124px, 1fr);
+  grid-template-rows: minmax(48px, calc(30dvh - 96px)) 144px minmax(124px, 1fr);
   justify-items: center;
   width: 100%;
   min-height: max(400px, calc(100svh - 48px));

@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "api:dev": "node --watch --env-file-if-exists=server/.env server/index.mjs",
+    "editor:start": "node --env-file-if-exists=server/.env server/editor.mjs",
     "api:build": "node server/build.mjs",
     "api:start": "node --env-file-if-exists=server/.env server/index.mjs",
     "db:check": "node --env-file-if-exists=server/.env server/check.mjs",

@@ -20,6 +20,7 @@ dist-ssr
 !.env.example
 !**/.env.example
 server/database/content-export.local.sql
+server/database/*.local.sql
 
 # Reproducible local browser review captures and check output
 .impeccable/review/

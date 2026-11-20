@@ -3,6 +3,7 @@ import { ContentImage } from '../atoms/ContentImage.jsx'
 import { ArrowRightIcon } from '../atoms/Icons.jsx'
 import { getProjectPath } from '../../content/siteContent.js'
 import { formatContentDate } from '../../core/dateFormatting.js'
+import { EditorSlot } from '../molecules/EditorSlot.jsx'
 
 export function ProjectCard({ project, compact = false, featured = false, eager = false, entranceIndex = 0 }) {
   const date = formatContentDate(project.date)
@@ -10,6 +11,7 @@ export function ProjectCard({ project, compact = false, featured = false, eager 
 
   return (
     <article className={`project-card profile-enter${compact ? ' project-card--compact' : ''}${featured ? ' project-card--featured' : ''}`} style={{ '--entrance-index': entranceIndex }}>
+      {import.meta.env.DEV ? <EditorSlot kind="project" id={project.slug} /> : null}
       <AppLink className="project-card__link" href={getProjectPath(project.slug)}>
         <figure className="project-card__media">
           <ContentImage

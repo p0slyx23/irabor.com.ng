@@ -1,6 +1,7 @@
 import { AppLink } from '../atoms/AppLink.jsx'
 import { Chip } from '../atoms/Chip.jsx'
 import { ArrowRightIcon } from '../atoms/Icons.jsx'
+import { EditorSlot } from '../molecules/EditorSlot.jsx'
 
 export function ExperienceList({ entries, entranceStart = 0 }) {
   return (
@@ -12,6 +13,7 @@ export function ExperienceList({ entries, entranceStart = 0 }) {
 
         return (
           <article className="experience-entry profile-enter" key={entry.id} style={{ '--entrance-index': entranceStart + index }}>
+            {import.meta.env.DEV ? <EditorSlot kind="experience" id={entry.id} /> : null}
             <p className="experience-entry__period">{entry.period}</p>
             <div className="experience-entry__body">
               <div className="experience-entry__title-row">

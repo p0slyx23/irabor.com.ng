@@ -7,15 +7,12 @@ export function ContentLoading({ onInteract }) {
   const reducedMotion = useReducedMotionPreference()
   const [paused, setPaused] = useState(false)
   const [hidden, setHidden] = useState(() => document.hidden)
-  const [slow, setSlow] = useState(false)
   const stopped = paused || reducedMotion || hidden
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setSlow(true), 6000)
     const handleVisibility = () => setHidden(document.hidden)
     document.addEventListener('visibilitychange', handleVisibility)
     return () => {
-      window.clearTimeout(timer)
       document.removeEventListener('visibilitychange', handleVisibility)
     }
   }, [])
@@ -23,7 +20,7 @@ export function ContentLoading({ onInteract }) {
   return (
     <>
       <p aria-atomic="true" aria-live="polite" className="sr-only" role="status">
-        {slow ? 'Still connecting. This is taking a little longer.' : 'Loading portfolio. Getting the latest experience and projects.'}
+        Loading portfolio. Getting the latest experience and projects.
       </p>
       <main aria-busy="true" className="content-gate content-thinking" data-state="loading" id="main-content" onFocusCapture={onInteract} onPointerDown={onInteract} tabIndex={-1}>
         <h1 className="sr-only">Loading portfolio</h1>
@@ -39,7 +36,7 @@ export function ContentLoading({ onInteract }) {
             <BrandMarkIcon className="content-loader__mark" />
           </button>
           <div className="content-loader__controls">
-            <ThinkingStatus paused={stopped} slow={slow} />
+            <ThinkingStatus paused={stopped} />
           </div>
         </div>
       </main>

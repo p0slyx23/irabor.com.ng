@@ -24,6 +24,7 @@ import { ProjectSummary } from '../components/molecules/ProjectSummary.jsx'
 import { ProjectStackCarousel } from '../components/organisms/ProjectStackCarousel.jsx'
 import { TableOfContents } from '../components/organisms/TableOfContents.jsx'
 import { NotFoundPage } from './NotFoundPage.jsx'
+import { EditorSlot } from '../components/molecules/EditorSlot.jsx'
 
 export function ArticlePage() {
   const articleRef = useRef(null)
@@ -58,6 +59,7 @@ export function ArticlePage() {
 
   return (
     <div className="page-shell page-shell--article">
+      {import.meta.env.DEV && isProjectRoute ? <EditorSlot kind="project" id={article.slug} /> : null}
       <ArticleReadingProgress targetRef={articleRef} />
       {isProjectRoute ? (
         <AppLink className="profile-text-link page-back-link project-back-link" href="/#projects">

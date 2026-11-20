@@ -30,6 +30,7 @@ colors:
   nav-glass-border-dark: "rgba(255, 255, 255, 0.19)"
   nav-glass-highlight-dark: "rgba(255, 255, 255, 0.13)"
   nav-glass-hover-dark: "rgba(255, 255, 255, 0.09)"
+  editor-backdrop: "rgb(0 0 0 / 0.28)"
 typography:
   display:
     fontFamily: "Inter, Manrope, sans-serif"
@@ -87,6 +88,8 @@ typography:
     fontSize: "0.875rem"
     fontWeight: 500
     lineHeight: 1.5
+  editor-subsection:
+    fontSize: "1.125rem"
 rounded:
   "4": "4px"
   "8": "8px"
@@ -213,6 +216,13 @@ At widths from 901px through 1100px, the column ratio becomes narrower on the id
 
 Desktop content begins with 32px main padding, and the profile identity sticks at 48px. Mobile section headings span the viewport and stick to its top edge with 18px vertical padding and solid theme-colored backgrounds. Navigation and the status-gradient overlay are temporarily commented out in AppShell. Safe-area spacing is zero. Homepage content ends at the footer, with zero trailing layout padding. Desktop section headings are visually hidden and retain accessible section names.
 
+Recovery compositions are centered on desktop with a bounded width (640px).
+At widths of 600px and below, the logo begins below the viewport top (24px),
+copy follows beneath it, and actions and the note sit toward the bottom through
+normal flex flow. The page expands when enlarged text or wrapped actions need
+more room. The local editor uses a right-hand sheet (600px maximum), filling
+the width on phones, with independent vertical scrolling.
+
 ## Elevation & Depth
 
 Profile content uses spacing, typography, and subtle hover fills to establish hierarchy. Compact project rows gain an accent-tinted background on fine-pointer hover. The header glass uses backdrop blur (20px), saturation (150%), a fine border, an inset highlight, and a soft shadow.
@@ -220,6 +230,7 @@ Profile content uses spacing, typography, and subtle hover fills to establish hi
 - **Light navigation shadow** uses a diffuse shadow (0 6px 22px rgba(33, 16, 51, 0.07)).
 - **Dark navigation shadow** uses a deeper shadow (0 8px 26px rgba(0, 0, 0, 0.2)).
 - Shared raised buttons use an accent offset shadow (4px 4px 0). Pressing a button moves it into that offset.
+- Recovery buttons keep a neutral page fill and ink border, distinct from their accent offset shadow. The local editor sheet uses the editor-backdrop token to dim the page.
 - Reduced-transparency, increased-contrast, and forced-color preferences use opaque header surfaces with stronger borders.
 
 ## Shapes
@@ -233,8 +244,9 @@ Profile project thumbnails have small corners (4px), their links have a modest r
 ### Content loading and recovery
 
 Database content loads before the main portfolio mounts. A full-viewport,
-theme-aware loading screen centers the existing 96px brandmark independently
-of a bottom-aligned thinking-status line. The logo bounces by 10px over a smooth
+theme-aware loading screen horizontally centers the existing 96px brandmark
+near 30% of the dynamic viewport height, independently of a bottom-aligned
+thinking-status line. The logo bounces by 10px over a smooth
 1600ms cycle. The supplied Thinking states remix retains its 150ms ease-in-out
 swap, 8px travel, 2px blur, 50ms gap, 2000ms hold, and 2000ms linear shimmer.
 Its stage variables map to the existing semantic palette. Status copy describes
@@ -242,7 +254,9 @@ connection/waiting, not fictional AI tasks or completed progress. There is no
 separate pause button; tapping the logo still stops visual motion without
 cancelling the request. Bottom text wraps at enlarged font sizes without moving the logo.
 Reduced-motion preferences remove the effects and decorative controls; hidden
-tabs also pause them. After six seconds, the status explains the longer wait.
+tabs also pause them. The thinking feedback continues throughout loading;
+there is no additional slow-connection message, explanation, or résumé action
+on this screen. There is no fabricated progress or background keep-alive ping.
 There is no artificial minimum duration: real content replaces the loader as
 soon as it is ready. A polite live status sits outside the busy main region.
 Failures use the recovery composition below. Successful retries or loader keyboard interactions
@@ -251,20 +265,41 @@ return focus to the main content, without disrupting direct hash navigation.
 ### Recovery screens
 
 Content failures, missing pages, missing projects, and unexpected rendering
-errors share an open, cardless layout. A small brand signature precedes a
+errors share an open, cardless layout. A logo-only brandmark (44px) precedes a
 32–48px Inter heading, readable explanatory copy, and a primary recovery action.
 The existing accent and offset button shadow remain; no red warning treatment,
 decorative illustration, or technical exception details are shown.
 
 Service failures offer a deliberate retry and a bundled résumé PDF independent
-of the content API and R2. Offline and timeout copy explain the relevant next
-step without blaming the visitor or promising that a PDF works offline.
+of the content API and R2. Only service-unavailable responses (503) and timeouts
+use possible waking copy without an expandable explanation. Their Wake portfolio action and logo
+both send a real retry. Offline, configuration, invalid-content, and other HTTP
+failures retain appropriate error copy without claiming that the server is asleep.
+Offline copy does not promise that a PDF works without a connection.
 Missing pages point to recent work and the archive. Unexpected rendering errors
 offer a full reload and the résumé. Headings receive focus when a recovery
 screen appears; connection changes are announced without stealing focus.
 Actions wrap on small screens, retain 48px targets, and use directional arrows
 without underlines. Both themes share the same geometry. Reduced motion removes
 arrow transitions, and error routes omit the normal footer and route animation.
+
+### Local editor
+
+The localhost-only editor extends the portfolio with dashed inline Edit, Add,
+and reorder controls plus a fixed toolbar. It uses the existing theme colors,
+small corners (4px), and restrained borders. A native modal sheet opens on the
+right over the dimmed page, locks background scrolling, and restores focus on
+close. Fields use readable text (16px), visible accent focus outlines, and
+theme-aware backgrounds. Project subsections use the editor-subsection role;
+the save footer stays visible while scrolling. Sheet and inline controls expand
+to touch targets (44px) at widths of 600px and below.
+
+The toolbar and sheet explicitly identify live content: Save changes writes to
+MySQL. Busy controls prevent overlapping operations, dirty dismissal asks before
+discarding changes, and failed or conflicting saves preserve the open form.
+Reload latest and Undo last save support recovery. Social links have explicit
+Move link up and Move link down controls. These editing controls and write
+endpoints are excluded from production.
 
 ### Navigation
 

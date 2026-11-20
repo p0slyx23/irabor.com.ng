@@ -48,6 +48,12 @@ new content, then apply reviewed SQL migrations to the database.
 
 [Server setup](./server/README.md) covers MySQL, migrations, Cloudflare R2, and
 deployment. Keep all database and R2 credentials in the ignored `server/.env`.
+Localhost development also offers an **Edit page** mode. Start it with
+`npm run editor:start` alongside the API and Vite; saves update shared MySQL
+content directly. The public build contains no editing interface, and the
+public API remains read-only. See the server setup for security and recovery.
+Follow the [local editing and deployment guide](./docs/local-editor-and-deployment.md)
+for editor usage, R2 file updates, recovery, and the commit/merge workflow.
 For local development, leave `VITE_CONTENT_API_URL` empty in `.env.local` so Vite
 proxies `/api` to the API on port 3001. On Vercel, the specific `/api/content`
 rewrite forwards to Railway before the SPA fallback, so the variable can stay
