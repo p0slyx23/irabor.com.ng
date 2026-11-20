@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import App from '../App.jsx'
 import { Button } from '../components/atoms/Button.jsx'
 import { RecoveryLink, RecoveryState } from '../components/molecules/RecoveryState.jsx'
@@ -9,6 +9,8 @@ import { loadPortfolioContent } from '../core/loadPortfolioContent.mjs'
 import { getContentRecovery } from '../core/recovery.mjs'
 import { useOnlineStatus } from '../core/useOnlineStatus.js'
 import resumeUrl from '../assets/files/resume.pdf'
+
+const LocalEditor = import.meta.env.DEV ? lazy(() => import('../dev/LocalEditor.jsx')) : null
 
 export function ContentGate() {
   const [attempt, setAttempt] = useState(0)
@@ -40,13 +42,20 @@ export function ContentGate() {
     }
   }, [state.status])
 
-  if (state.status === 'ready') return <App />
+  if (state.status === 'ready') {
+    if (import.meta.env.DEV && ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+      return <Suspense fallback={<ContentLoading />}><LocalEditor><App /></LocalEditor></Suspense>
+    }
+    return <App />
+  }
   if (state.status === 'loading') return <ContentLoading onInteract={() => { usedLoader.current = true }} />
+  const recovery = getContentRecovery(state.code, online)
+  const retry = () => { retried.current = true; setState({ status: 'loading' }); setAttempt(value => value + 1) }
   return (
     <main aria-busy="false" className="content-gate recovery-screen" data-state="error" id="main-content" tabIndex={-1}>
-      <RecoveryState {...getContentRecovery(state.code, online)} note="The résumé opens as a PDF in a new tab.">
-        <Button onClick={() => { retried.current = true; setState({ status: 'loading' }); setAttempt((value) => value + 1) }}>
-          Try again
+      <RecoveryState {...recovery} onWake={recovery.wake ? retry : undefined} note="The résumé opens as a PDF in a new tab.">
+        <Button onClick={retry}>
+          {recovery.wake ? 'Wake portfolio' : 'Try again'}
         </Button>
         <RecoveryLink href={resumeUrl} external>View résumé</RecoveryLink>
       </RecoveryState>

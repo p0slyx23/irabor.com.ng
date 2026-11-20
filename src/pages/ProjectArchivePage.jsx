@@ -2,6 +2,7 @@ import { AppLink } from '../components/atoms/AppLink.jsx'
 import { ArrowRightIcon } from '../components/atoms/Icons.jsx'
 import { getProjectBySlug, getProjectPath, projectPosts } from '../content/siteContent.js'
 import { getContentDateSortValue, getContentYear } from '../core/dateFormatting.js'
+import { EditorSlot } from '../components/molecules/EditorSlot.jsx'
 
 const technologyLabels = {
   react: 'React', php: 'PHP', sql: 'MySQL', flutter: 'Flutter',
@@ -24,6 +25,7 @@ export function ProjectArchivePage() {
         <ArrowRightIcon aria-hidden="true" /> Irabor
       </AppLink>
       <h1>Project Archive</h1>
+      {import.meta.env.DEV ? <EditorSlot kind="project" add /> : null}
       <table className="project-archive__table">
         <thead><tr><th scope="col">Year</th><th scope="col">Project</th><th scope="col" className="project-archive__stack">Built with</th><th scope="col" className="project-archive__live">Links</th></tr></thead>
         <tbody>
@@ -35,7 +37,7 @@ export function ProjectArchivePage() {
             return (
               <tr key={project.slug}>
                 <td>{year || '—'}</td>
-                <th scope="row"><AppLink href={getProjectPath(project.slug)}>{project.title}<ArrowRightIcon aria-hidden="true" /></AppLink></th>
+                <th scope="row"><AppLink href={getProjectPath(project.slug)}>{project.title}<ArrowRightIcon aria-hidden="true" /></AppLink>{import.meta.env.DEV ? <EditorSlot kind="project" id={project.slug} /> : null}</th>
                 <td className="project-archive__stack"><ul>{technologies.map((technology) => <li key={technology}>{technology}</li>)}</ul></td>
                 <td className="project-archive__live">
                   <ul className="project-archive__links">

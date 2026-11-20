@@ -5,13 +5,12 @@ const messages = [
   'Waiting for the latest work',
   'Thanks for your patience',
 ]
-const slowMessage = 'Still connecting. Thanks for waiting.'
 
-export function ThinkingStatus({ paused, slow }) {
+export function ThinkingStatus({ paused }) {
   const [cycle, setCycle] = useState(0)
 
   useEffect(() => {
-    if (paused || slow) return undefined
+    if (paused) return undefined
     // First hold is 2000ms; later holds follow the 150ms swap + 50ms gap.
     let timer
     const advance = () => {
@@ -20,14 +19,14 @@ export function ThinkingStatus({ paused, slow }) {
     }
     timer = window.setTimeout(advance, 2000)
     return () => window.clearTimeout(timer)
-  }, [paused, slow])
+  }, [paused])
 
-  const current = slow ? slowMessage : messages[cycle % messages.length]
+  const current = messages[cycle % messages.length]
   return (
     <span aria-hidden="true" className="thinking-status">
-      {[...messages, slowMessage].map(message => <span className="thinking-status__sizer" key={message}>{message}</span>)}
-      {cycle > 0 && !slow ? <span className="thinking-status__text thinking-status__text--exit" key={`out-${cycle}`}>{messages[(cycle - 1) % messages.length]}</span> : null}
-      <span className={`thinking-status__text${cycle > 0 && !slow ? ' thinking-status__text--enter' : ''}`} data-text={current} key={slow ? 'slow' : cycle}>{current}</span>
+      {messages.map(message => <span className="thinking-status__sizer" key={message}>{message}</span>)}
+      {cycle > 0 ? <span className="thinking-status__text thinking-status__text--exit" key={`out-${cycle}`}>{messages[(cycle - 1) % messages.length]}</span> : null}
+      <span className={`thinking-status__text${cycle > 0 ? ' thinking-status__text--enter' : ''}`} data-text={current} key={cycle}>{current}</span>
     </span>
   )
 }

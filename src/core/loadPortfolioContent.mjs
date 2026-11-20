@@ -42,7 +42,7 @@ export async function loadPortfolioContent({ endpoint = '', assets = {}, signal,
       const response = await fetchImpl(url, { signal: controller.signal, credentials: 'omit', cache: 'no-store' })
       if (!response.ok) {
         retry = response.status >= 500 || response.status === 429
-        throw new ContentLoadError('unavailable')
+        throw new ContentLoadError(response.status === 429 ? 'rate-limited' : response.status === 503 ? 'unavailable' : 'service-error')
       }
       if (!(response.headers.get('content-type') || '').includes('application/json')) throw new ContentLoadError('configuration')
       let payload

@@ -3,6 +3,7 @@ import { AppLink } from '../components/atoms/AppLink.jsx'
 import { ArrowRightIcon, BrandMarkIcon } from '../components/atoms/Icons.jsx'
 import { ExperienceList } from '../components/organisms/ExperienceList.jsx'
 import { ProjectCard } from '../components/organisms/ProjectCard.jsx'
+import { EditorSlot } from '../components/molecules/EditorSlot.jsx'
 import { getContentYear } from '../core/dateFormatting.js'
 import {
   experienceSection,
@@ -23,6 +24,7 @@ export function HomePage() {
     <div className={`profile-layout${playEntrance ? ' profile-layout--enter' : ''}`}>
       <header className="profile-identity">
         <div>
+          {import.meta.env.DEV ? <EditorSlot kind="profile" /> : null}
           <h1 className="profile-enter" id="profile-name" style={{ '--entrance-index': 0 }}><BrandMarkIcon className="profile-identity__mark" />{profileContent.name}</h1>
           <p className="profile-identity__role profile-enter" style={{ '--entrance-index': 1 }}>{siteBrand.tagline}</p>
           <p className="profile-identity__intro profile-enter" style={{ '--entrance-index': 2 }}>{profileContent.introduction}</p>
@@ -33,6 +35,7 @@ export function HomePage() {
 
       <div className="profile-content">
         <section aria-labelledby="about-title" className="profile-section profile-about" id="about">
+          {import.meta.env.DEV ? <EditorSlot kind="about" /> : null}
           <h2 className="profile-section__heading" id="about-title">About</h2>
           {profileContent.about.map((paragraph, index) => (
             <p className="profile-enter" key={paragraph} style={{ '--entrance-index': index }}>{paragraph}</p>
@@ -42,6 +45,7 @@ export function HomePage() {
         <section aria-labelledby="experience-title" className="profile-section profile-experience" id="experience">
           <h2 className="profile-section__heading" id="experience-title">Experience</h2>
           <ExperienceList entries={experienceSection.entries} entranceStart={profileContent.about.length} />
+          {import.meta.env.DEV ? <EditorSlot kind="experience" add /> : null}
           {resume ? (
             <AppLink className="profile-text-link profile-text-link--external profile-enter" href={resume.url} style={{ '--entrance-index': resumeEntranceIndex }} target="_blank">
               View full résumé <ArrowRightIcon aria-hidden="true" />
@@ -56,6 +60,7 @@ export function HomePage() {
               <ProjectCard compact entranceIndex={projectsEntranceStart + index} key={project.slug} project={project} />
             ))}
           </div>
+          {import.meta.env.DEV ? <EditorSlot kind="project" add /> : null}
           <AppLink className="profile-text-link profile-text-link--external profile-enter" href="/archive" style={{ '--entrance-index': projectsEntranceStart + featuredProjects.length }}>
             View full project archive <ArrowRightIcon aria-hidden="true" />
           </AppLink>

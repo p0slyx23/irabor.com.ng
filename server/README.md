@@ -4,6 +4,79 @@ The React frontend loads content from the read-only API. MySQL holds portfolio
 settings, projects, experience, and verified public asset locations. Cloudflare
 R2 holds public cover images and the resume. Local asset originals are retained.
 
+## Localhost-only page editing
+
+Run `npm run db:migrate` once to create the additive recovery-history table.
+Then use three terminals:
+
+```powershell
+npm run api:dev
+```
+
+```powershell
+npm run editor:start
+```
+
+```powershell
+npm run dev
+```
+
+Open **http://localhost:5173** and choose **Edit page**. Edit profile/About,
+experience, projects, case-study blocks, links, cover URLs, and social links
+from the existing page. Move up/down changes ordering. Each **Save changes**
+writes directly to the shared live MySQL database; there is no draft/publish
+workflow. The public API caches content for up to 60 seconds.
+
+The editor binds only to `127.0.0.1:3002`, refuses production/Railway/Vercel
+environments, validates Host/Origin, and requires a per-process session token
+on writes. Vite's local proxy routes `/api/editor` to this process. The public
+API never imports the editor and remains read-only; production builds omit
+the editing interface entirely. Keep Vite on port 5173 and never expose either
+development server through a public tunnel.
+
+Every successful save records the previous snapshot. Deletions require
+confirmation; **Undo last save** restores that snapshot and itself remains
+recoverable. Revision checks reject stale edits from another tab. Close/discard
+the form, choose **Reload latest**, then reapply your change after a conflict.
+If a save times out, reload first to check whether it committed before retrying.
+The editor currently retains at least one project, matching the seeded-content
+readiness contract. Original file uploads and verified R2 registration remain
+in the existing `assets:sync` workflow; the editor accepts public URLs or stable
+`asset:src/assets/...` references, never Vite's generated `/assets/...` URLs.
+
+Migration `006_irabor_v2_architecture.sql` updates only the Irabor V2 case study.
+The ignored `server/database/*.local.sql` files are local recovery exports and
+must not be committed. Recovery history intentionally remains private to the
+local editor and is not exposed by `/api/content`.
+
+## Railway cold starts and the wake screen
+
+If the hosting plan sleeps between visits, the UI keeps the connection attempt
+honest: the thinking animation continues without extra waiting messages or
+explanations. An unavailable or timed-out content request
+offers **Wake portfolio**, which performs a real, bounded retry. Copy says the
+server *may* be waking up; offline, invalid content, and browser crashes are not
+misrepresented as confirmed sleep. There are no background keep-alive pings or
+fake percentage counters. The screen does not change the Railway plan or
+promise that a suspended/exhausted service can be woken from the browser.
+
+If you later want an always-on deployment:
+
+The API configuration already sets `deploy.sleepApplication` to `false`.
+Verify **Serverless / App Sleeping is off for BOTH the API and MySQL services**
+in Railway. The database is a separate service; the API's config cannot change
+its setting. Redeploy the affected service after changing this setting, since
+the running container keeps the sleep setting from when it was created.
+Always-on services consume more resources than sleeping services. Do not add
+browser keep-alive loops or fake progress to hide a cold start.
+
+When both services are awake, compare `/healthz`, `/readyz`, and `/api/content`:
+fast liveness with slow readiness points toward database/network latency, not
+proof that the API slept. Current dashboard settings and deployment logs are
+needed to distinguish sleeping from restarts or resource limits.
+
+Source: [Railway Serverless documentation](https://docs.railway.com/deployments/serverless).
+
 ## Local development
 
 Use Node.js 22.12 or later (24 LTS recommended) and MySQL 8.0 or later.
